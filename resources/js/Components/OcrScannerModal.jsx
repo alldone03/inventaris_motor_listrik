@@ -2,31 +2,33 @@ import React, { useState, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { createWorker } from 'tesseract.js';
+import heic2any from 'heic2any';
 import { 
     Camera, 
     Upload, 
     X, 
     Sparkles, 
-    Check, 
+    Search, 
     RotateCw, 
     Crop, 
-    Maximize2, 
-    Zap, 
+    CheckCircle2,
     Image as ImageIcon,
-    CheckCircle2
+    AlertCircle,
+    Loader2
 } from 'lucide-react';
 
-export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPrefillForm }) {
+export default function OcrScannerModal({ isOpen, onClose, onSelectResult }) {
     const [imageSrc, setImageSrc] = useState(null);
     const [crop, setCrop] = useState(null);
     const [completedCrop, setCompletedCrop] = useState(null);
-    const [croppedPreviewUrl, setCroppedPreviewUrl] = useState(null);
     const [isScanning, setIsScanning] = useState(false);
+    const [isConvertingHeic, setIsConvertingHeic] = useState(false);
     const [progress, setProgress] = useState(0);
     const [statusText, setStatusText] = useState('');
-    const [extractedText, setExtractedText] = useState('');
-    const [parsedData, setParsedData] = useState(null);
+    const [extractedItem, setExtractedItem] = useState('');
+    const [rawText, setRawText] = useState('');
     const [cameraActive, setCameraActive] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     
     const fileInputRef = useRef(null);
     const videoRef = useRef(null);
@@ -39,12 +41,13 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
         setImageSrc(null);
         setCrop(null);
         setCompletedCrop(null);
-        setCroppedPreviewUrl(null);
         setIsScanning(false);
+        setIsConvertingHeic(false);
         setProgress(0);
         setStatusText('');
-        setExtractedText('');
-        setParsedData(null);
+        setExtractedItem('');
+        setRawText('');
+        setErrorMessage('');
         stopCamera();
     };
 
@@ -53,34 +56,72 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
         onClose();
     };
 
-    const handleFileUpload = (e) => {
+    const handleFileUpload = async (e) => {
         const file = e.target.files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setImageSrc(event.target.result);
-                setExtractedText('');
-                setParsedData(null);
-                setCroppedPreviewUrl(null);
-            };
-            reader.readAsDataURL(file);
+            setErrorMessage('');
+            setExtractedItem('');
+            setRawText('');
+
+            const fileNameLower = file.name.toLowerCase();
+            const isHeic = fileNameLower.endsWith('.heic') || 
+                           fileNameLower.endsWith('.heif') || 
+                           file.type === 'image/heic' || 
+                           file.type === 'image/heif';
+
+            if (isHeic) {
+                setIsConvertingHeic(true);
+                setStatusText('Mengonversi foto HEIC iPhone...');
+                try {
+                    const convertedBlob = await heic2any({
+                        blob: file,
+                        toType: 'image/jpeg',
+                        quality: 0.92,
+                    });
+                    const blobToRead = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        setImageSrc(event.target.result);
+                        setIsConvertingHeic(false);
+                    };
+                    reader.readAsDataURL(blobToRead);
+                } catch (err) {
+                    console.error('HEIC conversion error:', err);
+                    setErrorMessage('Gagal mengonversi format HEIC. Pastikan file tidak terkunci atau rusak.');
+                    setIsConvertingHeic(false);
+                }
+            } else {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    setImageSrc(event.target.result);
+                };
+                reader.onerror = () => {
+                    setErrorMessage('Gagal membaca berkas gambar. Format mungkin rusak atau tidak didukung.');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        // Reset input value so re-uploading same file triggers onChange
+        if (e.target) {
+            e.target.value = '';
         }
     };
 
     const onImageLoaded = (img) => {
         imgRef.current = img;
-        // Default initial crop box (e.g. 80% width, 60% height in center)
-        const width = img.width * 0.8;
-        const height = img.height * 0.6;
-        const x = (img.width - width) / 2;
-        const y = (img.height - height) / 2;
+        const naturalW = img.width || 300;
+        const naturalH = img.height || 200;
+        const width = naturalW * 0.75;
+        const height = naturalH * 0.45;
+        const x = (naturalW - width) / 2;
+        const y = (naturalH - height) / 2;
         
         const initialCrop = {
             unit: 'px',
-            x,
-            y,
-            width,
-            height,
+            x: Math.max(0, x),
+            y: Math.max(0, y),
+            width: Math.max(50, width),
+            height: Math.max(30, height),
         };
         setCrop(initialCrop);
         setCompletedCrop(initialCrop);
@@ -88,6 +129,7 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
 
     const startCamera = async () => {
         try {
+            setErrorMessage('');
             setCameraActive(true);
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: 'environment' }
@@ -97,7 +139,7 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
             }
         } catch (err) {
             console.error('Camera access error:', err);
-            alert('Tidak dapat mengakses kamera. Pastikan izin kamera telah diberikan.');
+            setErrorMessage('Tidak dapat mengakses kamera. Pastikan izin kamera aktif.');
             setCameraActive(false);
         }
     };
@@ -115,19 +157,24 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
         if (videoRef.current && canvasRef.current) {
             const video = videoRef.current;
             const canvas = canvasRef.current;
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
             const ctx = canvas.getContext('2d');
+            
+            // Fill with white background
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+            
+            const dataUrl = canvas.toDataURL('image/png');
             setImageSrc(dataUrl);
             stopCamera();
-            setExtractedText('');
-            setParsedData(null);
+            setExtractedItem('');
+            setRawText('');
         }
     };
 
-    const getCroppedImageBlob = (image, crop) => {
+    const getCroppedCanvas = (image, crop) => {
         const canvas = document.createElement('canvas');
         const scaleX = image.naturalWidth / image.width;
         const scaleY = image.naturalHeight / image.height;
@@ -137,11 +184,14 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
         const pixelCropWidth = crop.width * scaleX;
         const pixelCropHeight = crop.height * scaleY;
 
-        canvas.width = pixelCropWidth;
-        canvas.height = pixelCropHeight;
+        canvas.width = Math.max(1, pixelCropWidth);
+        canvas.height = Math.max(1, pixelCropHeight);
         const ctx = canvas.getContext('2d');
 
-        // Enhance image contrast for OCR
+        // Solid white background to prevent PNG transparency from becoming black
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
         ctx.drawImage(
             image,
             pixelCropX,
@@ -154,161 +204,96 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
             pixelCropHeight
         );
 
-        return canvas.toDataURL('image/jpeg', 0.95);
+        return canvas;
     };
 
-    const parseMotorInfo = (text) => {
-        let foundItem = '';
-        let foundHpKw = '';
-        let foundVolt = '';
-        let foundAmp = '';
-        let foundRpm = '';
-        let foundMfg = '';
-        let foundFrame = '';
-        let foundIp = '';
-        let foundFreq = '';
+    const cleanItemCode = (text) => {
+        if (!text) return '';
 
-        // Match item code format like 2213-JA, 1102-FA, etc.
-        const itemRegex = /\b([0-9]{3,4}\s*[-–_]\s*[A-Z]{1,3})\b/i;
-        const itemMatch = text.match(itemRegex);
-        if (itemMatch) {
-            foundItem = itemMatch[1].replace(/\s+/g, '').toUpperCase();
-        } else {
-            const itemKeywordMatch = text.match(/ITEM\s*[:=\-]?\s*([A-Z0-9\-_]+)/i);
-            if (itemKeywordMatch) {
-                foundItem = itemKeywordMatch[1].trim().toUpperCase();
-            }
+        // 1. Try regex pattern match like "2213-JA", "1102-FA", "3305-MB", "2213_JA", "2213 JA"
+        const itemPattern = /\b([0-9]{3,4}\s*[-–_ ]\s*[A-Z]{1,3})\b/i;
+        const match = text.match(itemPattern);
+        if (match) {
+            return match[1].replace(/\s+/g, '-').replace(/[_–]/g, '-').toUpperCase();
         }
 
-        // If cropped area is small and contains a short alphanumeric item directly (e.g. "2213-JA" or "2213 JA")
-        if (!foundItem) {
-            const cleanText = text.trim().replace(/\s+/g, ' ');
-            if (cleanText.length > 2 && cleanText.length <= 25) {
-                const simpleCandidate = cleanText.split('\n')[0].trim();
-                if (/^[A-Z0-9\-_/ ]+$/i.test(simpleCandidate)) {
-                    foundItem = simpleCandidate.toUpperCase();
-                }
-            }
+        // 2. Try pattern "ITEM: 2213-JA" or "ITEM NO: ..."
+        const itemKeywordMatch = text.match(/ITEM(?:\s*(?:NO|CODE|TAG)?)\s*[:=\-]?\s*([A-Z0-9\-_/ ]+)/i);
+        if (itemKeywordMatch) {
+            const candidate = itemKeywordMatch[1].trim().split('\n')[0].trim();
+            return candidate.replace(/\s+/g, '-').toUpperCase();
         }
 
-        // Match Voltage (e.g. 440 V, 380V, 380/660 V)
-        const voltMatch = text.match(/(\d{3}(?:\s*[\/]\s*\d{3})?)\s*V(?:OLTS?|OLTAGE)?\b/i);
-        if (voltMatch) {
-            foundVolt = voltMatch[1].replace(/\s+/g, '') + ' V';
+        // 3. Fallback: Take the cleanest single line from the cropped selection
+        const lines = text
+            .split('\n')
+            .map(l => l.trim())
+            .filter(l => l.length >= 2);
+
+        if (lines.length > 0) {
+            const bestLine = lines.find(l => /[0-9]/.test(l) && /[A-Za-z]/.test(l)) || lines[0];
+            return bestLine.replace(/[^A-Za-z0-9\-_/ ]/g, '').trim().toUpperCase();
         }
 
-        // Match Power kW / HP
-        const kwMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:KW|KILOWATT)/i);
-        const hpMatch = text.match(/(\d+(?:\.\d+)?)\s*HP/i);
-        if (kwMatch && hpMatch) {
-            foundHpKw = `${hpMatch[1]} HP / ${kwMatch[1]} kW`;
-        } else if (hpMatch) {
-            foundHpKw = `${hpMatch[1]} HP`;
-        } else if (kwMatch) {
-            foundHpKw = `${kwMatch[1]} kW`;
-        }
-
-        // Match Ampere
-        const ampMatch = text.match(/(\d+(?:\.\d+)?)\s*A(?:MP|MPERE)?\b/i);
-        if (ampMatch) {
-            foundAmp = ampMatch[1] + ' A';
-        }
-
-        // Match RPM
-        const rpmMatch = text.match(/(\d{3,4})\s*RPM\b/i);
-        if (rpmMatch) {
-            foundRpm = rpmMatch[1] + ' RPM';
-        }
-
-        // Match Frequency
-        const freqMatch = text.match(/(\d{2})\s*HZ\b/i);
-        if (freqMatch) {
-            foundFreq = freqMatch[1] + ' Hz';
-        }
-
-        // Match IP Rating
-        const ipMatch = text.match(/IP\s*[:=\-]?\s*(\d{2})/i);
-        if (ipMatch) {
-            foundIp = ipMatch[1];
-        }
-
-        // Match Frame
-        const frameMatch = text.match(/FRAME\s*[:=\-]?\s*([0-9A-Z]+)/i);
-        if (frameMatch) {
-            foundFrame = frameMatch[1];
-        }
-
-        // Match Manufacturer
-        const mfgKeywords = ['TECO', 'SIEMENS', 'ABB', 'TOSHIBA', 'WEG', 'MITSUBISHI', 'TATUNG', 'LEROY SOMER', 'BALDOR', 'SEW'];
-        for (const mfg of mfgKeywords) {
-            if (text.toUpperCase().includes(mfg)) {
-                foundMfg = mfg;
-                break;
-            }
-        }
-
-        return {
-            item: foundItem,
-            hp_kw: foundHpKw,
-            voltage: foundVolt,
-            ampere: foundAmp,
-            rpm: foundRpm,
-            frequency: foundFreq,
-            ip_rating: foundIp,
-            frame: foundFrame,
-            manufacture: foundMfg,
-        };
+        return text.trim().toUpperCase();
     };
 
     const processOcr = async (useCrop = true) => {
         if (!imageSrc) return;
 
-        let targetImage = imageSrc;
+        setErrorMessage('');
+        let targetCanvasOrImage = imageSrc;
 
-        // If user wants to crop and a valid crop selection exists
-        if (useCrop && completedCrop && completedCrop.width > 10 && completedCrop.height > 10 && imgRef.current) {
-            targetImage = getCroppedImageBlob(imgRef.current, completedCrop);
-            setCroppedPreviewUrl(targetImage);
+        if (useCrop && completedCrop && completedCrop.width > 5 && completedCrop.height > 5 && imgRef.current) {
+            targetCanvasOrImage = getCroppedCanvas(imgRef.current, completedCrop);
         }
 
         setIsScanning(true);
-        setProgress(5);
-        setStatusText('Menyiapkan Tesseract OCR Engine...');
+        setProgress(10);
+        setStatusText('Menyiapkan OCR Engine...');
 
         try {
-            const worker = await createWorker('ind+eng', 1, {
+            const worker = await createWorker('eng', 1, {
                 logger: (m) => {
                     if (m.status === 'recognizing text') {
                         setProgress(Math.round(m.progress * 80) + 15);
-                        setStatusText(`Membaca karakter OCR... ${Math.round(m.progress * 100)}%`);
+                        setStatusText(`Membaca huruf & angka Item... ${Math.round(m.progress * 100)}%`);
                     } else {
                         setStatusText(m.status);
                     }
                 }
             });
 
-            setStatusText('Menganalisis teks terseleksi...');
-            const ret = await worker.recognize(targetImage);
-            const recognizedText = ret.data.text;
+            setStatusText('Mengekstrak teks item...');
+            const ret = await worker.recognize(targetCanvasOrImage);
+            const recognized = ret.data.text || '';
             
-            setExtractedText(recognizedText);
-            const parsed = parseMotorInfo(recognizedText);
-            setParsedData(parsed);
+            setRawText(recognized);
+            const detectedItem = cleanItemCode(recognized);
+            setExtractedItem(detectedItem);
 
             await worker.terminate();
             setProgress(100);
             setStatusText('Selesai!');
         } catch (error) {
             console.error('OCR Error:', error);
-            setStatusText('Gagal membaca OCR: ' + (error.message || 'Error tidak diketahui'));
+            setErrorMessage('Gagal memproses gambar OCR. Pastikan format gambar valid.');
+            setStatusText('Terjadi kendala.');
         } finally {
             setIsScanning(false);
         }
     };
 
+    const handleExecuteSearch = () => {
+        if (extractedItem && onSelectResult) {
+            onSelectResult(extractedItem);
+            handleClose();
+        }
+    };
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto">
-            <div className="relative w-full max-w-3xl rounded-3xl bg-white shadow-2xl border border-slate-100 overflow-hidden my-6 max-h-[92vh] flex flex-col">
+            <div className="relative w-full max-w-2xl rounded-3xl bg-white shadow-2xl border border-slate-100 overflow-hidden my-6 max-h-[92vh] flex flex-col">
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white shrink-0">
                     <div className="flex items-center gap-2.5">
@@ -317,10 +302,10 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                         </div>
                         <div>
                             <h3 className="font-extrabold text-base sm:text-lg leading-tight">
-                                Seleksi Area & Scan OCR Nameplate
+                                OCR Pemindai Kode Item Motor
                             </h3>
                             <p className="text-xs text-emerald-100">
-                                Geser dan atur kotak seleksi (crop) pada area teks/angka yang ingin dibaca
+                                Mendukung <strong>HEIC (iPhone), JPG, JPEG, PNG, WEBP</strong>
                             </p>
                         </div>
                     </div>
@@ -333,7 +318,24 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                 </div>
 
                 {/* Body Content */}
-                <div className="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1">
+                <div className="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1">
+                    {/* Error message banner */}
+                    {errorMessage && (
+                        <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                            <AlertCircle className="h-4 w-4 text-rose-600 shrink-0" />
+                            <span>{errorMessage}</span>
+                        </div>
+                    )}
+
+                    {/* HEIC Converting loader */}
+                    {isConvertingHeic && (
+                        <div className="p-6 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-center space-y-2">
+                            <Loader2 className="h-7 w-7 text-amber-600 animate-spin mx-auto" />
+                            <p className="text-xs font-bold">Mengonversi format HEIC iPhone ke format gambar web...</p>
+                            <p className="text-[11px] text-amber-700">Mohon tunggu beberapa saat.</p>
+                        </div>
+                    )}
+
                     {/* Camera view if active */}
                     {cameraActive && (
                         <div className="relative rounded-2xl overflow-hidden bg-black aspect-video flex flex-col items-center justify-center">
@@ -365,7 +367,7 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                     <canvas ref={canvasRef} className="hidden" />
 
                     {/* Image Upload / Crop Interface */}
-                    {!cameraActive && (
+                    {!cameraActive && !isConvertingHeic && (
                         <div>
                             {imageSrc ? (
                                 <div className="space-y-4">
@@ -373,7 +375,7 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                                     <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                         <div className="flex items-center gap-2 text-xs text-emerald-900 font-medium">
                                             <Crop className="h-4 w-4 text-emerald-600 shrink-0" />
-                                            <span>Tarik & sesuaikan kotak crop pada kode Item / data spesifikasi motor.</span>
+                                            <span>Sesuaikan kotak seleksi pada tulisan <strong>Kode Item</strong> (contoh: 2213-JA)</span>
                                         </div>
 
                                         <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -382,15 +384,7 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                                                 onClick={() => fileInputRef.current?.click()}
                                                 className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-100 flex items-center gap-1.5"
                                             >
-                                                <RotateCw className="h-3.5 w-3.5" /> Ganti
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => processOcr(false)}
-                                                disabled={isScanning}
-                                                className="px-3 py-1.5 rounded-lg bg-slate-800 text-white text-xs font-semibold hover:bg-slate-900 flex items-center gap-1.5"
-                                            >
-                                                <Maximize2 className="h-3.5 w-3.5" /> Scan Full
+                                                <RotateCw className="h-3.5 w-3.5" /> Ganti Foto
                                             </button>
                                             <button
                                                 type="button"
@@ -399,25 +393,26 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                                                 className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md flex items-center gap-1.5 disabled:opacity-50"
                                             >
                                                 <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-                                                <span>Scan Area Crop</span>
+                                                <span>Baca Item (OCR)</span>
                                             </button>
                                         </div>
                                     </div>
 
                                     {/* Crop Area Container */}
-                                    <div className="relative rounded-2xl overflow-hidden border border-slate-300 bg-slate-950 flex items-center justify-center p-2 max-h-[380px]">
+                                    <div className="relative rounded-2xl overflow-hidden border border-slate-300 bg-slate-950 flex items-center justify-center p-2 min-h-[240px] max-h-[380px]">
                                         <ReactCrop
                                             crop={crop}
                                             onChange={(c) => setCrop(c)}
                                             onComplete={(c) => setCompletedCrop(c)}
-                                            className="max-h-[360px]"
+                                            className="max-h-[360px] flex items-center justify-center"
                                         >
                                             <img
                                                 ref={imgRef}
                                                 src={imageSrc}
                                                 alt="Nameplate to Crop"
                                                 onLoad={(e) => onImageLoaded(e.currentTarget)}
-                                                className="max-h-[360px] w-auto object-contain rounded"
+                                                style={{ maxHeight: '360px', maxWidth: '100%', objectFit: 'contain' }}
+                                                crossOrigin="anonymous"
                                             />
                                         </ReactCrop>
                                     </div>
@@ -432,7 +427,9 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                                             <Upload className="h-7 w-7" />
                                         </div>
                                         <h4 className="font-bold text-slate-800 text-sm">Unggah Foto Nameplate</h4>
-                                        <p className="text-xs text-slate-500 mt-1">Pilih file foto dari galeri / komputer</p>
+                                        <p className="text-xs text-slate-500 mt-1">
+                                            Format <strong>HEIC (iPhone), JPG, JPEG, PNG</strong>
+                                        </p>
                                     </div>
 
                                     <div
@@ -442,8 +439,8 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                                         <div className="p-4 bg-teal-100 text-teal-700 rounded-2xl mb-3 group-hover:scale-105 transition">
                                             <Camera className="h-7 w-7" />
                                         </div>
-                                        <h4 className="font-bold text-slate-800 text-sm">Buka Kamera Langsung</h4>
-                                        <p className="text-xs text-slate-500 mt-1">Ambil foto fisik nameplate motor di lapangan</p>
+                                        <h4 className="font-bold text-slate-800 text-sm">Gunakan Kamera</h4>
+                                        <p className="text-xs text-slate-500 mt-1">Foto fisik nameplate motor langsung</p>
                                     </div>
                                 </div>
                             )}
@@ -451,7 +448,7 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                             <input
                                 ref={fileInputRef}
                                 type="file"
-                                accept="image/*"
+                                accept="image/jpeg,image/jpg,image/png,image/webp,image/heic,image/heif,.heic,.heif,image/*"
                                 className="hidden"
                                 onChange={handleFileUpload}
                             />
@@ -464,7 +461,7 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                             <div className="flex justify-between text-xs font-bold text-slate-700">
                                 <span className="flex items-center gap-1.5">
                                     <RotateCw className="h-3.5 w-3.5 animate-spin text-emerald-600" />
-                                    {statusText || 'Sedang memproses OCR...'}
+                                    {statusText || 'Sedang membaca teks OCR...'}
                                 </span>
                                 <span className="text-emerald-700">{progress}%</span>
                             </div>
@@ -477,97 +474,45 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                         </div>
                     )}
 
-                    {/* Extracted Data Display */}
-                    {parsedData && !isScanning && (
-                        <div className="space-y-4 pt-2 border-t border-slate-100">
+                    {/* Extracted Item Display & Direct Search */}
+                    {extractedItem && !isScanning && (
+                        <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 border-2 border-emerald-300 space-y-4 shadow-sm">
                             <div className="flex items-center justify-between">
-                                <span className="text-xs font-black uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                                    <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Hasil Pembacaan OCR Area Terpilih
+                                <span className="text-xs font-black uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
+                                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                                    Hasil Pembacaan Item Terdeteksi
                                 </span>
-                                {parsedData.item && (
-                                    <span className="text-xs font-bold px-3 py-1 bg-emerald-100 text-emerald-900 rounded-full border border-emerald-300">
-                                        Item: {parsedData.item}
-                                    </span>
-                                )}
+                                <span className="text-[10px] font-semibold text-slate-400">
+                                    Dapat diedit jika perlu koreksi
+                                </span>
                             </div>
 
-                            {/* Main Item Box */}
-                            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
-                                <div>
-                                    <div className="text-[11px] text-emerald-700 font-bold uppercase">KODE ITEM TERBACA:</div>
-                                    <div className="text-2xl font-black text-slate-900 tracking-tight font-mono">
-                                        {parsedData.item || '(Teks item belum spesifik)'}
-                                    </div>
-                                    <p className="text-xs text-slate-500 mt-0.5">
-                                        Klik tombol untuk langsung mencari atau mengisi kolom input form.
-                                    </p>
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                                <div className="relative flex-1">
+                                    <input
+                                        type="text"
+                                        value={extractedItem}
+                                        onChange={(e) => setExtractedItem(e.target.value)}
+                                        className="w-full px-4 py-3 bg-white border border-emerald-300 rounded-xl font-mono font-black text-xl text-slate-900 tracking-tight focus:ring-2 focus:ring-emerald-500 shadow-xs"
+                                        placeholder="Kode Item..."
+                                    />
                                 </div>
-                                <div className="flex gap-2 w-full sm:w-auto">
-                                    {parsedData.item && onSelectResult && (
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                onSelectResult(parsedData.item);
-                                                handleClose();
-                                            }}
-                                            className="flex-1 sm:flex-initial px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition flex items-center justify-center gap-1.5"
-                                        >
-                                            <Check className="h-4 w-4" /> Gunakan Sebagai Item
-                                        </button>
-                                    )}
-                                    {onPrefillForm && (
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                onPrefillForm(parsedData);
-                                                handleClose();
-                                            }}
-                                            className="flex-1 sm:flex-initial px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow transition flex items-center justify-center gap-1.5"
-                                        >
-                                            <Zap className="h-4 w-4" /> Isi Semua Form
-                                        </button>
-                                    )}
-                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={handleExecuteSearch}
+                                    className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2 shrink-0"
+                                >
+                                    <Search className="h-4 w-4" />
+                                    <span>Cari Item Ini Sekarang</span>
+                                </button>
                             </div>
 
-                            {/* Detected Parameters Grid */}
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
-                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-                                    <span className="text-slate-400 block font-medium text-[10px] uppercase">HP / kW</span>
-                                    <span className="font-bold text-slate-800">{parsedData.hp_kw || '-'}</span>
-                                </div>
-                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-                                    <span className="text-slate-400 block font-medium text-[10px] uppercase">Voltage (V)</span>
-                                    <span className="font-bold text-slate-800">{parsedData.voltage || '-'}</span>
-                                </div>
-                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-                                    <span className="text-slate-400 block font-medium text-[10px] uppercase">Ampere (A)</span>
-                                    <span className="font-bold text-slate-800">{parsedData.ampere || '-'}</span>
-                                </div>
-                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-                                    <span className="text-slate-400 block font-medium text-[10px] uppercase">RPM</span>
-                                    <span className="font-bold text-slate-800">{parsedData.rpm || '-'}</span>
-                                </div>
-                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-                                    <span className="text-slate-400 block font-medium text-[10px] uppercase">Manufacture</span>
-                                    <span className="font-bold text-slate-800">{parsedData.manufacture || '-'}</span>
-                                </div>
-                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-                                    <span className="text-slate-400 block font-medium text-[10px] uppercase">IP Rating</span>
-                                    <span className="font-bold text-slate-800">{parsedData.ip_rating || '-'}</span>
-                                </div>
-                            </div>
-
-                            {/* Raw Extracted Text Details */}
-                            <details className="text-xs bg-slate-50 p-3 rounded-xl border border-slate-200 text-slate-600">
-                                <summary className="cursor-pointer font-semibold text-slate-700 flex items-center justify-between">
-                                    <span>Teks Hasil OCR Lengkap</span>
-                                    <span className="text-[10px] text-slate-400">({extractedText.length} karakter)</span>
-                                </summary>
-                                <pre className="mt-2.5 p-2.5 bg-white rounded-lg border border-slate-200 font-mono text-[11px] whitespace-pre-wrap max-h-32 overflow-y-auto">
-                                    {extractedText || 'Tidak ada teks yang terbaca.'}
-                                </pre>
-                            </details>
+                            {rawText && (
+                                <p className="text-[11px] text-slate-500 truncate">
+                                    <span className="font-semibold text-slate-600">Teks mentah terbaca:</span> {rawText.replace(/\n+/g, ' ')}
+                                </p>
+                            )}
                         </div>
                     )}
                 </div>
@@ -575,7 +520,7 @@ export default function OcrScannerModal({ isOpen, onClose, onSelectResult, onPre
                 {/* Footer */}
                 <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between shrink-0">
                     <span className="text-xs text-slate-400">
-                        {imageSrc ? 'Gunakan kursor mouse untuk memilih area kotak crop.' : 'Pilih atau foto nameplate motor.'}
+                        {imageSrc ? 'Pilih area item lalu klik "Baca Item (OCR)".' : 'Pilih atau foto nameplate motor.'}
                     </span>
                     <button
                         type="button"

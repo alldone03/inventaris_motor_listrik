@@ -35,19 +35,8 @@ export default function MotorsEdit({ motor }) {
         put(route('motors.update', motor.id));
     };
 
-    const handlePrefillFromOcr = (ocrData) => {
-        setData((prev) => ({
-            ...prev,
-            item: ocrData.item || prev.item,
-            hp_kw: ocrData.hp_kw || prev.hp_kw,
-            voltage: ocrData.voltage || prev.voltage,
-            ampere: ocrData.ampere || prev.ampere,
-            rpm: ocrData.rpm || prev.rpm,
-            frame: ocrData.frame || prev.frame,
-            ip_rating: ocrData.ip_rating || prev.ip_rating,
-            frequency: ocrData.frequency || prev.frequency,
-            manufacture: ocrData.manufacture || prev.manufacture,
-        }));
+    const handleItemOcr = (itemCode) => {
+        setData('item', itemCode);
     };
 
     return (
@@ -286,7 +275,7 @@ export default function MotorsEdit({ motor }) {
             <OcrScannerModal
                 isOpen={isOcrOpen}
                 onClose={() => setIsOcrOpen(false)}
-                onPrefillForm={handlePrefillFromOcr}
+                onSelectResult={handleItemOcr}
             />
         </AuthenticatedLayout>
     );
