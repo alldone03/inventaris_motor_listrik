@@ -2570,6 +2570,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-image-crop@npm:^11.1.2":
+  version: 11.1.2
+  resolution: "react-image-crop@npm:11.1.2"
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 10c0/7325afda6ec3f0b7c5bc3d376f3caf29cc57a3518271623a3e3e4edf49178d63ac10749a6ec5bc4271aa34ea2aaa3d80e2248cb05ba7a9b06fca260ff2472028
+  languageName: node
+  linkType: hard
+
 "react-reconciler@npm:^0.33.0":
   version: 0.33.0
   resolution: "react-reconciler@npm:0.33.0"
@@ -2763,6 +2772,7 @@ __metadata:
     postcss: "npm:^8.4.31"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
+    react-image-crop: "npm:^11.1.2"
     tailwindcss: "npm:^3.2.1"
     tesseract.js: "npm:^7.0.0"
     vite: "npm:^8.0.0"
