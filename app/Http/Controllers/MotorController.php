@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Motor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -57,7 +58,7 @@ class MotorController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'item' => 'required|string|max:255',
+            'item' => ['required', 'string', 'max:255', 'unique:motors,item'],
             'label_ke' => 'nullable|string|max:255',
             'alamat_motor' => 'nullable|string|max:255',
             'hp_kw' => 'nullable|string|max:255',
@@ -70,6 +71,9 @@ class MotorController extends Controller
             'rpm' => 'nullable|string|max:255',
             'area' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
+        ], [
+            'item.unique' => 'Kode Item motor ini sudah terdaftar. Harap gunakan kode item yang unik.',
+            'item.required' => 'Kode Item motor wajib diisi.',
         ]);
 
         $motor = Motor::create($validated);
@@ -108,7 +112,7 @@ class MotorController extends Controller
     public function update(Request $request, Motor $motor): RedirectResponse
     {
         $validated = $request->validate([
-            'item' => 'required|string|max:255',
+            'item' => ['required', 'string', 'max:255', Rule::unique('motors', 'item')->ignore($motor->id)],
             'label_ke' => 'nullable|string|max:255',
             'alamat_motor' => 'nullable|string|max:255',
             'hp_kw' => 'nullable|string|max:255',
@@ -121,6 +125,9 @@ class MotorController extends Controller
             'rpm' => 'nullable|string|max:255',
             'area' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
+        ], [
+            'item.unique' => 'Kode Item motor ini sudah terdaftar pada data motor lain.',
+            'item.required' => 'Kode Item motor wajib diisi.',
         ]);
 
         $motor->update($validated);
