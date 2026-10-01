@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import OcrScannerModal from '@/Components/OcrScannerModal';
-import { 
-    Zap, 
-    ArrowLeft, 
-    Save, 
-    Camera, 
-    Sparkles, 
-    Check, 
+import {
+    Zap,
+    ArrowLeft,
+    Save,
+    Camera,
+    Sparkles,
+    Check,
     RotateCcw,
     Layers,
     Info
@@ -289,7 +289,7 @@ export default function MotorsCreate() {
                         {/* Section 3: Keterangan */}
                         <div>
                             <h4 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 pb-2 border-b border-slate-100">
-                                3. Catatan & Keterangan Tambahan
+                                3. Catatan & Keterangan Tambahan (Contoh: Rewinding di Vendor PT ABC, Est. Selesai 05/10/2026)
                             </h4>
                             <div>
                                 <textarea

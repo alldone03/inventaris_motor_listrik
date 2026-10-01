@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import OcrScannerModal from '@/Components/OcrScannerModal';
-import { 
-    Zap, 
-    Search, 
-    Camera, 
-    PlusCircle, 
-    Eye, 
-    Edit, 
-    Trash2, 
-    FilePlus, 
-    FileText, 
-    Layers, 
-    Filter, 
+import {
+    Zap,
+    Search,
+    Camera,
+    PlusCircle,
+    Eye,
+    Edit,
+    Trash2,
+    FilePlus,
+    FileText,
+    Layers,
+    Filter,
     X,
     Sparkles,
     CheckCircle2,
@@ -25,6 +25,8 @@ import {
 export default function MotorsIndex({ motors, filters }) {
     const [search, setSearch] = useState(filters.search || '');
     const [isOcrOpen, setIsOcrOpen] = useState(false);
+    const { auth, flash } = usePage().props;
+    const user = auth.user;
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -63,24 +65,26 @@ export default function MotorsIndex({ motors, filters }) {
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2.5">
-                        <button
-                            type="button"
-                            onClick={() => setIsOcrOpen(true)}
-                            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white text-xs font-bold shadow-md shadow-teal-600/20 flex items-center gap-2 transition"
-                        >
-                            <Camera className="h-4 w-4" />
-                            <span>Scan OCR Nameplate</span>
-                        </button>
+                    {user.role === "admin" && (
+                        <div className="flex items-center gap-2.5">
+                            <button
+                                type="button"
+                                onClick={() => setIsOcrOpen(true)}
+                                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white text-xs font-bold shadow-md shadow-teal-600/20 flex items-center gap-2 transition"
+                            >
+                                <Camera className="h-4 w-4" />
+                                <span>Scan OCR Nameplate</span>
+                            </button>
 
-                        <Link
-                            href={route('motors.create')}
-                            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center gap-2 transition"
-                        >
-                            <PlusCircle className="h-4 w-4" />
-                            <span>Tambah Motor Baru</span>
-                        </Link>
-                    </div>
+                            <Link
+                                href={route('motors.create')}
+                                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center gap-2 transition"
+                            >
+                                <PlusCircle className="h-4 w-4" />
+                                <span>Tambah Motor Baru</span>
+                            </Link>
+                        </div>
+                    )}
                 </div>
             }
         >
@@ -142,7 +146,7 @@ export default function MotorsIndex({ motors, filters }) {
                         <table className="w-full text-left border-collapse text-xs">
                             <thead>
                                 <tr className="bg-slate-900 text-slate-200 border-b border-slate-800 text-[11px] font-bold uppercase tracking-wider">
-                                    <th className="py-3.5 px-4">Item & Label</th>
+                                    <th className="py-3.5 px-4">Label & Item</th>
                                     <th className="py-3.5 px-3">Alamat</th>
                                     <th className="py-3.5 px-3">Daya (HP/kW)</th>
                                     <th className="py-3.5 px-3">Voltage & Ampere</th>
@@ -150,26 +154,27 @@ export default function MotorsIndex({ motors, filters }) {
                                     <th className="py-3.5 px-3">Freq & MFG</th>
                                     <th className="py-3.5 px-4">Keterangan</th>
                                     <th className="py-3.5 px-3 text-center">Checklists</th>
-                                    <th className="py-3.5 px-4 text-center">Aksi</th>
+                                    {user.role === "admin" && (<th className="py-3.5 px-4 text-center">Aksi</th>)}
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
                                 {motors.data.map((motor) => (
-                                    <tr 
-                                        key={motor.id} 
+                                    <tr
+                                        key={motor.id}
                                         className="hover:bg-emerald-50/40 transition group"
                                     >
                                         {/* Item & Label */}
                                         <td className="py-3.5 px-4 whitespace-nowrap">
                                             <div className="flex items-center gap-2">
-                                                <div className="font-mono font-black text-slate-900 text-sm bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200 group-hover:border-emerald-300 group-hover:bg-emerald-50 text-emerald-950">
-                                                    {motor.item}
-                                                </div>
                                                 {motor.label_ke && (
                                                     <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold">
                                                         Label: {motor.label_ke}
                                                     </span>
                                                 )}
+                                                <div className="font-mono font-black text-slate-900 text-sm bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200 group-hover:border-emerald-300 group-hover:bg-emerald-50 text-emerald-950">
+                                                    {motor.item}
+                                                </div>
+
                                             </div>
                                         </td>
 
@@ -211,7 +216,7 @@ export default function MotorsIndex({ motors, filters }) {
                                         </td>
 
                                         {/* Keterangan */}
-                                        <td className="py-3.5 px-4 max-w-xs truncate text-slate-500" title={motor.keterangan || ''}>
+                                        <td className="py-3.5 px-4 max-w-xs break-words whitespace-normal text-slate-500" title={motor.keterangan || ''}>
                                             {motor.keterangan || '-'}
                                         </td>
 
@@ -227,46 +232,48 @@ export default function MotorsIndex({ motors, filters }) {
                                         </td>
 
                                         {/* Actions */}
-                                        <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                                            <div className="flex items-center justify-center gap-1.5">
-                                                {/* Add Checklist Form */}
-                                                <Link
-                                                    href={route('motors.checklists.create', motor.id)}
-                                                    className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition"
-                                                    title="Buat Form Checklist Perbaikan Baru"
-                                                >
-                                                    <FilePlus className="h-4 w-4" />
-                                                </Link>
+                                        {user.role === "admin" && (
+                                            <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                                                <div className="flex items-center justify-center gap-1.5">
+                                                    {/* Add Checklist Form */}
+                                                    <Link
+                                                        href={route('motors.checklists.create', motor.id)}
+                                                        className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition"
+                                                        title="Buat Form Checklist Perbaikan Baru"
+                                                    >
+                                                        <FilePlus className="h-4 w-4" />
+                                                    </Link>
 
-                                                {/* View Detail Motor */}
-                                                <Link
-                                                    href={route('motors.show', motor.id)}
-                                                    className="p-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-800 hover:text-white transition"
-                                                    title="Lihat Detail & Riwayat Form"
-                                                >
-                                                    <Eye className="h-4 w-4" />
-                                                </Link>
+                                                    {/* View Detail Motor */}
+                                                    <Link
+                                                        href={route('motors.show', motor.id)}
+                                                        className="p-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-800 hover:text-white transition"
+                                                        title="Lihat Detail & Riwayat Form"
+                                                    >
+                                                        <Eye className="h-4 w-4" />
+                                                    </Link>
 
-                                                {/* Edit Motor */}
-                                                <Link
-                                                    href={route('motors.edit', motor.id)}
-                                                    className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white transition"
-                                                    title="Edit Data Motor"
-                                                >
-                                                    <Edit className="h-4 w-4" />
-                                                </Link>
+                                                    {/* Edit Motor */}
+                                                    <Link
+                                                        href={route('motors.edit', motor.id)}
+                                                        className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white transition"
+                                                        title="Edit Data Motor"
+                                                    >
+                                                        <Edit className="h-4 w-4" />
+                                                    </Link>
 
-                                                {/* Delete Motor */}
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleDelete(motor.id, motor.item)}
-                                                    className="p-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-600 hover:text-white transition"
-                                                    title="Hapus Motor"
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </button>
-                                            </div>
-                                        </td>
+                                                    {/* Delete Motor */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleDelete(motor.id, motor.item)}
+                                                        className="p-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-600 hover:text-white transition"
+                                                        title="Hapus Motor"
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
 
@@ -303,13 +310,12 @@ export default function MotorsIndex({ motors, filters }) {
                                         key={idx}
                                         href={link.url || '#'}
                                         dangerouslySetInnerHTML={{ __html: link.label }}
-                                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-                                            link.active
-                                                ? 'bg-emerald-600 text-white'
-                                                : link.url
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${link.active
+                                            ? 'bg-emerald-600 text-white'
+                                            : link.url
                                                 ? 'bg-slate-50 hover:bg-slate-100 text-slate-700'
                                                 : 'text-slate-300 pointer-events-none'
-                                        }`}
+                                            }`}
                                     />
                                 ))}
                             </div>

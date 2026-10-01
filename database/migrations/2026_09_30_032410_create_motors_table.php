@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('motors', function (Blueprint $table) {
             $table->id();
             $table->string('item')->unique();
-            $table->string('label_ke')->nullable();
+            $table->string('label_ke')->unique();
             $table->string('alamat_motor')->nullable();
             $table->string('hp_kw')->nullable();
             $table->string('voltage')->nullable();

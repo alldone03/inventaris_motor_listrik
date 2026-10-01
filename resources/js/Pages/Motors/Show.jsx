@@ -1,18 +1,18 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router } from '@inertiajs/react';
-import { 
-    Zap, 
-    ArrowLeft, 
-    Edit, 
-    Trash2, 
-    FilePlus, 
-    FileCheck, 
-    Eye, 
-    CheckCircle2, 
-    Clock, 
-    Calendar, 
-    User, 
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import {
+    Zap,
+    ArrowLeft,
+    Edit,
+    Trash2,
+    FilePlus,
+    FileCheck,
+    Eye,
+    CheckCircle2,
+    Clock,
+    Calendar,
+    User,
     Wrench,
     Tag,
     Activity,
@@ -22,6 +22,9 @@ import {
 } from 'lucide-react';
 
 export default function MotorsShow({ motor }) {
+    const { auth, flash } = usePage().props;
+    const user = auth.user;
+
     const handleDeleteChecklist = (checklistId, formNo) => {
         if (confirm(`Hapus form checklist "${formNo || 'ini'}"?`)) {
             router.delete(route('checklists.destroy', checklistId));
@@ -62,30 +65,32 @@ export default function MotorsShow({ motor }) {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <Link
-                            href={route('motors.checklists.create', motor.id)}
-                            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center gap-2 transition"
-                        >
-                            <FilePlus className="h-4 w-4" />
-                            <span>Buat Form Checklist Baru</span>
-                        </Link>
-                        <Link
-                            href={route('motors.edit', motor.id)}
-                            className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
-                            title="Edit Data Motor"
-                        >
-                            <Edit className="h-4 w-4" />
-                        </Link>
-                        <button
-                            type="button"
-                            onClick={handleDeleteMotor}
-                            className="p-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 transition"
-                            title="Hapus Motor"
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </button>
-                    </div>
+                    {user.role === "admin" && (
+                        <div className="flex items-center gap-2">
+                            <Link
+                                href={route('motors.checklists.create', motor.id)}
+                                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center gap-2 transition"
+                            >
+                                <FilePlus className="h-4 w-4" />
+                                <span>Buat Form Checklist Baru</span>
+                            </Link>
+                            <Link
+                                href={route('motors.edit', motor.id)}
+                                className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                                title="Edit Data Motor"
+                            >
+                                <Edit className="h-4 w-4" />
+                            </Link>
+                            <button
+                                type="button"
+                                onClick={handleDeleteMotor}
+                                className="p-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 transition"
+                                title="Hapus Motor"
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </button>
+                        </div>
+                    )}
                 </div>
             }
         >
@@ -191,13 +196,15 @@ export default function MotorsShow({ motor }) {
                             </p>
                         </div>
 
-                        <Link
-                            href={route('motors.checklists.create', motor.id)}
-                            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5 self-start sm:self-auto"
-                        >
-                            <FilePlus className="h-4 w-4" />
-                            <span>Buat Form Checklist Baru</span>
-                        </Link>
+                        {user.role === "admin" && (
+                            <Link
+                                href={route('motors.checklists.create', motor.id)}
+                                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5 self-start sm:self-auto"
+                            >
+                                <FilePlus className="h-4 w-4" />
+                                <span>Buat Form Checklist Baru</span>
+                            </Link>
+                        )}
                     </div>
 
                     <div className="space-y-4">
@@ -211,11 +218,10 @@ export default function MotorsShow({ motor }) {
                                         <span className="font-mono text-sm font-black text-slate-900 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-xs">
                                             {checklist.no_form || 'Form Checklist'}
                                         </span>
-                                        <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
-                                            checklist.status_perbaikan === 'Selesai'
-                                                ? 'bg-emerald-100 text-emerald-800'
-                                                : 'bg-amber-100 text-amber-800'
-                                        }`}>
+                                        <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${checklist.status_perbaikan === 'Selesai'
+                                            ? 'bg-emerald-100 text-emerald-800'
+                                            : 'bg-amber-100 text-amber-800'
+                                            }`}>
                                             {checklist.status_perbaikan}
                                         </span>
                                         {checklist.tanggal_selesai && (
@@ -247,21 +253,26 @@ export default function MotorsShow({ motor }) {
                                         <Eye className="h-4 w-4" />
                                         <span>Lihat Format A4</span>
                                     </Link>
-                                    <Link
-                                        href={route('checklists.edit', checklist.id)}
-                                        className="p-2 rounded-xl bg-slate-200/80 hover:bg-slate-300 text-slate-700 transition"
-                                        title="Edit Checklist"
-                                    >
-                                        <Edit className="h-4 w-4" />
-                                    </Link>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleDeleteChecklist(checklist.id, checklist.no_form)}
-                                        className="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 transition"
-                                        title="Hapus Checklist"
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </button>
+                                    {user.role === "admin" && (
+                                        <Link
+                                            href={route('checklists.edit', checklist.id)}
+                                            className="p-2 rounded-xl bg-slate-200/80 hover:bg-slate-300 text-slate-700 transition"
+                                            title="Edit Checklist"
+                                        >
+                                            <Edit className="h-4 w-4" />
+                                        </Link>
+                                    )}
+                                    {user.role === "admin" && (
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDeleteChecklist(checklist.id, checklist.no_form)}
+                                            className="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 transition"
+                                            title="Hapus Checklist"
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </button>
+                                    )}
+
                                 </div>
                             </div>
                         ))}

@@ -1,0 +1,6 @@
+diganti nomor_motor yang sebelumnya adalah label
+
+kartu history dimunculkan di daftar historis motor
+
+tambahkan fitur scrap motor
+

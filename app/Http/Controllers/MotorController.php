@@ -29,6 +29,11 @@ class MotorController extends Controller
                         ->orWhere('voltage', 'like', "%{$search}%")
                         ->orWhere('manufacture', 'like', "%{$search}%")
                         ->orWhere('area', 'like', "%{$search}%")
+                        ->orWhere('rpm', 'like', "%{$search}%")
+                        ->orWhere('ampere', 'like', "%{$search}%")
+                        ->orWhere('frequency', 'like', "%{$search}%")
+                        ->orWhere('ip_rating', 'like', "%{$search}%")
+                        ->orWhere('frame', 'like', "%{$search}%")
                         ->orWhere('keterangan', 'like', "%{$search}%");
                 });
             })
@@ -58,8 +63,8 @@ class MotorController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'item' => ['required', 'string', 'max:255', 'unique:motors,item'],
-            'label_ke' => 'nullable|string|max:255',
+            'item' => 'nullable|string|max:255',
+            'label_ke' => ['required', 'string', 'max:255', 'unique:motors,label_ke'],
             'alamat_motor' => 'nullable|string|max:255',
             'hp_kw' => 'nullable|string|max:255',
             'voltage' => 'nullable|string|max:255',
@@ -72,8 +77,8 @@ class MotorController extends Controller
             'area' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
         ], [
-            'item.unique' => 'Kode Item motor ini sudah terdaftar. Harap gunakan kode item yang unik.',
-            'item.required' => 'Kode Item motor wajib diisi.',
+            'label_ke.unique' => 'Label Ke motor ini sudah terdaftar. Harap gunakan kode item yang unik.',
+            'label_ke.required' => 'Label Ke motor wajib diisi.',
         ]);
 
         $motor = Motor::create($validated);
@@ -112,8 +117,8 @@ class MotorController extends Controller
     public function update(Request $request, Motor $motor): RedirectResponse
     {
         $validated = $request->validate([
-            'item' => ['required', 'string', 'max:255', Rule::unique('motors', 'item')->ignore($motor->id)],
-            'label_ke' => 'nullable|string|max:255',
+            'item' => 'nullable|string|max:255',
+            'label_ke' => ['required', 'string', 'max:255', Rule::unique('motors', 'label_ke')->ignore($motor->id)],
             'alamat_motor' => 'nullable|string|max:255',
             'hp_kw' => 'nullable|string|max:255',
             'voltage' => 'nullable|string|max:255',

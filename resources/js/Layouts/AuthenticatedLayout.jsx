@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import PupukKujangLogo from '@/Components/PupukKujangLogo';
-import { 
-    LayoutDashboard, 
-    Zap, 
-    List, 
-    PlusCircle, 
-    Menu, 
-    X, 
-    ChevronLeft, 
-    ChevronRight, 
-    User, 
-    LogOut, 
-    FileCheck, 
+import {
+    LayoutDashboard,
+    Zap,
+    List,
+    PlusCircle,
+    Menu,
+    X,
+    ChevronLeft,
+    ChevronRight,
+    User,
+    LogOut,
+    FileCheck,
     Settings,
     Search,
     ShieldCheck,
@@ -116,8 +116,8 @@ export default function AuthenticatedLayout({ header, children }) {
                                     href={item.href}
                                     onClick={() => setIsMobileOpen(false)}
                                     className={`flex items-center gap-3 px-3.5 py-3 rounded-xl font-medium text-sm transition-all group relative
-                                        ${item.active 
-                                            ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/30' 
+                                        ${item.active
+                                            ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/30'
                                             : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
                                         }
                                         ${isCollapsed && !isMobileOpen ? 'justify-center px-0' : ''}
@@ -138,24 +138,26 @@ export default function AuthenticatedLayout({ header, children }) {
                         })}
 
                         {/* Action shortcut: Tambah Motor */}
-                        <div className="pt-4 mt-4 border-t border-slate-800/80">
-                            {(!isCollapsed || isMobileOpen) && (
-                                <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                                    Aksi Cepat
-                                </div>
-                            )}
-                            <Link
-                                href={route('motors.create')}
-                                onClick={() => setIsMobileOpen(false)}
-                                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-emerald-300 bg-emerald-950/40 border border-emerald-800/40 hover:bg-emerald-900/50 hover:text-emerald-200 transition group
+                        {user.role === "admin" && (
+                            <div className="pt-4 mt-4 border-t border-slate-800/80">
+                                {(!isCollapsed || isMobileOpen) && (
+                                    <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                        Aksi Cepat
+                                    </div>
+                                )}
+                                <Link
+                                    href={route('motors.create')}
+                                    onClick={() => setIsMobileOpen(false)}
+                                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-emerald-300 bg-emerald-950/40 border border-emerald-800/40 hover:bg-emerald-900/50 hover:text-emerald-200 transition group
                                     ${isCollapsed && !isMobileOpen ? 'justify-center px-0' : ''}
                                 `}
-                                title={isCollapsed ? 'Tambah Motor Baru' : undefined}
-                            >
-                                <PlusCircle className="h-4 w-4 shrink-0 text-emerald-400" />
-                                {(!isCollapsed || isMobileOpen) && <span>Tambah Motor Baru</span>}
-                            </Link>
-                        </div>
+                                    title={isCollapsed ? 'Tambah Motor Baru' : undefined}
+                                >
+                                    <PlusCircle className="h-4 w-4 shrink-0 text-emerald-400" />
+                                    {(!isCollapsed || isMobileOpen) && <span>Tambah Motor Baru</span>}
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
                     {/* Sidebar Footer & Collapse Toggle */}
@@ -228,6 +230,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                 </div>
                                 <div className="hidden md:flex flex-col text-left">
                                     <span className="text-xs font-bold text-slate-800 leading-tight">{user.name}</span>
+                                    <span className="text-[10px] text-slate-500">Role : {user.role}</span>
                                     <span className="text-[10px] text-slate-500">{user.email}</span>
                                 </div>
                             </button>
@@ -241,6 +244,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white shadow-xl border border-slate-100 py-2 z-50">
                                         <div className="px-4 py-2 border-b border-slate-100">
                                             <p className="text-xs font-bold text-slate-800">{user.name}</p>
+                                            <p className="text-xs font-bold text-slate-800">Role : {user.role}</p>
                                             <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
                                         </div>
                                         <Link

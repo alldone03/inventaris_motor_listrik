@@ -1,17 +1,20 @@
 import React, { useRef } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import PupukKujangLogo from '@/Components/PupukKujangLogo';
-import { 
-    Printer, 
-    Edit, 
-    ArrowLeft, 
-    Check, 
+import {
+    Printer,
+    Edit,
+    ArrowLeft,
+    Check,
     X,
     FileText
 } from 'lucide-react';
 
 export default function ChecklistsShow({ checklist, motor }) {
+    const { auth, flash } = usePage().props;
+    const user = auth.user;
+
     const printRef = useRef(null);
 
     const handlePrint = () => {
@@ -45,14 +48,15 @@ export default function ChecklistsShow({ checklist, motor }) {
                     </div>
 
                     <div className="flex items-center gap-2.5">
-                        <Link
-                            href={route('checklists.edit', checklist.id)}
-                            className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5"
-                        >
-                            <Edit className="h-4 w-4" />
-                            <span>Edit Form</span>
-                        </Link>
-
+                        {user.role === "admin" && (
+                            <Link
+                                href={route('checklists.edit', checklist.id)}
+                                className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5"
+                            >
+                                <Edit className="h-4 w-4" />
+                                <span>Edit Form</span>
+                            </Link>
+                        )}
                         <button
                             type="button"
                             onClick={handlePrint}
@@ -114,7 +118,7 @@ export default function ChecklistsShow({ checklist, motor }) {
 
             <div className="max-w-4xl mx-auto my-3 flex flex-col items-center">
                 {/* A4 Paper Container formatted fully as tabular document */}
-                <div 
+                <div
                     ref={printRef}
                     className="a4-container w-full bg-white rounded-xl shadow-xl border border-slate-300 p-4 sm:p-6 text-slate-900 font-sans print:p-0 print:border-none print:shadow-none text-[10px] leading-tight"
                 >
@@ -155,7 +159,7 @@ export default function ChecklistsShow({ checklist, motor }) {
                                     <div className="grid grid-cols-3 gap-x-1">
                                         <span className="text-slate-500 font-semibold">No. Form:</span>
                                         <span className="col-span-2 font-bold font-mono text-slate-950 truncate">{checklist.no_form || '-'}</span>
-                                        
+
                                         <span className="text-slate-500 font-semibold">Kode Item:</span>
                                         <span className="col-span-2 font-black font-mono text-emerald-800 text-[10px] truncate">{motor.item}</span>
 
@@ -250,7 +254,7 @@ export default function ChecklistsShow({ checklist, motor }) {
 
                                     {/* Task Rows */}
                                     {section.tasks?.map((task, tIdx) => (
-                                        <tr 
+                                        <tr
                                             key={task.sub || tIdx}
                                             className="border-b border-slate-300/80 hover:bg-slate-50/50"
                                         >
@@ -280,11 +284,10 @@ export default function ChecklistsShow({ checklist, motor }) {
 
                                             {/* Status OK / NO */}
                                             <td className="py-[2px] px-1 text-center font-bold font-mono text-[8.5px]">
-                                                <span className={`inline-block px-1 py-[1px] rounded text-[8px] font-black uppercase ${
-                                                    task.status === 'OK' 
-                                                        ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' 
-                                                        : 'bg-rose-100 text-rose-900 border border-rose-300'
-                                                }`}>
+                                                <span className={`inline-block px-1 py-[1px] rounded text-[8px] font-black uppercase ${task.status === 'OK'
+                                                    ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
+                                                    : 'bg-rose-100 text-rose-900 border border-rose-300'
+                                                    }`}>
                                                     {task.status || 'OK'}
                                                 </span>
                                             </td>
