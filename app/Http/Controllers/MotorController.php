@@ -85,7 +85,7 @@ class MotorController extends Controller
             'rpm' => 'nullable|string|max:255',
             'area' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
-            'status' => 'nullable|string|in:Di Gudang,Keluar Gudang',
+            'status' => 'nullable|string|in:Di Workshop,Keluar Workshop',
         ], [
             'label_ke.unique' => 'Label Ke motor ini sudah terdaftar. Harap gunakan kode item yang unik.',
             'label_ke.required' => 'Label Ke motor wajib diisi.',
@@ -140,7 +140,7 @@ class MotorController extends Controller
             'rpm' => 'nullable|string|max:255',
             'area' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
-            'status' => 'nullable|string|in:Di Gudang,Keluar Gudang',
+            'status' => 'nullable|string|in:Di Workshop,Keluar Workshop',
         ], [
             'item.unique' => 'Kode Item motor ini sudah terdaftar pada data motor lain.',
             'item.required' => 'Kode Item motor wajib diisi.',

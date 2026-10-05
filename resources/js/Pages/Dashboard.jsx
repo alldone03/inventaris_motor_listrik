@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import OcrScannerModal from '@/Components/OcrScannerModal';
-import { 
-    Zap, 
-    FileCheck, 
-    CheckCircle2, 
-    Clock, 
-    PlusCircle, 
-    Search, 
-    Camera, 
-    ArrowRight, 
-    Wrench, 
-    Activity, 
+import {
+    Zap,
+    FileCheck,
+    CheckCircle2,
+    Clock,
+    PlusCircle,
+    Search,
+    Camera,
+    ArrowRight,
+    Wrench,
+    Activity,
     Layers,
     Sparkles,
     Eye,
@@ -138,7 +138,7 @@ export default function Dashboard({ stats, recentChecklists, recentMotors }) {
                         </div>
                         <div className="mt-3 flex gap-2">
                             <div className="px-2 py-1 bg-emerald-100 text-emerald-800 text-xs rounded font-semibold">
-                                {stats.motorDiGudang} Di Gudang
+                                {stats.motorDiGudang} Di Workshop
                             </div>
                             <div className="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded font-semibold">
                                 {stats.motorKeluar} Keluar
@@ -285,11 +285,10 @@ export default function Dashboard({ stats, recentChecklists, recentMotors }) {
                                                 <span className="font-mono text-xs font-bold text-slate-700">
                                                     {c.no_form || 'Form Checklist'}
                                                 </span>
-                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                                                    c.status_perbaikan === 'Selesai' 
-                                                        ? 'bg-emerald-100 text-emerald-800' 
+                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${c.status_perbaikan === 'Selesai'
+                                                        ? 'bg-emerald-100 text-emerald-800'
                                                         : 'bg-amber-100 text-amber-800'
-                                                }`}>
+                                                    }`}>
                                                     {c.status_perbaikan}
                                                 </span>
                                             </div>

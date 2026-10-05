@@ -50,10 +50,10 @@ export default function MotorsIndex({ motors, filters }) {
         if (filters.sort_field === field && filters.sort_direction === 'asc') {
             direction = 'desc';
         }
-        router.get(route('motors.index'), { 
-            search, 
-            sort_field: field, 
-            sort_direction: direction 
+        router.get(route('motors.index'), {
+            search,
+            sort_field: field,
+            sort_direction: direction
         }, { preserveState: true, replace: true });
     };
 
@@ -61,8 +61,8 @@ export default function MotorsIndex({ motors, filters }) {
         if (filters.sort_field !== field) {
             return <ArrowUpDown className="h-3 w-3 opacity-0 group-hover:opacity-40 transition-opacity ml-1" />;
         }
-        return filters.sort_direction === 'asc' 
-            ? <ChevronUp className="h-3 w-3 text-emerald-500 ml-1" /> 
+        return filters.sort_direction === 'asc'
+            ? <ChevronUp className="h-3 w-3 text-emerald-500 ml-1" />
             : <ChevronDown className="h-3 w-3 text-emerald-500 ml-1" />;
     };
 
@@ -276,11 +276,11 @@ export default function MotorsIndex({ motors, filters }) {
 
                                         {/* Status */}
                                         <td className="py-3.5 px-3 whitespace-nowrap">
-                                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${motor.status === 'Keluar Gudang'
+                                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${motor.status === 'Keluar Workshop'
                                                 ? 'bg-amber-100 text-amber-800'
                                                 : 'bg-emerald-100 text-emerald-800'
                                                 }`}>
-                                                {motor.status || 'Di Gudang'}
+                                                {motor.status || 'Di Workshop'}
                                             </span>
                                         </td>
 

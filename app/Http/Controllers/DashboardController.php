@@ -13,8 +13,8 @@ class DashboardController extends Controller
     public function index(): Response
     {
         $totalMotors = Motor::count();
-        $motorDiGudang = Motor::where('status', 'Di Gudang')->count();
-        $motorKeluar = Motor::where('status', 'Keluar Gudang')->count();
+        $motorDiGudang = Motor::where('status', 'Di Workshop')->count();
+        $motorKeluar = Motor::where('status', 'Keluar Workshop')->count();
         $totalChecklists = MotorChecklist::count();
         $selesaiChecklists = MotorChecklist::where('status_perbaikan', 'Selesai')->count();
         $prosesChecklists = MotorChecklist::where('status_perbaikan', '!=', 'Selesai')->count();

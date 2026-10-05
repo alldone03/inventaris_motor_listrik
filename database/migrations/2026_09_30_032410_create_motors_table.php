@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('rpm')->nullable();
             $table->string('area')->nullable();
             $table->text('keterangan')->nullable();
-            $table->string('status')->default('Di Gudang');
+            $table->string('status')->default('Di Workshop');
             $table->timestamps();
         });
     }
