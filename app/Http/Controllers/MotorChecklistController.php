@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Motor;
 use App\Models\MotorChecklist;
+use App\Models\Approver;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -18,11 +19,13 @@ class MotorChecklistController extends Controller
     {
         $defaultTemplate = MotorChecklist::getDefaultTemplate($motor);
         $nextFormNo = 'PK-BL-CHK-' . date('Y') . '-' . str_pad(MotorChecklist::count() + 1, 3, '0', STR_PAD_LEFT);
+        $approvers = Approver::all();
 
         return Inertia::render('Checklists/Create', [
             'motor' => $motor,
             'defaultTemplate' => $defaultTemplate,
             'suggestedFormNo' => $nextFormNo,
+            'approvers' => $approvers,
         ]);
     }
 
@@ -43,6 +46,8 @@ class MotorChecklistController extends Controller
             'rpm_spek' => 'nullable|string|max:255',
             'nama_teknisi' => 'nullable|string|max:255',
             'nama_staf' => 'nullable|string|max:255',
+            'tanggal_approval_teknisi' => 'nullable|date',
+            'tanggal_approval_staf' => 'nullable|date',
             'status_perbaikan' => 'required|string|max:255',
             'items' => 'required|array',
             'catatan_umum' => 'nullable|string',
@@ -60,6 +65,8 @@ class MotorChecklistController extends Controller
     public function show(MotorChecklist $checklist): Response
     {
         $checklist->load('motor');
+        // dd($checklist);
+
 
         return Inertia::render('Checklists/Show', [
             'checklist' => $checklist,
@@ -73,10 +80,12 @@ class MotorChecklistController extends Controller
     public function edit(MotorChecklist $checklist): Response
     {
         $checklist->load('motor');
+        $approvers = Approver::all();
 
         return Inertia::render('Checklists/Edit', [
             'checklist' => $checklist,
             'motor' => $checklist->motor,
+            'approvers' => $approvers,
         ]);
     }
 
@@ -97,6 +106,8 @@ class MotorChecklistController extends Controller
             'rpm_spek' => 'nullable|string|max:255',
             'nama_teknisi' => 'nullable|string|max:255',
             'nama_staf' => 'nullable|string|max:255',
+            'tanggal_approval_teknisi' => 'nullable|date',
+            'tanggal_approval_staf' => 'nullable|date',
             'status_perbaikan' => 'required|string|max:255',
             'items' => 'required|array',
             'catatan_umum' => 'nullable|string',

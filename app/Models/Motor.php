@@ -24,6 +24,7 @@ class Motor extends Model
         'rpm',
         'area',
         'keterangan',
+        'status',
     ];
 
     public function checklists(): HasMany

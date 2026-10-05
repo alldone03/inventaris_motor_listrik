@@ -31,6 +31,7 @@ export default function MotorsCreate() {
         rpm: '',
         area: '',
         keterangan: '',
+        status: 'Di Gudang',
     });
 
     const handleSubmit = (e) => {
@@ -103,36 +104,39 @@ export default function MotorsCreate() {
                                 1. Identifikasi Pokok Motor
                             </h4>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                {/* Item */}
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                                        Item <span className="text-rose-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={data.item}
-                                        onChange={(e) => setData('item', e.target.value)}
-                                        placeholder="Contoh: 2213-JA"
-                                        required
-                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
-                                    />
-                                    {errors.item && <p className="text-xs text-rose-500 mt-1">{errors.item}</p>}
-                                </div>
-
                                 {/* Label Ke */}
                                 <div>
                                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                                        Label Ke
+                                        Label Ke <span className="text-rose-500">*</span>
+
                                     </label>
                                     <input
                                         type="text"
                                         value={data.label_ke}
                                         onChange={(e) => setData('label_ke', e.target.value)}
                                         placeholder="Contoh: 61"
+                                        required
                                         className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
                                     />
                                     {errors.label_ke && <p className="text-xs text-rose-500 mt-1">{errors.label_ke}</p>}
                                 </div>
+                                {/* Item */}
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                                        Item
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.item}
+                                        onChange={(e) => setData('item', e.target.value)}
+                                        placeholder="Contoh: 2213-JA"
+
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
+                                    />
+                                    {errors.item && <p className="text-xs text-rose-500 mt-1">{errors.item}</p>}
+                                </div>
+
+
 
                                 {/* Alamat Motor */}
                                 <div>
@@ -147,6 +151,22 @@ export default function MotorsCreate() {
                                         className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
                                     />
                                     {errors.alamat_motor && <p className="text-xs text-rose-500 mt-1">{errors.alamat_motor}</p>}
+                                </div>
+
+                                {/* Status */}
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                                        Status
+                                    </label>
+                                    <select
+                                        value={data.status}
+                                        onChange={(e) => setData('status', e.target.value)}
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
+                                    >
+                                        <option value="Di Gudang">Di Gudang</option>
+                                        <option value="Keluar Gudang">Keluar Gudang</option>
+                                    </select>
+                                    {errors.status && <p className="text-xs text-rose-500 mt-1">{errors.status}</p>}
                                 </div>
                             </div>
                         </div>

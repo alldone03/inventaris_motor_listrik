@@ -28,6 +28,7 @@ export default function MotorsEdit({ motor }) {
         rpm: motor.rpm || '',
         area: motor.area || '',
         keterangan: motor.keterangan || '',
+        status: motor.status || 'Di Gudang',
     });
 
     const handleSubmit = (e) => {
@@ -134,6 +135,21 @@ export default function MotorsEdit({ motor }) {
                                         onChange={(e) => setData('alamat_motor', e.target.value)}
                                         className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
                                     />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                                        Status
+                                    </label>
+                                    <select
+                                        value={data.status}
+                                        onChange={(e) => setData('status', e.target.value)}
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
+                                    >
+                                        <option value="Di Gudang">Di Gudang</option>
+                                        <option value="Keluar Gudang">Keluar Gudang</option>
+                                    </select>
+                                    {errors.status && <p className="text-xs text-rose-500 mt-1">{errors.status}</p>}
                                 </div>
                             </div>
                         </div>

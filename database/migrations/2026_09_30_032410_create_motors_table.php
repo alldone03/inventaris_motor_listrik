@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('motors', function (Blueprint $table) {
             $table->id();
-            $table->string('item')->unique();
+            $table->string('item')->nullable();
             $table->string('label_ke')->unique();
             $table->string('alamat_motor')->nullable();
             $table->string('hp_kw')->nullable();
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('rpm')->nullable();
             $table->string('area')->nullable();
             $table->text('keterangan')->nullable();
+            $table->string('status')->default('Di Gudang');
             $table->timestamps();
         });
     }

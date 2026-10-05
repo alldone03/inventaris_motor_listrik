@@ -136,13 +136,14 @@ export default function Dashboard({ stats, recentChecklists, recentMotors }) {
                             <span className="text-3xl font-black text-slate-900">{stats.totalMotors}</span>
                             <span className="text-xs text-slate-500 ml-2">unit terdaftar</span>
                         </div>
-                        <Link
-                            href={route('motors.index')}
-                            className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-700"
-                        >
-                            <span>Lihat semua motor</span>
-                            <ChevronRight className="h-3.5 w-3.5" />
-                        </Link>
+                        <div className="mt-3 flex gap-2">
+                            <div className="px-2 py-1 bg-emerald-100 text-emerald-800 text-xs rounded font-semibold">
+                                {stats.motorDiGudang} Di Gudang
+                            </div>
+                            <div className="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded font-semibold">
+                                {stats.motorKeluar} Keluar
+                            </div>
+                        </div>
                     </div>
 
                     {/* Total Checklists */}
@@ -220,11 +221,11 @@ export default function Dashboard({ stats, recentChecklists, recentMotors }) {
                                     >
                                         <div className="flex items-center gap-3">
                                             <div className="h-10 w-10 rounded-xl bg-slate-900 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
-                                                {m.item.slice(0, 4)}
+                                                {m.item ? m.item.slice(0, 4) : 'MTR'}
                                             </div>
                                             <div>
                                                 <div className="font-black text-slate-900 text-sm group-hover:text-emerald-700 flex items-center gap-2">
-                                                    {m.item}
+                                                    {m.item || 'Tanpa Kode Item'}
                                                     {m.label_ke && (
                                                         <span className="text-[10px] font-semibold px-2 py-0.5 bg-slate-200 text-slate-700 rounded">
                                                             Label {m.label_ke}

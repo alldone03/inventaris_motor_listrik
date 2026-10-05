@@ -23,6 +23,8 @@ class MotorChecklist extends Model
         'rpm_spek',
         'nama_teknisi',
         'nama_staf',
+        'tanggal_approval_teknisi',
+        'tanggal_approval_staf',
         'status_perbaikan',
         'items',
         'catatan_umum',

@@ -13,6 +13,8 @@ class DashboardController extends Controller
     public function index(): Response
     {
         $totalMotors = Motor::count();
+        $motorDiGudang = Motor::where('status', 'Di Gudang')->count();
+        $motorKeluar = Motor::where('status', 'Keluar Gudang')->count();
         $totalChecklists = MotorChecklist::count();
         $selesaiChecklists = MotorChecklist::where('status_perbaikan', 'Selesai')->count();
         $prosesChecklists = MotorChecklist::where('status_perbaikan', '!=', 'Selesai')->count();
@@ -30,6 +32,8 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             'stats' => [
                 'totalMotors' => $totalMotors,
+                'motorDiGudang' => $motorDiGudang,
+                'motorKeluar' => $motorKeluar,
                 'totalChecklists' => $totalChecklists,
                 'selesaiChecklists' => $selesaiChecklists,
                 'prosesChecklists' => $prosesChecklists,

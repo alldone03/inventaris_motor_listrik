@@ -17,6 +17,12 @@ class MotorController extends Controller
     public function index(Request $request): Response
     {
         $search = $request->input('search');
+        $sortField = $request->input('sort_field', 'created_at');
+        $sortDirection = $request->input('sort_direction', 'desc');
+
+        $allowedSortFields = ['item', 'label_ke', 'alamat_motor', 'hp_kw', 'voltage', 'ampere', 'frame', 'ip_rating', 'frequency', 'manufacture', 'status', 'created_at'];
+        $sortField = in_array($sortField, $allowedSortFields) ? $sortField : 'created_at';
+        $sortDirection = in_array(strtolower($sortDirection), ['asc', 'desc']) ? strtolower($sortDirection) : 'desc';
 
         $motors = Motor::query()
             ->withCount('checklists')
@@ -34,10 +40,11 @@ class MotorController extends Controller
                         ->orWhere('frequency', 'like', "%{$search}%")
                         ->orWhere('ip_rating', 'like', "%{$search}%")
                         ->orWhere('frame', 'like', "%{$search}%")
+                        ->orWhere('status', 'like', "%{$search}%")
                         ->orWhere('keterangan', 'like', "%{$search}%");
                 });
             })
-            ->latest()
+            ->orderBy($sortField, $sortDirection)
             ->paginate(10)
             ->withQueryString();
 
@@ -45,6 +52,8 @@ class MotorController extends Controller
             'motors' => $motors,
             'filters' => [
                 'search' => $search,
+                'sort_field' => $sortField,
+                'sort_direction' => $sortDirection,
             ],
         ]);
     }
@@ -76,6 +85,7 @@ class MotorController extends Controller
             'rpm' => 'nullable|string|max:255',
             'area' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
+            'status' => 'nullable|string|in:Di Gudang,Keluar Gudang',
         ], [
             'label_ke.unique' => 'Label Ke motor ini sudah terdaftar. Harap gunakan kode item yang unik.',
             'label_ke.required' => 'Label Ke motor wajib diisi.',
@@ -130,6 +140,7 @@ class MotorController extends Controller
             'rpm' => 'nullable|string|max:255',
             'area' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
+            'status' => 'nullable|string|in:Di Gudang,Keluar Gudang',
         ], [
             'item.unique' => 'Kode Item motor ini sudah terdaftar pada data motor lain.',
             'item.required' => 'Kode Item motor wajib diisi.',

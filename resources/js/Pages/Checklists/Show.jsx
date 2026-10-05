@@ -325,7 +325,7 @@ export default function ChecklistsShow({ checklist, motor }) {
                                                 (Tanda Tangan)
                                             </div>
                                             <span className="font-extrabold text-slate-950 uppercase truncate max-w-[120px]">
-                                                {checklist.nama_teknisi || '( ....................... )'}
+                                                {checklist.nama_teknisi ? checklist.nama_teknisi.split(' - ')[0] : '( ....................... )'}
                                             </span>
                                             <span className="text-[7.5px] text-slate-500">
                                                 Tgl: {checklist.tanggal_selesai || '.... / .... / 2026'}
@@ -339,7 +339,7 @@ export default function ChecklistsShow({ checklist, motor }) {
                                                 (Tanda Tangan)
                                             </div>
                                             <span className="font-extrabold text-slate-950 uppercase truncate max-w-[120px]">
-                                                {checklist.nama_staf || '( ....................... )'}
+                                                {checklist.nama_staf ? checklist.nama_staf.split(' - ')[0] : '( ....................... )'}
                                             </span>
                                             <span className="text-[7.5px] text-slate-500">
                                                 Tgl: {checklist.tanggal_selesai || '.... / .... / 2026'}

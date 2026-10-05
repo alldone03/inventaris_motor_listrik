@@ -54,7 +54,13 @@ export default function AuthenticatedLayout({ header, children }) {
             icon: Zap,
             active: route().current('motors.*') || route().current('checklists.*'),
         },
-    ];
+        user.role === 'admin' && {
+            name: 'Persetujuan & Pengesahan',
+            href: route('approvers.index'),
+            icon: User,
+            active: route().current('approvers.*'),
+        },
+    ].filter(Boolean);
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased">

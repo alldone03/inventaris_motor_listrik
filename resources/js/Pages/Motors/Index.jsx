@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import OcrScannerModal from '@/Components/OcrScannerModal';
@@ -19,7 +19,10 @@ import {
     CheckCircle2,
     Info,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    ChevronUp,
+    ChevronDown,
+    ArrowUpDown
 } from 'lucide-react';
 
 export default function MotorsIndex({ motors, filters }) {
@@ -27,6 +30,41 @@ export default function MotorsIndex({ motors, filters }) {
     const [isOcrOpen, setIsOcrOpen] = useState(false);
     const { auth, flash } = usePage().props;
     const user = auth.user;
+    const isFirstRender = useRef(true);
+
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
+        const debounceId = setTimeout(() => {
+            router.get(route('motors.index'), { search }, { preserveState: true, replace: true });
+        }, 1000);
+
+        return () => clearTimeout(debounceId);
+    }, [search]);
+
+    const handleSort = (field) => {
+        let direction = 'asc';
+        if (filters.sort_field === field && filters.sort_direction === 'asc') {
+            direction = 'desc';
+        }
+        router.get(route('motors.index'), { 
+            search, 
+            sort_field: field, 
+            sort_direction: direction 
+        }, { preserveState: true, replace: true });
+    };
+
+    const SortIcon = ({ field }) => {
+        if (filters.sort_field !== field) {
+            return <ArrowUpDown className="h-3 w-3 opacity-0 group-hover:opacity-40 transition-opacity ml-1" />;
+        }
+        return filters.sort_direction === 'asc' 
+            ? <ChevronUp className="h-3 w-3 text-emerald-500 ml-1" /> 
+            : <ChevronDown className="h-3 w-3 text-emerald-500 ml-1" />;
+    };
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -146,12 +184,30 @@ export default function MotorsIndex({ motors, filters }) {
                         <table className="w-full text-left border-collapse text-xs">
                             <thead>
                                 <tr className="bg-slate-900 text-slate-200 border-b border-slate-800 text-[11px] font-bold uppercase tracking-wider">
-                                    <th className="py-3.5 px-4">Label & Item</th>
-                                    <th className="py-3.5 px-3">Alamat</th>
-                                    <th className="py-3.5 px-3">Daya (HP/kW)</th>
-                                    <th className="py-3.5 px-3">Voltage & Ampere</th>
-                                    <th className="py-3.5 px-3">Frame & IP</th>
-                                    <th className="py-3.5 px-3">Freq & MFG</th>
+                                    <th className="py-3.5 px-4 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('label_ke')}>
+                                        <div className="flex items-center">Label Ke <SortIcon field="label_ke" /></div>
+                                    </th>
+                                    <th className="py-3.5 px-4 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('item')}>
+                                        <div className="flex items-center">Item <SortIcon field="item" /></div>
+                                    </th>
+                                    <th className="py-3.5 px-3 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('alamat_motor')}>
+                                        <div className="flex items-center">Alamat <SortIcon field="alamat_motor" /></div>
+                                    </th>
+                                    <th className="py-3.5 px-3 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('hp_kw')}>
+                                        <div className="flex items-center">Daya (HP/kW) <SortIcon field="hp_kw" /></div>
+                                    </th>
+                                    <th className="py-3.5 px-3 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('voltage')}>
+                                        <div className="flex items-center">Voltage & Ampere <SortIcon field="voltage" /></div>
+                                    </th>
+                                    <th className="py-3.5 px-3 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('frame')}>
+                                        <div className="flex items-center">Frame & IP <SortIcon field="frame" /></div>
+                                    </th>
+                                    <th className="py-3.5 px-3 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('manufacture')}>
+                                        <div className="flex items-center">Freq & MFG <SortIcon field="manufacture" /></div>
+                                    </th>
+                                    <th className="py-3.5 px-3 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('status')}>
+                                        <div className="flex items-center">Status <SortIcon field="status" /></div>
+                                    </th>
                                     <th className="py-3.5 px-4">Keterangan</th>
                                     <th className="py-3.5 px-3 text-center">Checklists</th>
                                     {user.role === "admin" && (<th className="py-3.5 px-4 text-center">Aksi</th>)}
@@ -163,19 +219,22 @@ export default function MotorsIndex({ motors, filters }) {
                                         key={motor.id}
                                         className="hover:bg-emerald-50/40 transition group"
                                     >
-                                        {/* Item & Label */}
+                                        {/* Label Ke */}
                                         <td className="py-3.5 px-4 whitespace-nowrap">
-                                            <div className="flex items-center gap-2">
-                                                {motor.label_ke && (
-                                                    <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold">
-                                                        Label: {motor.label_ke}
-                                                    </span>
-                                                )}
-                                                <div className="font-mono font-black text-slate-900 text-sm bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200 group-hover:border-emerald-300 group-hover:bg-emerald-50 text-emerald-950">
+                                            {motor.label_ke ? (
+                                                <span className="px-2.5 py-1 rounded bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold">
+                                                    {motor.label_ke}
+                                                </span>
+                                            ) : '-'}
+                                        </td>
+
+                                        {/* Item */}
+                                        <td className="py-3.5 px-4 whitespace-nowrap">
+                                            {motor.item ? (
+                                                <div className="inline-block font-mono font-black text-slate-900 text-sm bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200 group-hover:border-emerald-300 group-hover:bg-emerald-50 text-emerald-950">
                                                     {motor.item}
                                                 </div>
-
-                                            </div>
+                                            ) : '-'}
                                         </td>
 
                                         {/* Alamat Motor */}
@@ -213,6 +272,16 @@ export default function MotorsIndex({ motors, filters }) {
                                         <td className="py-3.5 px-3 whitespace-nowrap">
                                             <div className="font-bold text-slate-900">{motor.manufacture || '-'}</div>
                                             <div className="text-[10px] text-slate-500">{motor.frequency || '50 Hz'}</div>
+                                        </td>
+
+                                        {/* Status */}
+                                        <td className="py-3.5 px-3 whitespace-nowrap">
+                                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${motor.status === 'Keluar Gudang'
+                                                ? 'bg-amber-100 text-amber-800'
+                                                : 'bg-emerald-100 text-emerald-800'
+                                                }`}>
+                                                {motor.status || 'Di Gudang'}
+                                            </span>
                                         </td>
 
                                         {/* Keterangan */}
@@ -279,7 +348,7 @@ export default function MotorsIndex({ motors, filters }) {
 
                                 {motors.data.length === 0 && (
                                     <tr>
-                                        <td colSpan={9} className="py-12 text-center text-slate-400">
+                                        <td colSpan={10} className="py-12 text-center text-slate-400">
                                             <div className="flex flex-col items-center justify-center gap-2">
                                                 <Info className="h-8 w-8 text-slate-300" />
                                                 <span className="font-semibold text-slate-600">Tidak ada data motor yang cocok dengan kriteria pencarian.</span>

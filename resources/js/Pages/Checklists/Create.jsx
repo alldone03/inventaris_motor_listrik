@@ -18,7 +18,7 @@ import {
     HelpCircle
 } from 'lucide-react';
 
-export default function ChecklistsCreate({ motor, defaultTemplate, suggestedFormNo }) {
+export default function ChecklistsCreate({ motor, defaultTemplate, suggestedFormNo, approvers = [] }) {
     const { data, setData, post, processing, errors } = useForm({
         no_form: suggestedFormNo || '',
         tanggal_masuk: new Date().toISOString().split('T')[0],
@@ -31,6 +31,8 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
         rpm_spek: motor.rpm || '',
         nama_teknisi: '',
         nama_staf: '',
+        tanggal_approval_teknisi: new Date().toISOString().split('T')[0],
+        tanggal_approval_staf: new Date().toISOString().split('T')[0],
         status_perbaikan: 'Selesai',
         items: defaultTemplate || [],
         catatan_umum: '',
@@ -297,11 +299,23 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap Teknisi</label>
-                                <input
-                                    type="text"
+                                <select
                                     value={data.nama_teknisi}
                                     onChange={(e) => setData('nama_teknisi', e.target.value)}
-                                    placeholder="Nama teknisi pelaksana..."
+                                    className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-emerald-500"
+                                >
+                                    <option value="">-- Pilih Teknisi --</option>
+                                    {approvers.map(a => (
+                                        <option key={a.id} value={`${a.nama} - ${a.jabatan}`}>{a.nama} - {a.jabatan}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="mt-2">
+                                <label className="block text-xs font-bold text-slate-600 mb-1">Tanggal Disetujui</label>
+                                <input
+                                    type="date"
+                                    value={data.tanggal_approval_teknisi}
+                                    onChange={(e) => setData('tanggal_approval_teknisi', e.target.value)}
                                     className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-emerald-500"
                                 />
                             </div>
@@ -317,11 +331,23 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap Staf / Supervisor</label>
-                                <input
-                                    type="text"
+                                <select
                                     value={data.nama_staf}
                                     onChange={(e) => setData('nama_staf', e.target.value)}
-                                    placeholder="Nama staf verifikator..."
+                                    className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-emerald-500"
+                                >
+                                    <option value="">-- Pilih Staf/Supervisor --</option>
+                                    {approvers.map(a => (
+                                        <option key={a.id} value={`${a.nama} - ${a.jabatan}`}>{a.nama} - {a.jabatan}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="mt-2">
+                                <label className="block text-xs font-bold text-slate-600 mb-1">Tanggal Disetujui</label>
+                                <input
+                                    type="date"
+                                    value={data.tanggal_approval_staf}
+                                    onChange={(e) => setData('tanggal_approval_staf', e.target.value)}
                                     className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-emerald-500"
                                 />
                             </div>
