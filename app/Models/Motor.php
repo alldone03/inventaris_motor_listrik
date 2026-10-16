@@ -25,6 +25,7 @@ class Motor extends Model
         'area',
         'keterangan',
         'status',
+        'mounting',
     ];
 
     public function checklists(): HasMany

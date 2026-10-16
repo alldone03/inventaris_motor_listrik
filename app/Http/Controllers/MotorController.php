@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Motor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,14 +18,16 @@ class MotorController extends Controller
     public function index(Request $request): Response
     {
         $search = $request->input('search');
-        $sortField = $request->input('sort_field', 'created_at');
-        $sortDirection = $request->input('sort_direction', 'desc');
+        $sortField = $request->input('sort_field', 'label_ke');
+        $sortDirection = $request->input('sort_direction', 'asc');
 
-        $allowedSortFields = ['item', 'label_ke', 'alamat_motor', 'hp_kw', 'voltage', 'ampere', 'frame', 'ip_rating', 'frequency', 'manufacture', 'status', 'created_at'];
-        $sortField = in_array($sortField, $allowedSortFields) ? $sortField : 'created_at';
-        $sortDirection = in_array(strtolower($sortDirection), ['asc', 'desc']) ? strtolower($sortDirection) : 'desc';
+        $allowedSortFields = ['item', 'label_ke', 'alamat_motor', 'hp_kw', 'voltage', 'ampere', 'frame', 'ip_rating', 'frequency', 'manufacture', 'status', 'mounting', 'created_at'];
+        $sortField = in_array($sortField, $allowedSortFields) ? $sortField : 'label_ke';
+        $sortDirection = in_array(strtolower($sortDirection), ['asc', 'desc']) ? strtolower($sortDirection) : 'asc';
 
-        $motors = Motor::query()
+        $numericFields = ['label_ke', 'item', 'alamat_motor'];
+
+        $query = Motor::query()
             ->withCount('checklists')
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
@@ -41,10 +44,24 @@ class MotorController extends Controller
                         ->orWhere('ip_rating', 'like', "%{$search}%")
                         ->orWhere('frame', 'like', "%{$search}%")
                         ->orWhere('status', 'like', "%{$search}%")
-                        ->orWhere('keterangan', 'like', "%{$search}%");
+                        ->orWhere('keterangan', 'like', "%{$search}%")
+                        ->orWhere('mounting', 'like', "%{$search}%");
                 });
-            })
-            ->orderBy($sortField, $sortDirection)
+            });
+
+        if (in_array($sortField, $numericFields)) {
+            $driver = DB::connection()->getDriverName();
+            $castType = in_array($driver, ['sqlite', 'pgsql']) ? 'INTEGER' : 'SIGNED';
+
+            $query->orderByRaw("CASE WHEN {$sortField} IS NULL OR {$sortField} = '' THEN 1 ELSE 0 END ASC")
+                ->orderByRaw("CAST({$sortField} AS {$castType}) {$sortDirection}")
+                ->orderByRaw("LENGTH({$sortField}) {$sortDirection}")
+                ->orderBy($sortField, $sortDirection);
+        } else {
+            $query->orderBy($sortField, $sortDirection);
+        }
+
+        $motors = $query
             ->paginate(10)
             ->withQueryString();
 
@@ -63,7 +80,43 @@ class MotorController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Motors/Create');
+        $driver = DB::connection()->getDriverName();
+        $castType = in_array($driver, ['sqlite', 'pgsql']) ? 'INTEGER' : 'SIGNED';
+
+        // Cari motor dengan label_ke numerik tertinggi / data terakhir
+        $lastMotor = Motor::whereNotNull('label_ke')
+            ->where('label_ke', '!=', '')
+            ->orderByRaw("CAST(label_ke AS {$castType}) DESC")
+            ->orderByRaw("LENGTH(label_ke) DESC")
+            ->first();
+
+        if (!$lastMotor) {
+            $lastMotor = Motor::latest()->first();
+        }
+
+        $lastLabelKe = $lastMotor?->label_ke;
+
+        // Hitung saran nomor label berikutnya
+        $suggestedLabelKe = null;
+        if ($lastLabelKe !== null && trim($lastLabelKe) !== '') {
+            if (is_numeric($lastLabelKe)) {
+                $suggestedLabelKe = (string) ((int) $lastLabelKe + 1);
+            } elseif (preg_match('/^(.*?)(\d+)$/', $lastLabelKe, $matches)) {
+                $prefix = $matches[1];
+                $num = $matches[2];
+                $next = (int) $num + 1;
+                $suggestedLabelKe = $prefix . str_pad($next, strlen($num), '0', STR_PAD_LEFT);
+            } else {
+                $suggestedLabelKe = $lastLabelKe . '-1';
+            }
+        } else {
+            $suggestedLabelKe = '1';
+        }
+
+        return Inertia::render('Motors/Create', [
+            'lastLabelKe' => $lastLabelKe,
+            'suggestedLabelKe' => $suggestedLabelKe,
+        ]);
     }
 
     /**
@@ -86,6 +139,7 @@ class MotorController extends Controller
             'area' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
             'status' => 'nullable|string|in:Di Workshop,Keluar Workshop',
+            'mounting' => 'nullable|string|max:255',
         ], [
             'label_ke.unique' => 'Label Ke motor ini sudah terdaftar. Harap gunakan kode item yang unik.',
             'label_ke.required' => 'Label Ke motor wajib diisi.',
@@ -141,10 +195,12 @@ class MotorController extends Controller
             'area' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
             'status' => 'nullable|string|in:Di Workshop,Keluar Workshop',
+            'mounting' => 'nullable|string',
         ], [
             'item.unique' => 'Kode Item motor ini sudah terdaftar pada data motor lain.',
             'item.required' => 'Kode Item motor wajib diisi.',
         ]);
+        // dd($validated);
 
         $motor->update($validated);
 

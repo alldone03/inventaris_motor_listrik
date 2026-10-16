@@ -147,7 +147,10 @@ export default function MotorsShow({ motor }) {
                                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Frame</span>
                                 <span className="text-base font-bold text-slate-900">{motor.frame || '-'}</span>
                             </div>
-
+                            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60">
+                                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Mounting</span>
+                                <span className="text-base font-bold text-slate-900">{motor.mounting || '-'}</span>
+                            </div>
                             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60">
                                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">IP Rating</span>
                                 <span className="text-base font-bold text-slate-900">{motor.ip_rating || '-'}</span>

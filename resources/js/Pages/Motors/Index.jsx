@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import OcrScannerModal from '@/Components/OcrScannerModal';
+import MotorNameplateModal from '@/Components/MotorNameplateModal';
 import {
     Zap,
     Search,
@@ -22,12 +23,16 @@ import {
     ChevronRight,
     ChevronUp,
     ChevronDown,
-    ArrowUpDown
+    ArrowUpDown,
+    Printer,
+    Tag
 } from 'lucide-react';
 
 export default function MotorsIndex({ motors, filters }) {
     const [search, setSearch] = useState(filters.search || '');
     const [isOcrOpen, setIsOcrOpen] = useState(false);
+    const [selectedMotorForPrint, setSelectedMotorForPrint] = useState(null);
+    const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
     const { auth, flash } = usePage().props;
     const user = auth.user;
     const isFirstRender = useRef(true);
@@ -85,6 +90,11 @@ export default function MotorsIndex({ motors, filters }) {
         if (confirm(`Apakah Anda yakin ingin menghapus data motor "${itemCode}" dan seluruh form checklist terkait?`)) {
             router.delete(route('motors.destroy', id));
         }
+    };
+
+    const handleOpenPrintModal = (motor) => {
+        setSelectedMotorForPrint(motor);
+        setIsPrintModalOpen(true);
     };
 
     return (
@@ -196,6 +206,9 @@ export default function MotorsIndex({ motors, filters }) {
                                     <th className="py-3.5 px-3 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('hp_kw')}>
                                         <div className="flex items-center">Daya (HP/kW) <SortIcon field="hp_kw" /></div>
                                     </th>
+                                    <th className="py-3.5 px-3 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('mounting')}>
+                                        <div className="flex items-center">Mounting <SortIcon field="mounting" /></div>
+                                    </th>
                                     <th className="py-3.5 px-3 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('voltage')}>
                                         <div className="flex items-center">Voltage & Ampere <SortIcon field="voltage" /></div>
                                     </th>
@@ -254,6 +267,11 @@ export default function MotorsIndex({ motors, filters }) {
                                                     {motor.rpm}
                                                 </div>
                                             )}
+                                        </td>
+
+                                        {/* Mounting */}
+                                        <td className="py-3.5 px-3 whitespace-nowrap">
+                                            <div>{motor.mounting || '-'}</div>
                                         </td>
 
                                         {/* Voltage & Ampere */}
@@ -331,6 +349,16 @@ export default function MotorsIndex({ motors, filters }) {
                                                         <Edit className="h-4 w-4" />
                                                     </Link>
 
+                                                    {/* Print Nameplate */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleOpenPrintModal(motor)}
+                                                        className="p-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-600 hover:text-white transition"
+                                                        title="Cetak Name Plate Motor (Laser 8.5 x 5 cm)"
+                                                    >
+                                                        <Printer className="h-4 w-4" />
+                                                    </button>
+
                                                     {/* Delete Motor */}
                                                     <button
                                                         type="button"
@@ -398,6 +426,16 @@ export default function MotorsIndex({ motors, filters }) {
                 isOpen={isOcrOpen}
                 onClose={() => setIsOcrOpen(false)}
                 onSelectResult={handleOcrResult}
+            />
+
+            {/* Printable Laser Nameplate Modal (8.5 x 5 cm) */}
+            <MotorNameplateModal
+                isOpen={isPrintModalOpen}
+                onClose={() => {
+                    setIsPrintModalOpen(false);
+                    setSelectedMotorForPrint(null);
+                }}
+                motor={selectedMotorForPrint}
             />
         </AuthenticatedLayout>
     );

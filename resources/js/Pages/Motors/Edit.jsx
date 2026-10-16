@@ -29,6 +29,7 @@ export default function MotorsEdit({ motor }) {
         area: motor.area || '',
         keterangan: motor.keterangan || '',
         status: motor.status || 'Di Workshop',
+        mounting: motor.mounting || '',
     });
 
     const handleSubmit = (e) => {
@@ -151,7 +152,21 @@ export default function MotorsEdit({ motor }) {
                                     </select>
                                     {errors.status && <p className="text-xs text-rose-500 mt-1">{errors.status}</p>}
                                 </div>
-                            </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                                        Mounting
+                                    </label>
+                                    <select
+                                        value={data.mounting}
+                                        onChange={(e) => setData('mounting', e.target.value)}
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
+                                    >
+                                        <option value="Foot">Foot</option>
+                                        <option value="Flange">Flange</option>
+                                    </select>
+                                    {errors.mounting && <p className="text-xs text-rose-500 mt-1">{errors.mounting}</p>}
+                                </div>                            </div>
                         </div>
 
                         {/* Section 2 */}

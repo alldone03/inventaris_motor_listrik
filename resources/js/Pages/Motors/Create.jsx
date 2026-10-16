@@ -14,7 +14,7 @@ import {
     Info
 } from 'lucide-react';
 
-export default function MotorsCreate() {
+export default function MotorsCreate({ lastLabelKe, suggestedLabelKe }) {
     const [isOcrOpen, setIsOcrOpen] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -32,6 +32,7 @@ export default function MotorsCreate() {
         area: '',
         keterangan: '',
         status: 'Di Workshop',
+        mounting: 'Foot',
     });
 
     const handleSubmit = (e) => {
@@ -106,19 +107,55 @@ export default function MotorsCreate() {
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 {/* Label Ke */}
                                 <div>
-                                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                                        Label Ke <span className="text-rose-500">*</span>
-
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={data.label_ke}
-                                        onChange={(e) => setData('label_ke', e.target.value)}
-                                        placeholder="Contoh: 61"
-                                        required
-                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
-                                    />
+                                    <div className="flex items-center justify-between mb-1">
+                                        <label className="block text-xs font-bold text-slate-700">
+                                            Label Ke <span className="text-rose-500">*</span>
+                                        </label>
+                                        {lastLabelKe && (
+                                            <span className="text-[11px] text-slate-500 font-medium">
+                                                Terakhir:{' '}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setData('label_ke', lastLabelKe)}
+                                                    className="font-bold text-blue-700 font-mono bg-blue-50 hover:bg-blue-100 px-1.5 py-0.5 rounded border border-blue-200 transition cursor-pointer"
+                                                    title="Klik untuk mengisi nomor terakhir"
+                                                >
+                                                    {lastLabelKe}
+                                                </button>
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            list="label-ke-suggestions"
+                                            value={data.label_ke}
+                                            onChange={(e) => setData('label_ke', e.target.value)}
+                                            placeholder={suggestedLabelKe ? `Contoh: ${suggestedLabelKe}` : "Contoh: 61"}
+                                            required
+                                            className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
+                                        />
+                                        <datalist id="label-ke-suggestions">
+                                            {suggestedLabelKe && <option value={suggestedLabelKe}>Saran Nomor Berikutnya</option>}
+                                            {lastLabelKe && <option value={lastLabelKe}>Data Terakhir</option>}
+                                        </datalist>
+                                    </div>
                                     {errors.label_ke && <p className="text-xs text-rose-500 mt-1">{errors.label_ke}</p>}
+
+                                    {suggestedLabelKe && (
+                                        <div className="mt-1.5 flex items-center justify-between text-[11px]">
+                                            <span className="text-slate-500">Saran nomor baru:</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => setData('label_ke', suggestedLabelKe)}
+                                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold border border-emerald-200 transition cursor-pointer shadow-sm"
+                                                title={`Gunakan saran ${suggestedLabelKe}`}
+                                            >
+                                                <Sparkles className="h-3 w-3 text-emerald-600" />
+                                                <span>Gunakan #{suggestedLabelKe}</span>
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                                 {/* Item */}
                                 <div>
@@ -167,6 +204,21 @@ export default function MotorsCreate() {
                                         <option value="Keluar Workshop">Keluar Workshop</option>
                                     </select>
                                     {errors.status && <p className="text-xs text-rose-500 mt-1">{errors.status}</p>}
+                                </div>
+                                {/* Mounting */}
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                                        Mounting
+                                    </label>
+                                    <select
+                                        value={data.mounting}
+                                        onChange={(e) => setData('mounting', e.target.value)}
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
+                                    >
+                                        <option value="Foot" selected>Foot</option>
+                                        <option value="Flange">Flange</option>
+                                    </select>
+                                    {errors.mounting && <p className="text-xs text-rose-500 mt-1">{errors.mounting}</p>}
                                 </div>
                             </div>
                         </div>

@@ -82,10 +82,12 @@ export default function AuthenticatedLayout({ header, children }) {
                 >
                     {/* Brand Header */}
                     <div className="h-16 flex items-center justify-between px-4 border-b border-slate-800/80 bg-slate-950/50">
-                        <Link href={route('dashboard')} className="flex items-center gap-3 overflow-hidden">
-                            <div className="p-2 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white shadow-md shadow-emerald-500/20 shrink-0">
-                                <Wrench className="h-5 w-5" />
-                            </div>
+                        <Link href={route('dashboard')} className="flex items-center gap-3 overflow-hidden group">
+                            <img
+                                src="/logo_pkc_white.webp"
+                                alt="Logo Pupuk Kujang"
+                                className="h-11 w-auto shrink-0 object-contain drop-shadow"
+                            />
                             {(!isCollapsed || isMobileOpen) && (
                                 <div className="flex flex-col truncate">
                                     <span className="font-extrabold text-sm tracking-wider text-white uppercase font-sans">
