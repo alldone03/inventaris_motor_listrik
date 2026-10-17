@@ -16,6 +16,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Motor Nameplate Bulk Print
+    Route::get('/motors/print-nameplates', [MotorController::class, 'printNameplates'])->name('motors.print-nameplates');
+
     // Motor CRUD
     Route::resource('motors', MotorController::class);
 

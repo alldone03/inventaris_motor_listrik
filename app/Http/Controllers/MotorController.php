@@ -218,4 +218,41 @@ class MotorController extends Controller
         return redirect()->route('motors.index')
             ->with('success', 'Data Motor berhasil dihapus.');
     }
+
+    /**
+     * Display nameplates print selection and bulk printing page.
+     */
+    public function printNameplates(Request $request): Response
+    {
+        $search = $request->input('search');
+
+        $query = Motor::query()
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('item', 'like', "%{$search}%")
+                        ->orWhere('label_ke', 'like', "%{$search}%")
+                        ->orWhere('alamat_motor', 'like', "%{$search}%")
+                        ->orWhere('hp_kw', 'like', "%{$search}%")
+                        ->orWhere('voltage', 'like', "%{$search}%")
+                        ->orWhere('ampere', 'like', "%{$search}%")
+                        ->orWhere('mounting', 'like', "%{$search}%");
+                });
+            });
+
+        $driver = DB::connection()->getDriverName();
+        $castType = in_array($driver, ['sqlite', 'pgsql']) ? 'INTEGER' : 'SIGNED';
+
+        $motors = $query
+            ->orderByRaw("CASE WHEN label_ke IS NULL OR label_ke = '' THEN 1 ELSE 0 END ASC")
+            ->orderByRaw("CAST(label_ke AS {$castType}) ASC")
+            ->orderBy('label_ke', 'asc')
+            ->get();
+
+        return Inertia::render('Motors/PrintNameplates', [
+            'motors' => $motors,
+            'filters' => [
+                'search' => $search,
+            ],
+        ]);
+    }
 }

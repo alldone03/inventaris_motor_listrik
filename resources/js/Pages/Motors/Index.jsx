@@ -115,6 +115,14 @@ export default function MotorsIndex({ motors, filters }) {
 
                     {user.role === "admin" && (
                         <div className="flex items-center gap-2.5">
+                            <Link
+                                href={route('motors.print-nameplates')}
+                                className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold shadow-md shadow-slate-800/20 flex items-center gap-2 transition"
+                            >
+                                <Printer className="h-4 w-4 text-emerald-400" />
+                                <span>Cetak Nameplate</span>
+                            </Link>
+
                             <button
                                 type="button"
                                 onClick={() => setIsOcrOpen(true)}
@@ -130,6 +138,17 @@ export default function MotorsIndex({ motors, filters }) {
                             >
                                 <PlusCircle className="h-4 w-4" />
                                 <span>Tambah Motor Baru</span>
+                            </Link>
+                        </div>
+                    )}
+                    {user.role !== "admin" && (
+                        <div className="flex items-center gap-2.5">
+                            <Link
+                                href={route('motors.print-nameplates')}
+                                className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold shadow-md shadow-slate-800/20 flex items-center gap-2 transition"
+                            >
+                                <Printer className="h-4 w-4 text-emerald-400" />
+                                <span>Cetak Nameplate</span>
                             </Link>
                         </div>
                     )}

@@ -16,7 +16,8 @@ import {
     Settings,
     Search,
     ShieldCheck,
-    Wrench
+    Wrench,
+    Printer
 } from 'lucide-react';
 
 export default function AuthenticatedLayout({ header, children }) {
@@ -52,7 +53,13 @@ export default function AuthenticatedLayout({ header, children }) {
             name: 'Daftar Motor',
             href: route('motors.index'),
             icon: Zap,
-            active: route().current('motors.*') || route().current('checklists.*'),
+            active: (route().current('motors.*') || route().current('checklists.*')) && !route().current('motors.print-nameplates'),
+        },
+        {
+            name: 'Cetak Nameplate',
+            href: route('motors.print-nameplates'),
+            icon: Printer,
+            active: route().current('motors.print-nameplates'),
         },
         user.role === 'admin' && {
             name: 'Persetujuan & Pengesahan',
@@ -63,19 +70,19 @@ export default function AuthenticatedLayout({ header, children }) {
     ].filter(Boolean);
 
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased">
+        <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased print:min-h-0 print:bg-white print:block">
             {/* Mobile Sidebar Overlay */}
             {isMobileOpen && (
                 <div
-                    className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm lg:hidden transition-opacity"
+                    className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm lg:hidden transition-opacity print:hidden"
                     onClick={() => setIsMobileOpen(false)}
                 />
             )}
 
-            <div className="flex flex-1 min-h-screen">
+            <div className="flex flex-1 min-h-screen print:min-h-0 print:block">
                 {/* SIDEBAR */}
                 <aside
-                    className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-slate-900 text-slate-200 border-r border-slate-800 transition-all duration-300 ease-in-out
+                    className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-slate-900 text-slate-200 border-r border-slate-800 transition-all duration-300 ease-in-out print:hidden
                         ${isMobileOpen ? 'translate-x-0 w-72' : '-translate-x-full lg:translate-x-0'}
                         ${isCollapsed ? 'lg:w-20' : 'lg:w-64'}
                     `}
@@ -192,11 +199,11 @@ export default function AuthenticatedLayout({ header, children }) {
                 {/* MAIN CONTENT WRAPPER */}
                 <div
                     className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out
-                        ${isCollapsed ? 'lg:pl-20' : 'lg:pl-64'}
+                        ${isCollapsed ? 'lg:pl-20' : 'lg:pl-64'} print:pl-0 print:block print:w-full
                     `}
                 >
                     {/* Top Navbar */}
-                    <header className="sticky top-0 z-30 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+                    <header className="sticky top-0 z-30 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between print:hidden">
                         <div className="flex items-center gap-3">
                             {/* Mobile Hamburger */}
                             <button
@@ -279,14 +286,14 @@ export default function AuthenticatedLayout({ header, children }) {
 
                     {/* Page Header (if any) */}
                     {header && (
-                        <div className="bg-white border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 py-5">
+                        <div className="bg-white border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 py-5 print:hidden">
                             <div className="max-w-7xl mx-auto">{header}</div>
                         </div>
                     )}
 
                     {/* Flash messages */}
                     {flash?.success && (
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 print:hidden">
                             <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center justify-between shadow-sm">
                                 <div className="flex items-center gap-2">
                                     <FileCheck className="h-5 w-5 text-emerald-600 shrink-0" />
@@ -297,12 +304,12 @@ export default function AuthenticatedLayout({ header, children }) {
                     )}
 
                     {/* Main Children */}
-                    <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+                    <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto print:p-0 print:m-0 print:max-w-none print:w-full print:block">
                         {children}
                     </main>
 
                     {/* Footer */}
-                    <footer className="mt-auto py-4 px-6 border-t border-slate-200/70 text-center text-xs text-slate-400">
+                    <footer className="mt-auto py-4 px-6 border-t border-slate-200/70 text-center text-xs text-slate-400 print:hidden">
                         &copy; {new Date().getFullYear()} PT PUPUK KUJANG — Bengkel Listrik & Inventaris Motor Listrik
                     </footer>
                 </div>

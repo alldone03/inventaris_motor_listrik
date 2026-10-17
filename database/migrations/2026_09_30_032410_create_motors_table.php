@@ -24,7 +24,6 @@ return new class extends Migration
             $table->string('frequency')->nullable();
             $table->string('manufacture')->nullable();
             $table->string('rpm')->nullable();
-            $table->string('mounting')->nullable();
             $table->string('area')->nullable();
             $table->text('keterangan')->nullable();
             $table->string('status')->default('Di Workshop');
