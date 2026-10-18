@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePoll } from '@inertiajs/react';
 import OcrScannerModal from '@/Components/OcrScannerModal';
 import {
     Zap,
@@ -22,6 +22,11 @@ import {
 export default function Dashboard({ stats, recentChecklists, recentMotors }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [isOcrOpen, setIsOcrOpen] = useState(false);
+
+    // Auto update realtime data stats di dashboard setiap 2 detik
+    usePoll(2000, {
+        only: ['stats'],
+    });
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();
@@ -286,8 +291,8 @@ export default function Dashboard({ stats, recentChecklists, recentMotors }) {
                                                     {c.no_form || 'Form Checklist'}
                                                 </span>
                                                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${c.status_perbaikan === 'Selesai'
-                                                        ? 'bg-emerald-100 text-emerald-800'
-                                                        : 'bg-amber-100 text-amber-800'
+                                                    ? 'bg-emerald-100 text-emerald-800'
+                                                    : 'bg-amber-100 text-amber-800'
                                                     }`}>
                                                     {c.status_perbaikan}
                                                 </span>

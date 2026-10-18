@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { 
-    FileCheck, 
-    ArrowLeft, 
-    Save, 
-    Check, 
-    X, 
-    Plus, 
-    Trash2, 
-    Layers, 
-    Calendar, 
-    User, 
+import {
+    FileCheck,
+    ArrowLeft,
+    Save,
+    Check,
+    X,
+    Plus,
+    Trash2,
+    Layers,
+    Calendar,
+    User,
     Wrench,
     CheckCircle2,
     XCircle,
@@ -225,11 +225,10 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                                                     <button
                                                         type="button"
                                                         onClick={() => toggleCheck(sIdx, tIdx)}
-                                                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs transition ${
-                                                            task.checked
+                                                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs transition ${task.checked
                                                                 ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-xs'
                                                                 : 'bg-rose-100 text-rose-800 border border-rose-300'
-                                                        }`}
+                                                            }`}
                                                         title="Klik untuk ubah Centang / Silang"
                                                     >
                                                         {task.checked ? (
@@ -262,11 +261,10 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                                                     <button
                                                         type="button"
                                                         onClick={() => toggleStatus(sIdx, tIdx, task.status)}
-                                                        className={`px-3 py-1.5 rounded-xl font-black text-xs transition ${
-                                                            task.status === 'OK'
+                                                        className={`px-3 py-1.5 rounded-xl font-black text-xs transition ${task.status === 'OK'
                                                                 ? 'bg-emerald-600 text-white shadow-sm'
                                                                 : 'bg-rose-600 text-white shadow-sm'
-                                                        }`}
+                                                            }`}
                                                         title="Klik untuk ubah status OK / NO"
                                                     >
                                                         {task.status || 'OK'}
