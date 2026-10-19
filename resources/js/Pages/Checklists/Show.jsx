@@ -129,6 +129,7 @@ export default function ChecklistsShow({ checklist, motor }) {
                                 {/* Logo & Perusahaan */}
                                 <td className="w-[28%] p-1.5 border-r border-slate-900 align-middle">
                                     <div className="flex items-center gap-2">
+                                        <img src="/logo.png" alt="" />
                                         <PupukKujangLogo showText={false} className="h-9 w-auto shrink-0" />
                                         <div className="leading-tight">
                                             <div className="text-[10px] font-black tracking-wider text-slate-950 uppercase">
