@@ -233,7 +233,7 @@ export default function MotorsCreate({ lastLabelKe, suggestedLabelKe }) {
                                 {/* HP/kW */}
                                 <div>
                                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                                        HP / kW
+                                        Daya
                                     </label>
                                     <input
                                         type="text"
