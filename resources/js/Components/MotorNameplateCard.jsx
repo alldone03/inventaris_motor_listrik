@@ -18,29 +18,96 @@ export default function MotorNameplateCard({ motor, className = '', id, style = 
         >
             <div className='flex flex-col gap-2'>
                 <div className='flex gap-4 items-center justify-around border-b border-black'>
-                    <div className='text-5xl font-bold '>5</div>
+                    <div className='text-4xl font-bold '>{motor.label_ke}  </div>
                     <div className='flex flex-col justify-center items-center '>
                         <div className='text-sm font-bold'>PT PUPUK KUJANG</div>
                         <div className='text-sm font-bold'>Bengkel Listrik</div>
                     </div>
-                    <div className='text-5xl font-bold '>5</div>
-                </div>
-                <div className='flex gap-4 items-center justify-around border-b border-black'>
-                    <div>item: {motor.item}</div>
-                    <div>Daya: {motor.daya}</div>
-                    <div>Mounting: {motor.mounting}</div>
-                </div>
-                <div className='flex gap-4 items-center justify-around border-b border-black'>
-                    <div>alamat: {motor.alamat}</div>
-                    <div>volt: </div>
-                    <div>frame: </div>
-                </div>
-                <div className='flex gap-4 items-center justify-around border-b border-black'>
-                    <div>status: </div>
-                    <div>ampere: </div>
-                    <div>RPM: </div>
+
                 </div>
 
+
+                <table className='w-full text-sm  '>
+                    <tr className=''>
+                        <td className=''>
+                            <div className='text-[12px]'>
+                                Item:
+                            </div>
+                            <div className='text-[18px] font-bold'>
+                                {motor.item}
+                            </div>
+
+                        </td>
+                        <td className=''>
+                            <div className='text-[12px]'>
+                                Daya:
+                            </div>
+                            <div className='text-[18px] font-bold'>
+                                {motor.hp_kw}
+                            </div>
+                        </td>
+                        <td className=''  >
+                            <div className='text-[12px]'>
+                                Mounting:
+                            </div>
+                            <div className='text-[18px] font-bold'>
+                                {motor.mounting}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr className=''>
+                        <td className=''>
+                            <div className='text-[12px]'>
+                                Alamat:
+                            </div>
+                            <div className='text-[18px] font-bold'>
+                                {motor.alamat_motor}
+                            </div>
+                        </td>
+                        <td className=''>
+                            <div className='text-[12px]'>
+                                Volt:
+                            </div>
+                            <div className='text-[18px] font-bold'>
+                                {motor.voltage}
+                            </div>
+                        </td>
+                        <td className=''>
+                            <div className='text-[12px]'>
+                                frame:
+                            </div>
+                            <div className='text-[18px] font-bold'>
+                                {motor.frame}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr className=''>
+                        <td className=''>
+                            <div className='text-[12px]'>
+                                Status:
+                            </div>
+                            <div className='text-[12px] font-bold'>
+                                {motor.status}
+                            </div>
+                        </td>
+                        <td className=''>
+                            <div className='text-[12px]'>
+                                Ampere:
+                            </div>
+                            <div className='text-[18px] font-bold'>
+                                {motor.ampere}
+                            </div>
+                        </td>
+                        <td className=''>
+                            <div className='text-[12px]'>
+                                RPM:
+                            </div>
+                            <div className='text-[18px] font-bold'>
+                                {motor.rpm}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
 
             </div>
 
