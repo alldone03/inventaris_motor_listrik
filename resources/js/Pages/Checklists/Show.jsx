@@ -10,6 +10,7 @@ import {
     X,
     FileText
 } from 'lucide-react';
+import ApplicationLogo from '@/Components/ApplicationLogo';
 
 export default function ChecklistsShow({ checklist, motor }) {
     const { auth, flash } = usePage().props;
@@ -75,7 +76,7 @@ export default function ChecklistsShow({ checklist, motor }) {
             <style>{`
                 @page {
                     size: A4 portrait;
-                    margin: 5mm 6mm;
+                    margin: 1.5cm 6mm;
                 }
                 @media print {
                     html, body {
@@ -129,8 +130,9 @@ export default function ChecklistsShow({ checklist, motor }) {
                                 {/* Logo & Perusahaan */}
                                 <td className="w-[28%] p-1.5 border-r border-slate-900 align-middle">
                                     <div className="flex items-center gap-2">
-                                        <img src="/logo.png" alt="" />
-                                        <PupukKujangLogo showText={false} className="h-9 w-auto shrink-0" />
+
+                                        <ApplicationLogo className="h-12 w-auto invert" />
+
                                         <div className="leading-tight">
                                             <div className="text-[10px] font-black tracking-wider text-slate-950 uppercase">
                                                 PT PUPUK KUJANG
@@ -235,7 +237,7 @@ export default function ChecklistsShow({ checklist, motor }) {
                             <tr className="bg-slate-800 text-white font-extrabold uppercase text-[8.5px] border-b border-slate-900">
                                 <th className="py-1 px-1 border-r border-slate-600 w-7 text-center">NO</th>
                                 <th className="py-1 px-2 border-r border-slate-600 text-left">II. TAHAPAN PEKERJAAN & INSPEKSI</th>
-                                <th className="py-1 px-1 border-r border-slate-600 w-11 text-center">CEK</th>
+                                <th className="py-1 px-2 border-r border-slate-600 w-16 text-center">CEK</th>
                                 <th className="py-1 px-2 border-r border-slate-600 text-left w-[42%]">HASIL PENGUKURAN / KETERANGAN</th>
                                 <th className="py-1 px-1 w-11 text-center">STATUS</th>
                             </tr>
@@ -272,9 +274,9 @@ export default function ChecklistsShow({ checklist, motor }) {
                                             {/* Checkbox ✓ / ✗ */}
                                             <td className="py-[2px] px-1 border-r border-slate-300 text-center font-bold font-mono">
                                                 {task.checked ? (
-                                                    <span className="text-emerald-700 font-black">[ ✓ ]</span>
+                                                    <span className="text-emerald-700 font-black">✓</span>
                                                 ) : (
-                                                    <span className="text-rose-600 font-black">[ ✗ ]</span>
+                                                    <span className="text-rose-600 font-black">✗</span>
                                                 )}
                                             </td>
 
