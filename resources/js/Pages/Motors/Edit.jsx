@@ -102,26 +102,26 @@ export default function MotorsEdit({ motor }) {
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
                                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                                        Item <span className="text-rose-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={data.item}
-                                        onChange={(e) => setData('item', e.target.value)}
-                                        required
-                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
-                                    />
-                                    {errors.item && <p className="text-xs text-rose-500 mt-1">{errors.item}</p>}
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                                        Label Ke
+                                        Label ke <span className="text-rose-500">*</span>
                                     </label>
                                     <input
                                         type="text"
                                         value={data.label_ke}
                                         onChange={(e) => setData('label_ke', e.target.value)}
+                                        required
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
+                                    />
+                                    {errors.label_ke && <p className="text-xs text-rose-500 mt-1">{errors.label_ke}</p>}
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                                        Item
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.item}
+                                        onChange={(e) => setData('item', e.target.value)}
                                         className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
                                     />
                                 </div>
