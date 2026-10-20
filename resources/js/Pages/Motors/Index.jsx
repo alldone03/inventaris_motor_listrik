@@ -223,7 +223,7 @@ export default function MotorsIndex({ motors, filters }) {
                                         <div className="flex items-center">Alamat <SortIcon field="alamat_motor" /></div>
                                     </th>
                                     <th className="py-3.5 px-3 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('hp_kw')}>
-                                        <div className="flex items-center">Daya (HP/kW) <SortIcon field="hp_kw" /></div>
+                                        <div className="flex items-center">Daya (HP/kW) & RPM <SortIcon field="hp_kw" /></div>
                                     </th>
                                     <th className="py-3.5 px-3 cursor-pointer hover:bg-slate-800 transition group" onClick={() => handleSort('mounting')}>
                                         <div className="flex items-center">Mounting <SortIcon field="mounting" /></div>
@@ -283,7 +283,7 @@ export default function MotorsIndex({ motors, filters }) {
                                             </span>
                                             {motor.rpm && (
                                                 <div className="text-[10px] text-slate-400 font-normal">
-                                                    {motor.rpm}
+                                                   RPM : {motor.rpm}
                                                 </div>
                                             )}
                                         </td>
