@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApproverController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardFrontController;
 use App\Http\Controllers\MotorChecklistController;
 use App\Http\Controllers\MotorController;
 use App\Http\Controllers\ProfileController;
@@ -15,6 +16,7 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard_front', [DashboardFrontController::class, 'index'])->name('dashboard_front');
 
     // Motor Nameplate Bulk Print
     Route::get('/motors/print-nameplates', [MotorController::class, 'printNameplates'])->name('motors.print-nameplates');
