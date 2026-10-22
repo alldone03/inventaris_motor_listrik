@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AuthenticatedLayout from '@/Pages/Listrik/ListrikLayout';
 import { Head, Link, router, usePoll, usePage } from '@inertiajs/react';
 import OcrScannerModal from '@/Components/OcrScannerModal';
 import {
@@ -18,8 +18,9 @@ import {
     Eye,
     ChevronRight
 } from 'lucide-react';
+import ListrikLayout from '@/Pages/Listrik/ListrikLayout';
 
-export default function Dashboard({ stats, recentChecklists, recentMotors }) {
+export default function ListrikDashboard({ stats, recentChecklists, recentMotors }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [isOcrOpen, setIsOcrOpen] = useState(false);
     const { auth } = usePage().props;
@@ -42,7 +43,7 @@ export default function Dashboard({ stats, recentChecklists, recentMotors }) {
     };
 
     return (
-        <AuthenticatedLayout
+        <ListrikLayout
             header={
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
@@ -73,8 +74,8 @@ export default function Dashboard({ stats, recentChecklists, recentMotors }) {
                                 className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center gap-2 transition"
                             >
                                 <PlusCircle className="h-4 w-4" />
-                            <span>Tambah Motor Baru</span>
-                        </Link>
+                                <span>Tambah Motor Baru</span>
+                            </Link>
                         )}
                     </div>
                 </div>
@@ -337,6 +338,6 @@ export default function Dashboard({ stats, recentChecklists, recentMotors }) {
                 onClose={() => setIsOcrOpen(false)}
                 onSelectResult={handleOcrResult}
             />
-        </AuthenticatedLayout>
+        </ListrikLayout>
     );
 }

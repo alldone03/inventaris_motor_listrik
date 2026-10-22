@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AuthenticatedLayout from '@/Pages/Listrik/ListrikLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import OcrScannerModal from '@/Components/OcrScannerModal';
 import {

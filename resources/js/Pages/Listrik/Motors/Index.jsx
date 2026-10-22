@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AuthenticatedLayout from '@/Pages/Listrik/ListrikLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import OcrScannerModal from '@/Components/OcrScannerModal';
 import MotorNameplateModal from '@/Components/MotorNameplateModal';
@@ -283,7 +283,7 @@ export default function MotorsIndex({ motors, filters }) {
                                             </span>
                                             {motor.rpm && (
                                                 <div className="text-[10px] text-slate-400 font-normal">
-                                                   RPM : {motor.rpm}
+                                                    RPM : {motor.rpm}
                                                 </div>
                                             )}
                                         </td>

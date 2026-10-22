@@ -21,7 +21,7 @@ class MotorChecklistController extends Controller
         $nextFormNo = 'PK-BL-CHK-' . date('Y') . '-' . str_pad(MotorChecklist::count() + 1, 3, '0', STR_PAD_LEFT);
         $approvers = Approver::all();
 
-        return Inertia::render('Checklists/Create', [
+        return Inertia::render('Listrik/Checklists/Create', [
             'motor' => $motor,
             'defaultTemplate' => $defaultTemplate,
             'suggestedFormNo' => $nextFormNo,
@@ -68,7 +68,7 @@ class MotorChecklistController extends Controller
         // dd($checklist);
 
 
-        return Inertia::render('Checklists/Show', [
+        return Inertia::render('Listrik/Checklists/Show', [
             'checklist' => $checklist,
             'motor' => $checklist->motor,
         ]);
@@ -82,7 +82,7 @@ class MotorChecklistController extends Controller
         $checklist->load('motor');
         $approvers = Approver::all();
 
-        return Inertia::render('Checklists/Edit', [
+        return Inertia::render('Listrik/Checklists/Edit', [
             'checklist' => $checklist,
             'motor' => $checklist->motor,
             'approvers' => $approvers,

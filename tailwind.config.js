@@ -11,13 +11,7 @@ export default {
         './resources/js/**/*.jsx',
     ],
 
-    theme: {
-        extend: {
-            fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-            },
-        },
-    },
+    
 
     plugins: [forms, daisyui],
 };

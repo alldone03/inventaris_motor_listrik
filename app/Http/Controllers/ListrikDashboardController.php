@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class DashboardController extends Controller
+class ListrikDashboardController extends Controller
 {
     public function index(): Response
     {
@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $motorKeluar = Motor::where('status', 'Keluar Workshop')->count();
         $totalChecklists = MotorChecklist::count();
         $selesaiChecklists = MotorChecklist::where('status_perbaikan', 'Selesai')->count();
-        $prosesChecklists = MotorChecklist::where('status_perbaikan', '!=', 'Selesai')->count();
+        $prosesChecklists = MotorChecklist::where('staxtus_perbaikan', '!=', 'Selesai')->count();
 
         $recentChecklists = MotorChecklist::with('motor')
             ->latest()
@@ -29,7 +29,7 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return Inertia::render('Dashboard', [
+        return Inertia::render('Listrik/ListrikDashboard', [
             'stats' => [
                 'totalMotors' => $totalMotors,
                 'motorDiGudang' => $motorDiGudang,
