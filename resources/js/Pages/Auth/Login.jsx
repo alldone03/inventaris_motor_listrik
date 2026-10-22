@@ -31,68 +31,70 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             )}
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
+            <form onSubmit={submit} className="space-y-4">
+                {/* Fieldset Email */}
+                <fieldset className="fieldset">
+                    <legend className="fieldset-legend font-semibold text-base-content text-black">Email</legend>
+                    <input
                         id="email"
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
+                        className={`input input-bordered w-full text-base-content ${errors.email ? 'input-error' : ''}`}
                         autoComplete="username"
-                        isFocused={true}
+                        autoFocus={true}
                         onChange={(e) => setData('email', e.target.value)}
+                        placeholder="nama@email.com"
                     />
+                    {errors.email && (
+                        <p className="label text-error text-xs mt-1">{errors.email}</p>
+                    )}
+                </fieldset>
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
+                {/* Fieldset Password */}
+                <fieldset className="fieldset mt-4">
+                    <legend className="fieldset-legend font-semibold text-base-content text-black">Password</legend>
+                    <input
                         id="password"
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
+                        className={`input input-bordered w-full text-base-content ${errors.password ? 'input-error' : ''}`}
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
+                        placeholder="••••••••"
                     />
+                    {errors.password && (
+                        <p className="label text-error text-xs mt-1">{errors.password}</p>
+                    )}
+                </fieldset>
 
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4 block">
-                    <label className="flex items-center">
-                        <Checkbox
+                {/* Remember Me Checkbox */}
+                <div className="mt-4">
+                    <label className="cursor-pointer label justify-start gap-2 ">
+                        <input
+                            type="checkbox"
                             name="remember"
+                            className="checkbox checkbox-primary checkbox-sm"
                             checked={data.remember}
-                            onChange={(e) =>
-                                setData('remember', e.target.checked)
-                            }
+                            onChange={(e) => setData('remember', e.target.checked)}
                         />
-                        <span className="ms-2 text-sm text-gray-600">
-                            Remember me
-                        </span>
+                        <span className="label-text text-base-content text-black">Remember me</span>
                     </label>
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )}
+                {/* Action Buttons: Forgot Password & Submit */}
+                <div className="mt-6 flex items-center justify-center bg-red-500">
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
+                    <div className="w-full">
+                        <button
+                            type="submit"
+                            className={`btn btn-primary w-full ${processing ? 'loading' : ''}`}
+                            disabled={processing}
+                        >
+                            {processing ? 'Logging in...' : 'Log in'}
+                        </button>
+                    </div>
                 </div>
             </form>
         </GuestLayout>

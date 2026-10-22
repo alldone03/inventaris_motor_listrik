@@ -4,6 +4,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { Input } from 'postcss';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -26,14 +27,14 @@ export default function Register() {
             <Head title="Register" />
 
             <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                <fieldset className='fielset'>
+                    <legend className="fieldset-legend font-semibold text-base-content text-black">Nama Lengkap</legend>
 
-                    <TextInput
+                    <input
                         id="name"
                         name="name"
                         value={data.name}
-                        className="mt-1 block w-full"
+                        className={`input input-bordered w-full text-base-content ${errors.name ? 'input-error' : ''}`}
                         autoComplete="name"
                         isFocused={true}
                         onChange={(e) => setData('name', e.target.value)}
@@ -41,54 +42,51 @@ export default function Register() {
                     />
 
                     <InputError message={errors.name} className="mt-2" />
-                </div>
+                </fieldset>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
+                <fieldset className='fielset'>
+                    <legend className="fieldset-legend font-semibold text-base-content text-black">Email</legend>
 
-                    <TextInput
+                    <input
                         id="email"
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
+                        className={`input input-bordered w-full text-base-content ${errors.email ? 'input-error' : ''}`}
                         autoComplete="username"
                         onChange={(e) => setData('email', e.target.value)}
                         required
                     />
 
                     <InputError message={errors.email} className="mt-2" />
-                </div>
+                </fieldset>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                <fieldset className='fielset'>
+                    <legend className="fieldset-legend font-semibold text-base-content text-black">Password</legend>
 
-                    <TextInput
+                    <input
                         id="password"
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
+                        className={`input input-bordered w-full text-base-content ${errors.password ? 'input-error' : ''}`}
                         autoComplete="new-password"
                         onChange={(e) => setData('password', e.target.value)}
                         required
                     />
 
                     <InputError message={errors.password} className="mt-2" />
-                </div>
+                </fieldset>
 
-                <div className="mt-4">
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
+                <fieldset className='fielset'>
+                    <legend className="fieldset-legend font-semibold text-base-content text-black">Konfirmasi Password</legend>
 
-                    <TextInput
+                    <input
                         id="password_confirmation"
                         type="password"
                         name="password_confirmation"
                         value={data.password_confirmation}
-                        className="mt-1 block w-full"
+                        className={`input input-bordered w-full text-base-content ${errors.password_confirmation ? 'input-error' : ''}`}
                         autoComplete="new-password"
                         onChange={(e) =>
                             setData('password_confirmation', e.target.value)
@@ -98,9 +96,10 @@ export default function Register() {
 
                     <InputError
                         message={errors.password_confirmation}
-                        className="mt-2"
-                    />
-                </div>
+                        className="mt-2" />
+                </fieldset>
+
+
 
                 <div className="mt-4 flex items-center justify-end">
                     <Link
