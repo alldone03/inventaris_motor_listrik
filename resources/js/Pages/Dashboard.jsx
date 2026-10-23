@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router, usePoll } from '@inertiajs/react';
+import { Head, Link, router, usePoll, usePage } from '@inertiajs/react';
 import OcrScannerModal from '@/Components/OcrScannerModal';
 import {
     Zap,
@@ -22,6 +22,8 @@ import {
 export default function Dashboard({ stats, recentChecklists, recentMotors }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [isOcrOpen, setIsOcrOpen] = useState(false);
+    const { auth } = usePage().props;
+    const user = auth.user;
 
     // Auto update realtime data stats di dashboard setiap 2 detik
     usePoll(2000, {
@@ -65,13 +67,15 @@ export default function Dashboard({ stats, recentChecklists, recentMotors }) {
                             <span>Scan OCR Nameplate</span>
                         </button>
 
-                        <Link
-                            href={route('motors.create')}
-                            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center gap-2 transition"
-                        >
-                            <PlusCircle className="h-4 w-4" />
+                        {user.role === "admin" && (
+                            <Link
+                                href={route('motors.create')}
+                                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center gap-2 transition"
+                            >
+                                <PlusCircle className="h-4 w-4" />
                             <span>Tambah Motor Baru</span>
                         </Link>
+                        )}
                     </div>
                 </div>
             }
