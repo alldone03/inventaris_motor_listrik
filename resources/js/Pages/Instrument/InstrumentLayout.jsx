@@ -188,7 +188,7 @@ export default function InstrumentLayout({ header, children }) {
                             <div className="flex items-center gap-2 text-slate-500 text-xs font-medium">
                                 <span className="hidden sm:inline-block font-semibold text-slate-700">PT PUPUK KUJANG</span>
                                 <span className="hidden sm:inline-block">•</span>
-                                
+
                             </div>
                         </div>
 
@@ -204,8 +204,8 @@ export default function InstrumentLayout({ header, children }) {
                                 </div>
                                 <div className="hidden md:flex flex-col text-left">
                                     <span className="text-xs font-bold text-slate-800 leading-tight">{user.name}</span>
-                                    <span className="text-[10px] text-slate-500">Role : {user.role}</span>
-                                    <span className="text-[10px] text-slate-500">{user.email}</span>
+                                    <span className="text-[10px] text-slate-500">Jabatan : {user.jabatan}</span>
+                                    <span className="text-[10px] text-slate-500">Bagian : {user.bagian}</span>
                                 </div>
                             </button>
 

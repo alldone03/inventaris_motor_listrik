@@ -243,7 +243,8 @@ export default function ListrikLayout({ header, children }) {
                                 </div>
                                 <div className="hidden md:flex flex-col text-left">
                                     <span className="text-xs font-bold text-slate-800 leading-tight">{user.name}</span>
-                                    <span className="text-[10px] text-slate-500">Role : {user.role}</span>
+                                    <span className="text-[10px] text-slate-500">jabatan : {user.jabatan}</span>
+                                    <span className="text-[10px] text-slate-500">bagian : {user.bagian}</span>
                                     <span className="text-[10px] text-slate-500">{user.email}</span>
                                 </div>
                             </button>

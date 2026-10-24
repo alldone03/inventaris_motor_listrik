@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Bagian;
+use App\Models\Jabatan;
 use App\Models\Motor;
 use App\Models\MotorChecklist;
 use App\Models\User;
@@ -14,32 +16,43 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create demo user
-        User::firstOrCreate(
-            ['email' => 'admin@pupuk-kujang.co.id'],
-            [
-                'name' => 'Bengkel Listrik Admin',
-                'password' => bcrypt('password'),
-            ]
-        );
+        $this->call([
+            // MasterSeeder::class,
+            PegawaiSeeder::class,
+            
+        ]);
 
-        User::firstOrCreate(
-            ['email' => 'admin@kujang.com'],
-            [
-                'name' => 'Admin',
-                'role' => 'admin',
-                'password' => bcrypt('password'),
-            ]
-        );
+        // $adminJabatan = Jabatan::where('nama_jabatan', 'ADMIN')->first();
+        // $listrikBagian = Bagian::where('nama_bagian', 'Listrik')->first();
 
-        User::firstOrCreate(
-            ['email' => 'user@kujang.com'],
-            [
-                'name' => 'User',
-                'role' => 'user',
-                'password' => bcrypt('password'),
-            ]
-        );
+        // // Create demo user
+        // User::firstOrCreate(
+        //     ['email' => 'admin@pupuk-kujang.co.id'],
+        //     [
+        //         'name' => 'Bengkel Listrik Admin',
+        //         'jabatan_id' => $adminJabatan->id,
+        //         'bagian_id' => $listrikBagian->id,
+        //         'password' => bcrypt('password'),
+        //     ]
+        // );
+
+        // User::firstOrCreate(
+        //     ['email' => 'admin@kujang.com'],
+        //     [
+        //         'name' => 'Admin',
+        //         'role' => 'admin',
+        //         'password' => bcrypt('password'),
+        //     ]
+        // );
+
+        // User::firstOrCreate(
+        //     ['email' => 'user@kujang.com'],
+        //     [
+        //         'name' => 'User',
+        //         'role' => 'user',
+        //         'password' => bcrypt('password'),
+        //     ]
+        // );
 
         // $defaultTemplate = [
         //     [
