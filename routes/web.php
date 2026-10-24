@@ -20,7 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardMainController::class, 'index'])->name('dashboard');
     // route group /listrik
-    Route::prefix('listrik')->group(function () {
+    Route::prefix('listrik')->middleware(['CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|WLI,SPV|BengkelListrik,Staff|BengkelListrik,user|user'])->group(function () {
         Route::get('/dashboard', [ListrikDashboardController::class, 'index'])->name('listrik_dashboard');
 
         // Motor Nameplate Bulk Print
@@ -40,7 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('approvers', ApproverController::class)->except(['create', 'show', 'edit']);    
     });
     //instrument
-    Route::prefix('instrument')->group(function () {
+    Route::prefix('instrument')->middleware(['CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|WLI,AVP|BengkelInstrumen,SPV|BengkelInstrumen,Staff|BengkelInstrumen,user|user'])->group(function () {
         Route::get('/dashboard', [InstrumentDashboardController::class, 'index'])->name('instrument_dashboard');
 
         

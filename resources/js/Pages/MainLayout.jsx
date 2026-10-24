@@ -204,8 +204,8 @@ export default function MainLayout({ header, children }) {
                                 </div>
                                 <div className="hidden md:flex flex-col text-left">
                                     <span className="text-xs font-bold text-slate-800 leading-tight">{user.name}</span>
-                                    <span className="text-[10px] text-slate-500">Role : {user.role}</span>
-                                    <span className="text-[10px] text-slate-500">{user.email}</span>
+                                    <span className="text-[10px] text-slate-500">Bagian : {user.bagian}</span>
+                                    <span className="text-[10px] text-slate-500">Jabatan : {user.jabatan}</span>
                                 </div>
                             </button>
 
@@ -218,7 +218,8 @@ export default function MainLayout({ header, children }) {
                                     <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white shadow-xl border border-slate-100 py-2 z-50">
                                         <div className="px-4 py-2 border-b border-slate-100">
                                             <p className="text-xs font-bold text-slate-800">{user.name}</p>
-                                            <p className="text-xs font-bold text-slate-800">Role : {user.role}</p>
+                                            <p className="text-xs font-bold text-slate-800">Bagian : {user.bagian}</p>
+                                            <p className="text-xs font-bold text-slate-800">Jabatan : {user.jabatan}</p>
                                             <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
                                         </div>
                                         <Link
