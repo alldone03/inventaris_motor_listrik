@@ -24,7 +24,7 @@ export default function Dashboard() {
     const { auth } = usePage().props;
     const user = auth.user;
 
-    console.log(user);
+
 
     const aplikasi = [
         { nama: "Listrik", url: route("listrik_dashboard"), gambar: "/Listrik.png", deskripsi: "Database inventaris motor listrik dan peralatan kelistrikan workshop." },

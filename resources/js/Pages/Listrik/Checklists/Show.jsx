@@ -11,6 +11,7 @@ import {
     FileText
 } from 'lucide-react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
+import CheckIsInput from '@/Components/CheckIsInput';
 
 export default function ChecklistsShow({ checklist, motor }) {
     const { auth, flash } = usePage().props;
@@ -49,7 +50,7 @@ export default function ChecklistsShow({ checklist, motor }) {
                     </div>
 
                     <div className="flex items-center gap-2.5">
-                        {user.role === "admin" && (
+                        <CheckIsInput allowed="AVP|WLI,SPV|BengkelListrik,Staff|BengkelListrik">
                             <Link
                                 href={route('checklists.edit', checklist.id)}
                                 className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5"
@@ -57,7 +58,7 @@ export default function ChecklistsShow({ checklist, motor }) {
                                 <Edit className="h-4 w-4" />
                                 <span>Edit Form</span>
                             </Link>
-                        )}
+                        </CheckIsInput>
                         <button
                             type="button"
                             onClick={handlePrint}

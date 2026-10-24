@@ -27,6 +27,7 @@ import {
     Printer,
     Tag
 } from 'lucide-react';
+import CheckIsInput from '@/Components/CheckIsInput';
 
 export default function MotorsIndex({ motors, filters }) {
     const [search, setSearch] = useState(filters.search || '');
@@ -113,7 +114,7 @@ export default function MotorsIndex({ motors, filters }) {
                         </p>
                     </div>
 
-                    {user.role === "admin" && (
+                    <CheckIsInput allowed="AVP|WLI,SPV|BengkelListrik,Staff|BengkelListrik">
                         <div className="flex items-center gap-2.5">
                             <Link
                                 href={route('motors.print-nameplates')}
@@ -140,18 +141,8 @@ export default function MotorsIndex({ motors, filters }) {
                                 <span>Tambah Motor Baru</span>
                             </Link>
                         </div>
-                    )}
-                    {user.role !== "admin" && (
-                        <div className="flex items-center gap-2.5">
-                            <Link
-                                href={route('motors.print-nameplates')}
-                                className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold shadow-md shadow-slate-800/20 flex items-center gap-2 transition"
-                            >
-                                <Printer className="h-4 w-4 text-emerald-400" />
-                                <span>Cetak Nameplate</span>
-                            </Link>
-                        </div>
-                    )}
+                    </CheckIsInput>
+                    
                 </div>
             }
         >
@@ -242,7 +233,7 @@ export default function MotorsIndex({ motors, filters }) {
                                     </th>
                                     <th className="py-3.5 px-4">Keterangan</th>
                                     <th className="py-3.5 px-3 text-center">Checklists</th>
-                                    {user.role === "admin" && (<th className="py-3.5 px-4 text-center">Aksi</th>)}
+                                    <CheckIsInput allowed="AVP|WLI,SPV|BengkelListrik,Staff|BengkelListrik">(<th className="py-3.5 px-4 text-center">Aksi</th>)</CheckIsInput>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
@@ -338,7 +329,7 @@ export default function MotorsIndex({ motors, filters }) {
                                         </td>
 
                                         {/* Actions */}
-                                        {user.role === "admin" && (
+                                        <CheckIsInput allowed="AVP|WLI,SPV|BengkelListrik,Staff|BengkelListrik">
                                             <td className="py-3.5 px-4 text-center whitespace-nowrap">
                                                 <div className="flex items-center justify-center gap-1.5">
                                                     {/* Add Checklist Form */}
@@ -389,7 +380,8 @@ export default function MotorsIndex({ motors, filters }) {
                                                     </button>
                                                 </div>
                                             </td>
-                                        )}
+                                        </CheckIsInput  >
+
                                     </tr>
                                 ))}
 

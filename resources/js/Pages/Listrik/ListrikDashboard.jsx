@@ -19,12 +19,14 @@ import {
     ChevronRight
 } from 'lucide-react';
 import ListrikLayout from '@/Pages/Listrik/ListrikLayout';
+import CheckIsInput from '@/Components/CheckIsInput';
 
 export default function ListrikDashboard({ stats, recentChecklists, recentMotors }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [isOcrOpen, setIsOcrOpen] = useState(false);
     const { auth } = usePage().props;
     const user = auth.user;
+
 
     // Auto update realtime data stats di dashboard setiap 2 detik
     usePoll(2000, {
@@ -68,7 +70,7 @@ export default function ListrikDashboard({ stats, recentChecklists, recentMotors
                             <span>Scan OCR Nameplate</span>
                         </button>
 
-                        {user.role === "admin" && (
+                        <CheckIsInput allowed={"AVP|WLI,Staff|BengkelListrik"}>
                             <Link
                                 href={route('motors.create')}
                                 className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center gap-2 transition"
@@ -76,7 +78,8 @@ export default function ListrikDashboard({ stats, recentChecklists, recentMotors
                                 <PlusCircle className="h-4 w-4" />
                                 <span>Tambah Motor Baru</span>
                             </Link>
-                        )}
+
+                        </CheckIsInput>
                     </div>
                 </div>
             }
@@ -262,13 +265,15 @@ export default function ListrikDashboard({ stats, recentChecklists, recentMotors
                         </div>
 
                         <div className="mt-4 pt-4 border-t border-slate-100">
-                            <Link
-                                href={route('motors.create')}
-                                className="w-full py-2.5 px-4 rounded-xl border border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/50 text-slate-600 hover:text-emerald-700 text-xs font-bold flex items-center justify-center gap-2 transition"
-                            >
-                                <PlusCircle className="h-4 w-4" />
-                                <span>Tambah Spesifikasi Motor Baru</span>
-                            </Link>
+                            {user.jabatan == 'Admin' && (
+                                <Link
+                                    href={route('motors.create')}
+                                    className="w-full py-2.5 px-4 rounded-xl border border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/50 text-slate-600 hover:text-emerald-700 text-xs font-bold flex items-center justify-center gap-2 transition"
+                                >
+                                    <PlusCircle className="h-4 w-4" />
+                                    <span>Tambah Spesifikasi Motor Baru</span>
+                                </Link>
+                            )}
                         </div>
                     </div>
 

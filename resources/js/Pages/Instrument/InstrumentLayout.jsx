@@ -218,7 +218,8 @@ export default function InstrumentLayout({ header, children }) {
                                     <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white shadow-xl border border-slate-100 py-2 z-50">
                                         <div className="px-4 py-2 border-b border-slate-100">
                                             <p className="text-xs font-bold text-slate-800">{user.name}</p>
-                                            <p className="text-xs font-bold text-slate-800">Role : {user.role}</p>
+                                            <p className="text-xs font-bold text-slate-800">Jabatan : {user.jabatan}</p>
+                                            <p className="text-xs font-bold text-slate-800">Bagian : {user.bagian}</p>
                                             <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
                                         </div>
                                         <Link

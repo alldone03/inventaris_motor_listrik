@@ -19,6 +19,7 @@ import {
     Wrench,
     Printer
 } from 'lucide-react';
+import CheckIsInput from '@/Components/CheckIsInput';
 
 export default function ListrikLayout({ header, children }) {
     const { auth, flash } = usePage().props;
@@ -61,12 +62,7 @@ export default function ListrikLayout({ header, children }) {
             icon: Printer,
             active: route().current('motors.print-nameplates'),
         },
-        user.role === 'admin' && {
-            name: 'Persetujuan & Pengesahan',
-            href: route('approvers.index'),
-            icon: User,
-            active: route().current('approvers.*'),
-        },
+
     ].filter(Boolean);
 
     return (
@@ -151,9 +147,30 @@ export default function ListrikLayout({ header, children }) {
                                 </Link>
                             );
                         })}
+                        <CheckIsInput allowed={"VP|DeptHarListrikInstrumentAlatBerat,SPV|BengkelListrik,AVP|BengkelListrik,Staff|BengkelListrik"}>
+                            <Link
+                                href={route('approvers.index')}
+                                onClick={() => setIsMobileOpen(false)}
+                                className={`flex items-center gap-3 px-3.5 py-3 rounded-xl font-medium text-sm transition-all group relative
+                                        ${'text-slate-300 hover:bg-slate-800/80 hover:text-white'}
+                                        ${isCollapsed && !isMobileOpen ? 'justify-center px-0' : ''}
+                                    `}
+                                title={isCollapsed ? "Persetujuan & Pengesahan" : undefined}
+                            >
+                                <User className={`h-5 w-5 shrink-0 ${'text-slate-400 group-hover:text-emerald-400'}`} />
+                                {(!isCollapsed || isMobileOpen) && (
+                                    <span className="truncate">Persetujuan & Pengesahan</span>
+                                )}
+                                {isCollapsed && !isMobileOpen && (
+                                    <div className="absolute left-full ml-2 px-2.5 py-1 bg-slate-800 text-white text-xs rounded-md shadow-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50">
+                                        Persetujuan & Pengesahan
+                                    </div>
+                                )}
+                            </Link>
+                        </CheckIsInput>
 
                         {/* Action shortcut: Tambah Motor */}
-                        {user.role === "admin" && (
+                        <CheckIsInput allowed={"AVP|WLI,Staff|BengkelListrik"} >
                             <div className="pt-4 mt-4 border-t border-slate-800/80">
                                 {(!isCollapsed || isMobileOpen) && (
                                     <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
@@ -172,7 +189,7 @@ export default function ListrikLayout({ header, children }) {
                                     {(!isCollapsed || isMobileOpen) && <span>Tambah Motor Baru</span>}
                                 </Link>
                             </div>
-                        )}
+                        </CheckIsInput>
                     </div>
 
                     {/* Sidebar Footer & Collapse Toggle */}
@@ -258,7 +275,8 @@ export default function ListrikLayout({ header, children }) {
                                     <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white shadow-xl border border-slate-100 py-2 z-50">
                                         <div className="px-4 py-2 border-b border-slate-100">
                                             <p className="text-xs font-bold text-slate-800">{user.name}</p>
-                                            <p className="text-xs font-bold text-slate-800">Role : {user.role}</p>
+                                            <p className="text-xs font-bold text-slate-800">Jabatan : {user.jabatan}</p>
+                                            <p className="text-xs font-bold text-slate-800">Bagian : {user.bagian}</p>
                                             <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
                                         </div>
                                         <Link
