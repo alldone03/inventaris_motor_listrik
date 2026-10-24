@@ -20,7 +20,7 @@ import {
     Printer
 } from 'lucide-react';
 
-export default function AuthenticatedLayout({ header, children }) {
+export default function AlatBeratLayout({ header, children }) {
     const { auth, flash } = usePage().props;
     const user = auth.user;
 
@@ -45,28 +45,11 @@ export default function AuthenticatedLayout({ header, children }) {
     const navItems = [
         {
             name: 'Dashboard',
-            href: route('dashboard'),
+            href: route('instrument_dashboard'),
             icon: LayoutDashboard,
-            active: route().current('dashboard'),
+            active: route().current('instrument_dashboard'),
         },
-        {
-            name: 'Daftar Motor',
-            href: route('motors.index'),
-            icon: Zap,
-            active: (route().current('motors.*') || route().current('checklists.*')) && !route().current('motors.print-nameplates'),
-        },
-        {
-            name: 'Cetak Nameplate',
-            href: route('motors.print-nameplates'),
-            icon: Printer,
-            active: route().current('motors.print-nameplates'),
-        },
-        user.role === 'admin' && {
-            name: 'Persetujuan & Pengesahan',
-            href: route('approvers.index'),
-            icon: User,
-            active: route().current('approvers.*'),
-        },
+
     ].filter(Boolean);
 
     return (
@@ -100,9 +83,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     <span className="font-extrabold text-sm tracking-wider text-white uppercase font-sans">
                                         PUPUK KUJANG
                                     </span>
-                                    <span className="text-[10px] font-semibold text-emerald-400 tracking-wide">
-                                        Bengkel Motor Listrik
-                                    </span>
+
                                 </div>
                             )}
                         </Link>
@@ -152,27 +133,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             );
                         })}
 
-                        {/* Action shortcut: Tambah Motor */}
-                        {user.role === "admin" && (
-                            <div className="pt-4 mt-4 border-t border-slate-800/80">
-                                {(!isCollapsed || isMobileOpen) && (
-                                    <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                                        Aksi Cepat
-                                    </div>
-                                )}
-                                <Link
-                                    href={route('motors.create')}
-                                    onClick={() => setIsMobileOpen(false)}
-                                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-emerald-300 bg-emerald-950/40 border border-emerald-800/40 hover:bg-emerald-900/50 hover:text-emerald-200 transition group
-                                    ${isCollapsed && !isMobileOpen ? 'justify-center px-0' : ''}
-                                `}
-                                    title={isCollapsed ? 'Tambah Motor Baru' : undefined}
-                                >
-                                    <PlusCircle className="h-4 w-4 shrink-0 text-emerald-400" />
-                                    {(!isCollapsed || isMobileOpen) && <span>Tambah Motor Baru</span>}
-                                </Link>
-                            </div>
-                        )}
+
                     </div>
 
                     {/* Sidebar Footer & Collapse Toggle */}
@@ -196,7 +157,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
                 </aside>
 
-                {/* MAIN CONTENT WRAPPER */}
+
                 <div
                     className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out
                         ${isCollapsed ? 'lg:pl-20' : 'lg:pl-64'} print:pl-0 print:block print:w-full
@@ -227,9 +188,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             <div className="flex items-center gap-2 text-slate-500 text-xs font-medium">
                                 <span className="hidden sm:inline-block font-semibold text-slate-700">PT PUPUK KUJANG</span>
                                 <span className="hidden sm:inline-block">•</span>
-                                <span className="text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-semibold">
-                                    Sistem Inventaris & Form Checklist Motor Listrik
-                                </span>
+
                             </div>
                         </div>
 
@@ -310,7 +269,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                     {/* Footer */}
                     <footer className="mt-auto py-4 px-6 border-t border-slate-200/70 text-center text-xs text-slate-400 print:hidden">
-                        &copy; {new Date().getFullYear()} PT PUPUK KUJANG — Bengkel Listrik & Inventaris Motor Listrik
+                        &copy; {new Date().getFullYear()} PT PUPUK KUJANG
                     </footer>
                 </div>
             </div>

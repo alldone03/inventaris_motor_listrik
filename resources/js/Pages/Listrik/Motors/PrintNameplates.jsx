@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AuthenticatedLayout from '@/Pages/Listrik/ListrikLayout';
 import { Head, Link } from '@inertiajs/react';
 import MotorNameplateCard from '@/Components/MotorNameplateCard';
 import {
@@ -114,11 +114,10 @@ export default function PrintNameplates({ motors, filters }) {
                             type="button"
                             onClick={handlePrint}
                             disabled={selectedIds.length === 0}
-                            className={`px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 shadow-lg transition ${
-                                selectedIds.length > 0
-                                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20 cursor-pointer'
-                                    : 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
-                            }`}
+                            className={`px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 shadow-lg transition ${selectedIds.length > 0
+                                ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20 cursor-pointer'
+                                : 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
+                                }`}
                         >
                             <Printer className="h-4 w-4" />
                             <span>Cetak Terpilih ({selectedIds.length})</span>
@@ -161,33 +160,30 @@ export default function PrintNameplates({ motors, filters }) {
                                 <button
                                     type="button"
                                     onClick={() => setFilterStatus('all')}
-                                    className={`px-3 py-1.5 rounded-lg transition ${
-                                        filterStatus === 'all'
-                                            ? 'bg-white text-slate-900 shadow-sm'
-                                            : 'text-slate-600 hover:text-slate-900'
-                                    }`}
+                                    className={`px-3 py-1.5 rounded-lg transition ${filterStatus === 'all'
+                                        ? 'bg-white text-slate-900 shadow-sm'
+                                        : 'text-slate-600 hover:text-slate-900'
+                                        }`}
                                 >
                                     Semua ({motors.length})
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setFilterStatus('Di Workshop')}
-                                    className={`px-3 py-1.5 rounded-lg transition ${
-                                        filterStatus === 'Di Workshop'
-                                            ? 'bg-white text-emerald-700 shadow-sm'
-                                            : 'text-slate-600 hover:text-slate-900'
-                                    }`}
+                                    className={`px-3 py-1.5 rounded-lg transition ${filterStatus === 'Di Workshop'
+                                        ? 'bg-white text-emerald-700 shadow-sm'
+                                        : 'text-slate-600 hover:text-slate-900'
+                                        }`}
                                 >
                                     Di Workshop
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setFilterStatus('Keluar Workshop')}
-                                    className={`px-3 py-1.5 rounded-lg transition ${
-                                        filterStatus === 'Keluar Workshop'
-                                            ? 'bg-white text-amber-700 shadow-sm'
-                                            : 'text-slate-600 hover:text-slate-900'
-                                    }`}
+                                    className={`px-3 py-1.5 rounded-lg transition ${filterStatus === 'Keluar Workshop'
+                                        ? 'bg-white text-amber-700 shadow-sm'
+                                        : 'text-slate-600 hover:text-slate-900'
+                                        }`}
                                 >
                                     Keluar
                                 </button>
@@ -199,11 +195,10 @@ export default function PrintNameplates({ motors, filters }) {
                                 <button
                                     type="button"
                                     onClick={() => setPrintMode('stiker')}
-                                    className={`px-3 py-1.5 rounded-lg transition ${
-                                        printMode === 'stiker'
-                                            ? 'bg-emerald-600 text-white shadow-sm'
-                                            : 'text-slate-600 hover:text-slate-900'
-                                    }`}
+                                    className={`px-3 py-1.5 rounded-lg transition ${printMode === 'stiker'
+                                        ? 'bg-emerald-600 text-white shadow-sm'
+                                        : 'text-slate-600 hover:text-slate-900'
+                                        }`}
                                     title="Tiap kartu dicetak 1 lembar 8.5x5cm (printer stiker/label thermal/laser)"
                                 >
                                     Stiker (8.5x5cm)
@@ -211,11 +206,10 @@ export default function PrintNameplates({ motors, filters }) {
                                 <button
                                     type="button"
                                     onClick={() => setPrintMode('a4')}
-                                    className={`px-3 py-1.5 rounded-lg transition ${
-                                        printMode === 'a4'
-                                            ? 'bg-emerald-600 text-white shadow-sm'
-                                            : 'text-slate-600 hover:text-slate-900'
-                                    }`}
+                                    className={`px-3 py-1.5 rounded-lg transition ${printMode === 'a4'
+                                        ? 'bg-emerald-600 text-white shadow-sm'
+                                        : 'text-slate-600 hover:text-slate-900'
+                                        }`}
                                     title="Kertas A4 standar (grid kartu nameplate)"
                                 >
                                     Kertas A4 (Grid)
@@ -312,11 +306,10 @@ export default function PrintNameplates({ motors, filters }) {
                                     <div
                                         key={motor.id}
                                         onClick={() => toggleSelectOne(motor.id)}
-                                        className={`group relative rounded-2xl p-3 border-2 transition-all cursor-pointer flex flex-col items-center justify-between ${
-                                            isSelected
-                                                ? 'bg-emerald-50/40 border-emerald-500 shadow-md ring-2 ring-emerald-500/20'
-                                                : 'bg-white border-slate-200/80 hover:border-slate-300 hover:shadow-sm'
-                                        }`}
+                                        className={`group relative rounded-2xl p-3 border-2 transition-all cursor-pointer flex flex-col items-center justify-between ${isSelected
+                                            ? 'bg-emerald-50/40 border-emerald-500 shadow-md ring-2 ring-emerald-500/20'
+                                            : 'bg-white border-slate-200/80 hover:border-slate-300 hover:shadow-sm'
+                                            }`}
                                     >
                                         {/* Selection Checkbox Pill */}
                                         <div className="w-full flex items-center justify-between mb-2">
@@ -324,7 +317,7 @@ export default function PrintNameplates({ motors, filters }) {
                                                 <input
                                                     type="checkbox"
                                                     checked={isSelected}
-                                                    onChange={() => {}} // handled by parent onClick
+                                                    onChange={() => { }} // handled by parent onClick
                                                     className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                                                 />
                                                 <span className="font-bold text-xs text-slate-900">
@@ -333,11 +326,10 @@ export default function PrintNameplates({ motors, filters }) {
                                             </div>
 
                                             <span
-                                                className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                                                    motor.status === 'Di Workshop'
-                                                        ? 'bg-emerald-100 text-emerald-800'
-                                                        : 'bg-amber-100 text-amber-800'
-                                                }`}
+                                                className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${motor.status === 'Di Workshop'
+                                                    ? 'bg-emerald-100 text-emerald-800'
+                                                    : 'bg-amber-100 text-amber-800'
+                                                    }`}
                                             >
                                                 {motor.status || 'Di Workshop'}
                                             </span>
@@ -368,9 +360,8 @@ export default function PrintNameplates({ motors, filters }) {
                     {selectedMotors.map((motor) => (
                         <div
                             key={motor.id}
-                            className={`bulk-print-item ${
-                                printMode === 'stiker' ? 'sticker-mode-item' : 'a4-mode-item'
-                            }`}
+                            className={`bulk-print-item ${printMode === 'stiker' ? 'sticker-mode-item' : 'a4-mode-item'
+                                }`}
                         >
                             <MotorNameplateCard motor={motor} />
                         </div>
@@ -433,9 +424,8 @@ export default function PrintNameplates({ motors, filters }) {
                         padding: 0 !important;
                     }
 
-                    ${
-                        printMode === 'stiker'
-                            ? `
+                    ${printMode === 'stiker'
+                    ? `
                         @page {
                             size: 8.5cm 5cm;
                             margin: 0 !important;
@@ -479,7 +469,7 @@ export default function PrintNameplates({ motors, filters }) {
                             overflow: hidden !important;
                         }
                     `
-                            : `
+                    : `
                         @page {
                             size: A4 portrait;
                             margin: 0.8cm !important;
@@ -521,7 +511,7 @@ export default function PrintNameplates({ motors, filters }) {
                             overflow: hidden !important;
                         }
                     `
-                    }
+                }
 
                     * {
                         -webkit-print-color-adjust: exact !important;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AuthenticatedLayout from '@/Pages/Listrik/ListrikLayout';
 import { Head, useForm, router } from '@inertiajs/react';
 import { User, Plus, Edit, Trash2, X, Save } from 'lucide-react';
 

@@ -12,7 +12,7 @@ class ApproverController extends Controller
     public function index(): Response
     {
         $approvers = Approver::latest()->get();
-        return Inertia::render('Approvers/Index', ['approvers' => $approvers]);
+        return Inertia::render('Listrik/Approvers/Index', ['approvers' => $approvers]);
     }
 
     public function store(Request $request)

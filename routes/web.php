@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AlatBeratDashboardController;
 use App\Http\Controllers\ApproverController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DashboardFrontController;
+use App\Http\Controllers\InstrumentDashboardController;
+use App\Http\Controllers\ListrikDashboardController;
+use App\Http\Controllers\DashboardMainController;
 use App\Http\Controllers\MotorChecklistController;
 use App\Http\Controllers\MotorController;
 use App\Http\Controllers\ProfileController;
@@ -14,31 +16,46 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard_front', [DashboardFrontController::class, 'index'])->name('dashboard_front');
+    Route::get('/dashboard', [DashboardMainController::class, 'index'])->name('dashboard');
+    // route group /listrik
+    Route::prefix('listrik')->group(function () {
+        Route::get('/dashboard', [ListrikDashboardController::class, 'index'])->name('listrik_dashboard');
 
-    // Motor Nameplate Bulk Print
-    Route::get('/motors/print-nameplates', [MotorController::class, 'printNameplates'])->name('motors.print-nameplates');
+        // Motor Nameplate Bulk Print
+        Route::get('/motors/print-nameplates', [MotorController::class, 'printNameplates'])->name('motors.print-nameplates');
 
-    // Motor CRUD
-    Route::resource('motors', MotorController::class);
+        // Motor CRUD
+        Route::resource('motors', MotorController::class);
 
-    // Motor Checklists
-    Route::get('/motors/{motor}/checklists/create', [MotorChecklistController::class, 'create'])->name('motors.checklists.create');
-    Route::post('/motors/{motor}/checklists', [MotorChecklistController::class, 'store'])->name('motors.checklists.store');
-    Route::get('/checklists/{checklist}', [MotorChecklistController::class, 'show'])->name('checklists.show');
-    Route::get('/checklists/{checklist}/edit', [MotorChecklistController::class, 'edit'])->name('checklists.edit');
-    Route::put('/checklists/{checklist}', [MotorChecklistController::class, 'update'])->name('checklists.update');
-    Route::delete('/checklists/{checklist}', [MotorChecklistController::class, 'destroy'])->name('checklists.destroy');
+        // Motor Checklists
+        Route::get('/motors/{motor}/checklists/create', [MotorChecklistController::class, 'create'])->name('motors.checklists.create');
+        Route::post('/motors/{motor}/checklists', [MotorChecklistController::class, 'store'])->name('motors.checklists.store');
+        Route::get('/checklists/{checklist}', [MotorChecklistController::class, 'show'])->name('checklists.show');
+        Route::get('/checklists/{checklist}/edit', [MotorChecklistController::class, 'edit'])->name('checklists.edit');
+        Route::put('/checklists/{checklist}', [MotorChecklistController::class, 'update'])->name('checklists.update');
+        Route::delete('/checklists/{checklist}', [MotorChecklistController::class, 'destroy'])->name('checklists.destroy');
+        // Approvers
+        Route::resource('approvers', ApproverController::class)->except(['create', 'show', 'edit']);    
+    });
+    //instrument
+    Route::prefix('instrument')->group(function () {
+        Route::get('/dashboard', [InstrumentDashboardController::class, 'index'])->name('instrument_dashboard');
 
+        
+    });
+
+    Route::prefix('alat_berat')->group(function () {
+        Route::get('/dashboard', [AlatBeratDashboardController::class, 'index'])->name('alatberat_dashboard');
+
+       
+    });
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Approvers
-    Route::resource('approvers', ApproverController::class)->except(['create', 'show', 'edit']);
 });
 
 require __DIR__.'/auth.php';
