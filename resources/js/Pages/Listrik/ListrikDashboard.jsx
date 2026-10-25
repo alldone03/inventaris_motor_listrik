@@ -205,6 +205,7 @@ export default function ListrikDashboard({ stats, recentChecklists, recentMotors
                 {/* Two Column Section: Recent Motors & Recent Checklists */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Left: Recent Motors */}
+                    {user.jabatan !== "VP" && (
                     <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
                         <div>
                             <div className="flex items-center justify-between mb-4">
@@ -260,84 +261,87 @@ export default function ListrikDashboard({ stats, recentChecklists, recentMotors
                                 )}
                             </div>
                         </div>
-
-                        <div className="mt-4 pt-4 border-t border-slate-100">
-                            <Link
-                                href={route('motors.create')}
-                                className="w-full py-2.5 px-4 rounded-xl border border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/50 text-slate-600 hover:text-emerald-700 text-xs font-bold flex items-center justify-center gap-2 transition"
-                            >
-                                <PlusCircle className="h-4 w-4" />
-                                <span>Tambah Spesifikasi Motor Baru</span>
-                            </Link>
-                        </div>
-                    </div>
+                       
+                        
+                            <div className="mt-4 pt-4 border-t border-slate-100">
+                                <Link
+                                    href={route('motors.create')}
+                                    className="w-full py-2.5 px-4 rounded-xl border border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/50 text-slate-600 hover:text-emerald-700 text-xs font-bold flex items-center justify-center gap-2 transition"
+                                >
+                                    <PlusCircle className="h-4 w-4" />
+                                    <span>Tambah Spesifikasi Motor Baru</span>
+                                </Link>
+                            </div>
+                            </div>
+                        )}
 
                     {/* Right: Recent Checklists */}
-                    <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center gap-2">
-                                    <div className="p-2 rounded-lg bg-teal-50 text-teal-700">
-                                        <FileCheck className="h-4 w-4" />
+                        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-2">
+                                        <div className="p-2 rounded-lg bg-teal-50 text-teal-700">
+                                            <FileCheck className="h-4 w-4" />
+                                        </div>
+                                        <h3 className="font-extrabold text-slate-900 text-sm">Form Checklist Perbaikan Terakhir</h3>
                                     </div>
-                                    <h3 className="font-extrabold text-slate-900 text-sm">Form Checklist Perbaikan Terakhir</h3>
                                 </div>
-                            </div>
 
-                            <div className="space-y-3">
-                                {recentChecklists.map((c) => (
-                                    <div
-                                        key={c.id}
-                                        className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center justify-between gap-3 hover:border-teal-200 transition"
-                                    >
-                                        <div>
-                                            <div className="flex items-center gap-2">
-                                                <span className="font-mono text-xs font-bold text-slate-700">
-                                                    {c.no_form || 'Form Checklist'}
-                                                </span>
-                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${c.status_perbaikan === 'Selesai'
-                                                    ? 'bg-emerald-100 text-emerald-800'
-                                                    : 'bg-amber-100 text-amber-800'
-                                                    }`}>
-                                                    {c.status_perbaikan}
-                                                </span>
+                                <div className="space-y-3">
+                                    {recentChecklists.map((c) => (
+                                        <div
+                                            key={c.id}
+                                            className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center justify-between gap-3 hover:border-teal-200 transition"
+                                        >
+                                            <div>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-mono text-xs font-bold text-slate-700">
+                                                        {c.no_form || 'Form Checklist'}
+                                                    </span>
+                                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${c.status_perbaikan === 'Selesai'
+                                                        ? 'bg-emerald-100 text-emerald-800'
+                                                        : 'bg-amber-100 text-amber-800'
+                                                        }`}>
+                                                        {c.status_perbaikan}
+                                                    </span>
+                                                </div>
+                                                <div className="text-xs text-slate-600 font-semibold mt-1">
+                                                    Item Motor: {c.motor?.item} ({c.motor?.manufacture || 'MFG'})
+                                                </div>
+                                                <div className="text-[11px] text-slate-400 mt-0.5">
+                                                    Teknisi: {c.nama_teknisi || '-'} • Tgl: {c.tanggal_selesai || c.tanggal_masuk || '-'}
+                                                </div>
                                             </div>
-                                            <div className="text-xs text-slate-600 font-semibold mt-1">
-                                                Item Motor: {c.motor?.item} ({c.motor?.manufacture || 'MFG'})
-                                            </div>
-                                            <div className="text-[11px] text-slate-400 mt-0.5">
-                                                Teknisi: {c.nama_teknisi || '-'} • Tgl: {c.tanggal_selesai || c.tanggal_masuk || '-'}
+
+                                            <div className="flex items-center gap-1.5 shrink-0">
+                                                <Link
+                                                    href={route('checklists.show', c.id)}
+                                                    className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm flex items-center gap-1 transition"
+                                                    title="Preview Dokumen A4"
+                                                >
+                                                    <Eye className="h-3.5 w-3.5" />
+                                                    <span>A4 Preview</span>
+                                                </Link>
                                             </div>
                                         </div>
+                                    ))}
 
-                                        <div className="flex items-center gap-1.5 shrink-0">
-                                            <Link
-                                                href={route('checklists.show', c.id)}
-                                                className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm flex items-center gap-1 transition"
-                                                title="Preview Dokumen A4"
-                                            >
-                                                <Eye className="h-3.5 w-3.5" />
-                                                <span>A4 Preview</span>
-                                            </Link>
-                                        </div>
-                                    </div>
-                                ))}
-
-                                {recentChecklists.length === 0 && (
-                                    <p className="text-xs text-slate-500 text-center py-6">Belum ada form checklist yang dibuat.</p>
-                                )}
+                                    {recentChecklists.length === 0 && (
+                                        <p className="text-xs text-slate-500 text-center py-6">Belum ada form checklist yang dibuat.</p>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* OCR Scanner Modal */}
-            <OcrScannerModal
-                isOpen={isOcrOpen}
-                onClose={() => setIsOcrOpen(false)}
-                onSelectResult={handleOcrResult}
-            />
+                {/* OCR Scanner Modal */}
+                <OcrScannerModal
+                    isOpen={isOcrOpen}
+                    onClose={() => setIsOcrOpen(false)}
+                    onSelectResult={handleOcrResult}
+                />
+            
         </ListrikLayout>
     );
 }
