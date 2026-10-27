@@ -46,7 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('alat_berat')
             ->middleware([
-                'CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|BengkelListrik',
+                'CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|BengkelListrik,AVP|WLI',
                 'auth',
                 'verified',
             ])
