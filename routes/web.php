@@ -3,6 +3,7 @@
 use App\Http\Controllers\AlatBeratDashboardController;
 use App\Http\Controllers\ApproverController;
 use App\Http\Controllers\DashboardMainController;
+use App\Http\Controllers\GovernorDashboardController;
 use App\Http\Controllers\InstrumentDashboardController;
 use App\Http\Controllers\ListrikDashboardController;
 use App\Http\Controllers\MotorChecklistController;
@@ -39,23 +40,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('approvers', ApproverController::class)->except(['create', 'show', 'edit']);
     });
     // instrument
-    Route::prefix('instrument')->middleware(['CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|WLI,AVP|BengkelInstrumen,SPV|BengkelInstrumen,Staff|BengkelInstrumen,user|user'])->group(function () {
-        Route::get('/dashboard', [InstrumentDashboardController::class, 'index'])->name('instrument_dashboard');
 
+    // instrument
+    Route::prefix('instrument')->middleware(['CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|WLI,AVP|BengkelInstrumen,SPV|BengkelInstrumen,Staff|BengkelInstrumen,user|user'])->group(function () {
+        Route::get('/dashboard', [InstrumentDashboardController::class, 'index'])
+            ->name('instrument_dashboard');
+
+        // Dashboard Governor
+        Route::get('/governor', [GovernorDashboardController::class, 'index'])
+            ->name('governor.dashboard');
     });
 
     Route::prefix('alat_berat')
-            ->middleware([
-                'CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|BengkelListrik,AVP|WLI',
-                'auth',
-                'verified',
-            ])
-            ->group(function () {
-                Route::get('/dashboard', [AlatBeratDashboardController::class, 'index'])
-                    ->name('alatberat_dashboard');
-            });
+        ->middleware([
+            'CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|BengkelListrik,AVP|WLI',
+            'auth',
+            'verified',
+        ])
+        ->group(function () {
+            Route::get('/dashboard', [AlatBeratDashboardController::class, 'index'])
+                ->name('alatberat_dashboard');
+        });
 
-        // Profile
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
