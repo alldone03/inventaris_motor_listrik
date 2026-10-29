@@ -1,10 +1,13 @@
 
 import { useState } from "react";
-import { Link, router } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import GovernorLayout from "./GovernorLayout";
+import CheckIsInput from "@/Components/CheckIsInput";
 
 export default function GovernorIndex({ governors, filters = {} }) {
     const [search, setSearch] = useState(filters.search ?? "");
+    const { auth } = usePage().props;
+    const user = auth.user;
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -64,13 +67,14 @@ export default function GovernorIndex({ governors, filters = {} }) {
                             Kelola dan cari data peralatan Governor.
                         </p>
                     </div>
-
-                    <Link
-                        href={route("governor.create")}
-                        className="btn btn-primary"
-                    >
-                        + Tambah Governor
-                    </Link>
+                    <CheckIsInput allowed="AVP,SPV,Staff">
+                        <Link
+                            href={route("governor.create")}
+                            className="btn btn-primary"
+                        >
+                            + Tambah Governor
+                        </Link>
+                    </CheckIsInput>
                 </div>
 
                 {/* Search */}
@@ -149,7 +153,9 @@ export default function GovernorIndex({ governors, filters = {} }) {
                                 <th>Stock Code</th>
                                 <th>Area</th>
                                 <th>Pabrik</th>
-                                <th>Actions</th>
+                                <CheckIsInput allowed="AVP,SPV,Staff">
+                                    <th>Actions</th>
+                                </CheckIsInput>
                             </tr>
                         </thead>
 
@@ -171,32 +177,42 @@ export default function GovernorIndex({ governors, filters = {} }) {
                                         <td>{governor.stock_code}</td>
                                         <td>{governor.area}</td>
                                         <td>{governor.pabrik}</td>
-
-                                        <td>
-                                            <div className="flex gap-2">
-                                                <Link
-                                                    href={route(
-                                                        "governor.edit",
-                                                        governor.id
-                                                    )}
-                                                    className="btn btn-sm btn-primary"
-                                                >
-                                                    Edit
-                                                </Link>
-
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        handleDelete(
+                                        <CheckIsInput allowed="AVP|WLI,SPV|Instrument,Staff|Instrument,AVP|Instrument">
+                                            <td>
+                                                <div className="flex gap-2">
+                                                    <Link
+                                                        href={route(
+                                                            "governor.edit",
                                                             governor.id
-                                                        )
-                                                    }
-                                                    className="btn btn-sm border-0 bg-red-600 text-white hover:bg-red-700"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </td>
+                                                        )}
+                                                        className="btn btn-sm btn-primary"
+                                                    >
+                                                        Edit
+                                                    </Link>
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                governor.id
+                                                            )
+                                                        }
+                                                        className="btn btn-sm border-0 bg-red-600 text-white hover:bg-red-700"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                    <Link
+                                                        href={route(
+                                                            "governor.uploadpdf",
+                                                            governor.id
+                                                        )}
+                                                        className="btn btn-sm border-0 bg-blue-600 text-white hover:bg-blue-700"
+                                                    >
+                                                        Upload
+                                                    </Link>
+                                                </div>
+                                            </td>
+                                        </CheckIsInput>
                                     </tr>
                                 ))
                             ) : (

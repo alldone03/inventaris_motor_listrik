@@ -12,7 +12,6 @@ use App\Http\Controllers\MotorController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
@@ -53,6 +52,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('governor.dashboard');
         Route::get('governor/index', [GovernorController::class, 'index'])
             ->name('governor.index');
+
         Route::get('governor/create', [GovernorController::class, 'create'])
             ->name('governor.create');
         Route::post('governor/store', [GovernorController::class, 'store'])
@@ -63,11 +63,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('governor.update');
         Route::delete('governor/{id}/delete', [GovernorController::class, 'delete'])
             ->name('governor.delete');
+        Route::get('governor/{id}/uploadpdf', [GovernorController::class, 'uploadpdf'])
+            ->name('governor.uploadpdf');
+        // Route::post('')
     });
-
+    // Alat Berat
     Route::prefix('alat_berat')
         ->middleware([
-            'CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|BengkelListrik,AVP|WLI',
+            'CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|BengkelListrik,AVP|WLI,user|user',
             'auth',
             'verified',
         ])

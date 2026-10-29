@@ -123,4 +123,28 @@ class GovernorController extends Controller
 
         return to_route('governor.index');
     }
+
+    public function uploadpdf(Request $request, $id)
+    {
+        // dd('hello');s
+
+        return Inertia::render('Instrument/Governor/Uploadpdf');
+    }
 }
+// } public function uploadPdf(Request $request, $id)
+// {
+//     $request->validate([
+//         'pdf' => 'required|file|mimes:pdf|max:10240',
+//     ]);
+
+//     $governor = Governor::findOrFail($id);
+
+//     $path = $request->file('pdf')
+//         ->store('governor-pdfs', 'public');
+
+//     $governor->update([
+//         'pdf_path' => $path,
+//     ]);
+
+//     return back()->with('success', 'PDF berhasil disimpan.');
+// }

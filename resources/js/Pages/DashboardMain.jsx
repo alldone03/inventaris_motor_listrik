@@ -52,6 +52,7 @@ export default function Dashboard() {
             <div className="flex gap-20">
                 {aplikasi.map((item, index) => (
                     <Link
+                        key={index}
                         className="group block bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-300"
                         href={item.url}
                     >

@@ -65,7 +65,7 @@ export default function MotorsShow({ motor }) {
                         </div>
                     </div>
 
-                    {user.role === "admin" && (
+                    <CheckIsInput allowed="AVP,SPV,Staff">
                         <div className="flex items-center gap-2">
                             <Link
                                 href={route('motors.checklists.create', motor.id)}
@@ -90,7 +90,7 @@ export default function MotorsShow({ motor }) {
                                 <Trash2 className="h-4 w-4" />
                             </button>
                         </div>
-                    )}
+                    </CheckIsInput>
                 </div>
             }
         >
@@ -199,7 +199,7 @@ export default function MotorsShow({ motor }) {
                             </p>
                         </div>
 
-                        {user.role === "admin" && (
+                        <CheckIsInput allowed="AVP,SPV,Staff">
                             <Link
                                 href={route('motors.checklists.create', motor.id)}
                                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5 self-start sm:self-auto"
@@ -207,7 +207,7 @@ export default function MotorsShow({ motor }) {
                                 <FilePlus className="h-4 w-4" />
                                 <span>Buat Form Checklist Baru</span>
                             </Link>
-                        )}
+                        </CheckIsInput>
                     </div>
 
                     <div className="space-y-4">
@@ -256,7 +256,7 @@ export default function MotorsShow({ motor }) {
                                         <Eye className="h-4 w-4" />
                                         <span>Lihat Format A4</span>
                                     </Link>
-                                    {user.role === "admin" && (
+                                    <CheckIsInput allowed="AVP,SPV,Staff">
                                         <Link
                                             href={route('checklists.edit', checklist.id)}
                                             className="p-2 rounded-xl bg-slate-200/80 hover:bg-slate-300 text-slate-700 transition"
@@ -264,8 +264,8 @@ export default function MotorsShow({ motor }) {
                                         >
                                             <Edit className="h-4 w-4" />
                                         </Link>
-                                    )}
-                                    {user.role === "admin" && (
+                                    </CheckIsInput>
+                                    <CheckIsInput allowed="AVP,SPV,Staff">
                                         <button
                                             type="button"
                                             onClick={() => handleDeleteChecklist(checklist.id, checklist.no_form)}
@@ -274,7 +274,7 @@ export default function MotorsShow({ motor }) {
                                         >
                                             <Trash2 className="h-4 w-4" />
                                         </button>
-                                    )}
+                                    </CheckIsInput>
 
                                 </div>
                             </div>
