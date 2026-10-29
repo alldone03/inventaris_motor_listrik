@@ -3,6 +3,7 @@
 use App\Http\Controllers\AlatBeratDashboardController;
 use App\Http\Controllers\ApproverController;
 use App\Http\Controllers\DashboardMainController;
+use App\Http\Controllers\GovernorController;
 use App\Http\Controllers\GovernorDashboardController;
 use App\Http\Controllers\InstrumentDashboardController;
 use App\Http\Controllers\ListrikDashboardController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\MotorChecklistController;
 use App\Http\Controllers\MotorController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -49,6 +51,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Dashboard Governor
         Route::get('/governor', [GovernorDashboardController::class, 'index'])
             ->name('governor.dashboard');
+        Route::get('governor/index', [GovernorController::class, 'index'])
+            ->name('governor.index');
+        Route::get('governor/create', [GovernorController::class, 'create'])
+            ->name('governor.create');
+        Route::post('governor/store', [GovernorController::class, 'store'])
+            ->name('governor.store');
+        Route::get('governor/{id}/edit', [GovernorController::class, 'edit'])
+            ->name('governor.edit');
+        Route::put('governor/{id}/update', [GovernorController::class, 'update'])
+            ->name('governor.update');
+        Route::delete('governor/{id}/delete', [GovernorController::class, 'delete'])
+            ->name('governor.delete');
     });
 
     Route::prefix('alat_berat')

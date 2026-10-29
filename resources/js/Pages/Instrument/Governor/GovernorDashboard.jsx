@@ -1,4 +1,4 @@
-import InstrumentLayout from '@/Pages/Instrument/InstrumentLayout';
+import GovernorLayout from '@/Pages/Instrument/Governor/GovernorLayout';
 import React from 'react';
 
 
@@ -45,7 +45,7 @@ const GovernorDashboard = () => {
     ];
 
     return (
-        <InstrumentLayout>
+        <GovernorLayout>
             <div className="flex-1 space-y-6">
                 {/* Header */}
                 <div className="flex items-center justify-between">
@@ -113,7 +113,7 @@ const GovernorDashboard = () => {
                     </div>
                 </div>
             </div>
-        </InstrumentLayout>
+        </GovernorLayout>
     );
 };
 
