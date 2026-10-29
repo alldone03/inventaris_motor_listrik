@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AuthenticatedLayout from '@/Pages/Listrik/ListrikLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     Zap,

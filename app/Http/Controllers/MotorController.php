@@ -65,7 +65,7 @@ class MotorController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return Inertia::render('Motors/Index', [
+        return Inertia::render('Listrik/Motors/Index', [
             'motors' => $motors,
             'filters' => [
                 'search' => $search,
@@ -113,7 +113,7 @@ class MotorController extends Controller
             $suggestedLabelKe = '1';
         }
 
-        return Inertia::render('Motors/Create', [
+        return Inertia::render('Listrik/Motors/Create', [
             'lastLabelKe' => $lastLabelKe,
             'suggestedLabelKe' => $suggestedLabelKe,
         ]);
@@ -160,7 +160,7 @@ class MotorController extends Controller
             $q->latest();
         }]);
 
-        return Inertia::render('Motors/Show', [
+        return Inertia::render('Listrik/Motors/Show', [
             'motor' => $motor,
         ]);
     }
@@ -170,7 +170,7 @@ class MotorController extends Controller
      */
     public function edit(Motor $motor): Response
     {
-        return Inertia::render('Motors/Edit', [
+        return Inertia::render('Listrik/Motors/Edit', [
             'motor' => $motor,
         ]);
     }
@@ -248,7 +248,7 @@ class MotorController extends Controller
             ->orderBy('label_ke', 'asc')
             ->get();
 
-        return Inertia::render('Motors/PrintNameplates', [
+        return Inertia::render('Listrik/Motors/PrintNameplates', [
             'motors' => $motors,
             'filters' => [
                 'search' => $search,

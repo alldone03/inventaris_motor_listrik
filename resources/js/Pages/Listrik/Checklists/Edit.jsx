@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import React from 'react';
+import AuthenticatedLayout from '@/Pages/Listrik/ListrikLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import {
     FileCheck,
@@ -7,35 +7,29 @@ import {
     Save,
     Check,
     X,
-    Plus,
-    Trash2,
-    Layers,
-    Calendar,
     User,
     Wrench,
-    CheckCircle2,
-    XCircle,
-    HelpCircle
+    Eye
 } from 'lucide-react';
 
-export default function ChecklistsCreate({ motor, defaultTemplate, suggestedFormNo, approvers = [] }) {
-    const { data, setData, post, processing, errors } = useForm({
-        no_form: suggestedFormNo || '',
-        tanggal_masuk: new Date().toISOString().split('T')[0],
-        tanggal_selesai: new Date().toISOString().split('T')[0],
-        area_lapangan: motor.area || (motor.alamat_motor ? `Alamat: ${motor.alamat_motor}` : ''),
-        keluhan: '',
-        daya_spek: motor.hp_kw || '',
-        tegangan_spek: motor.voltage || '',
-        ampere_spek: motor.ampere || '',
-        rpm_spek: motor.rpm || '',
-        nama_teknisi: '',
-        nama_staf: '',
-        tanggal_approval_teknisi: new Date().toISOString().split('T')[0],
-        tanggal_approval_staf: new Date().toISOString().split('T')[0],
-        status_perbaikan: 'Selesai',
-        items: defaultTemplate || [],
-        catatan_umum: '',
+export default function ChecklistsEdit({ checklist, motor, approvers = [] }) {
+    const { data, setData, put, processing, errors } = useForm({
+        no_form: checklist.no_form || '',
+        tanggal_masuk: checklist.tanggal_masuk || '',
+        tanggal_selesai: checklist.tanggal_selesai || '',
+        area_lapangan: checklist.area_lapangan || '',
+        keluhan: checklist.keluhan || '',
+        daya_spek: checklist.daya_spek || '',
+        tegangan_spek: checklist.tegangan_spek || '',
+        ampere_spek: checklist.ampere_spek || '',
+        rpm_spek: checklist.rpm_spek || '',
+        nama_teknisi: checklist.nama_teknisi || '',
+        nama_staf: checklist.nama_staf || '',
+        tanggal_approval_teknisi: checklist.tanggal_approval_teknisi || '',
+        tanggal_approval_staf: checklist.tanggal_approval_staf || '',
+        status_perbaikan: checklist.status_perbaikan || 'Selesai',
+        items: checklist.items || [],
+        catatan_umum: checklist.catatan_umum || '',
     });
 
     const handleTaskChange = (sectionIdx, taskIdx, field, value) => {
@@ -57,7 +51,7 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('motors.checklists.store', motor.id));
+        put(route('checklists.update', checklist.id));
     };
 
     return (
@@ -66,7 +60,7 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <Link
-                            href={route('motors.show', motor.id)}
+                            href={route('checklists.show', checklist.id)}
                             className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
                         >
                             <ArrowLeft className="h-5 w-5" />
@@ -74,21 +68,29 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                         <div>
                             <div className="flex items-center gap-2">
                                 <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-                                    Form Checklist Perbaikan Motor Listrik
+                                    Edit Form Checklist Perbaikan
                                 </h2>
                                 <span className="px-2.5 py-0.5 rounded-lg bg-slate-900 text-white font-mono font-bold text-xs">
-                                    Item: {motor.item}
+                                    {checklist.no_form || `Motor ${motor.item}`}
                                 </span>
                             </div>
                             <p className="text-xs text-slate-500 mt-0.5">
-                                Isi 7 tahapan pekerjaan bengkel listrik & verifikasi status OK/NO
+                                Perbarui isian hasil ukur, status centang / silang, dan persetujuan
                             </p>
                         </div>
                     </div>
+
+                    <Link
+                        href={route('checklists.show', checklist.id)}
+                        className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold shadow-md flex items-center gap-2 transition"
+                    >
+                        <Eye className="h-4 w-4" />
+                        <span>Lihat Format Cetak A4</span>
+                    </Link>
                 </div>
             }
         >
-            <Head title={`Buat Checklist ${motor.item} - Bengkel Listrik Pupuk Kujang`} />
+            <Head title={`Edit Checklist ${checklist.no_form || motor.item} - Bengkel Listrik`} />
 
             <form onSubmit={handleSubmit} className="space-y-8 max-w-5xl mx-auto">
                 {/* Header Information Card */}
@@ -99,7 +101,6 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                     </h3>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-                        {/* No Form */}
                         <div>
                             <label className="block font-bold text-slate-700 mb-1">Nomor Form / Dokumen</label>
                             <input
@@ -110,7 +111,6 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                             />
                         </div>
 
-                        {/* Tanggal Masuk */}
                         <div>
                             <label className="block font-bold text-slate-700 mb-1">Tanggal Masuk</label>
                             <input
@@ -121,7 +121,6 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                             />
                         </div>
 
-                        {/* Tanggal Selesai */}
                         <div>
                             <label className="block font-bold text-slate-700 mb-1">Tanggal Selesai</label>
                             <input
@@ -132,7 +131,6 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                             />
                         </div>
 
-                        {/* Status Perbaikan */}
                         <div>
                             <label className="block font-bold text-slate-700 mb-1">Status Perbaikan</label>
                             <select
@@ -155,7 +153,6 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                                 type="text"
                                 value={data.area_lapangan}
                                 onChange={(e) => setData('area_lapangan', e.target.value)}
-                                placeholder="Area 25 Pabrik..."
                                 className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:ring-2 focus:ring-emerald-500"
                             />
                         </div>
@@ -166,7 +163,6 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                                 type="text"
                                 value={data.keluhan}
                                 onChange={(e) => setData('keluhan', e.target.value)}
-                                placeholder="Contoh: Suara berisik bearing, getaran tinggi..."
                                 className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:ring-2 focus:ring-emerald-500"
                             />
                         </div>
@@ -180,7 +176,6 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                             key={section.no}
                             className="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden"
                         >
-                            {/* Section Header */}
                             <div className="bg-slate-900 px-6 py-3.5 text-white flex items-center justify-between">
                                 <div className="flex items-center gap-2.5">
                                     <span className="h-6 w-6 rounded-full bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">
@@ -195,7 +190,6 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                                 </span>
                             </div>
 
-                            {/* Tasks Table */}
                             <div className="p-4 sm:p-6 overflow-x-auto">
                                 <table className="w-full text-left text-xs border-collapse">
                                     <thead>
@@ -210,26 +204,22 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                                     <tbody className="divide-y divide-slate-100">
                                         {section.tasks.map((task, tIdx) => (
                                             <tr key={task.sub || tIdx} className="hover:bg-slate-50/80 transition">
-                                                {/* No Sub */}
                                                 <td className="py-3 px-2 text-center font-bold text-slate-400 font-mono">
                                                     {task.sub}
                                                 </td>
 
-                                                {/* Task Title */}
                                                 <td className="py-3 px-3 font-semibold text-slate-800 text-xs sm:text-sm">
                                                     {task.task}
                                                 </td>
 
-                                                {/* Checklist Check / Cross Toggle */}
                                                 <td className="py-3 px-3 text-center">
                                                     <button
                                                         type="button"
                                                         onClick={() => toggleCheck(sIdx, tIdx)}
                                                         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs transition ${task.checked
-                                                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-xs'
-                                                                : 'bg-rose-100 text-rose-800 border border-rose-300'
+                                                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-xs'
+                                                            : 'bg-rose-100 text-rose-800 border border-rose-300'
                                                             }`}
-                                                        title="Klik untuk ubah Centang / Silang"
                                                     >
                                                         {task.checked ? (
                                                             <>
@@ -245,27 +235,23 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                                                     </button>
                                                 </td>
 
-                                                {/* Keterangan Textbox */}
                                                 <td className="py-3 px-3">
                                                     <input
                                                         type="text"
                                                         value={task.notes || ''}
                                                         onChange={(e) => handleTaskChange(sIdx, tIdx, 'notes', e.target.value)}
-                                                        placeholder="Tulis keterangan..."
                                                         className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition"
                                                     />
                                                 </td>
 
-                                                {/* Status OK / NO Selector */}
                                                 <td className="py-3 px-3 text-center">
                                                     <button
                                                         type="button"
                                                         onClick={() => toggleStatus(sIdx, tIdx, task.status)}
                                                         className={`px-3 py-1.5 rounded-xl font-black text-xs transition ${task.status === 'OK'
-                                                                ? 'bg-emerald-600 text-white shadow-sm'
-                                                                : 'bg-rose-600 text-white shadow-sm'
+                                                            ? 'bg-emerald-600 text-white shadow-sm'
+                                                            : 'bg-rose-600 text-white shadow-sm'
                                                             }`}
-                                                        title="Klik untuk ubah status OK / NO"
                                                     >
                                                         {task.status || 'OK'}
                                                     </button>
@@ -287,7 +273,6 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                     </h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Teknisi (Left) */}
                         <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                             <div className="flex items-center gap-2">
                                 <Wrench className="h-4 w-4 text-emerald-600" />
@@ -319,7 +304,6 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                             </div>
                         </div>
 
-                        {/* Staf (Right) */}
                         <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                             <div className="flex items-center gap-2">
                                 <User className="h-4 w-4 text-teal-600" />
@@ -352,23 +336,20 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                         </div>
                     </div>
 
-                    {/* Catatan Umum */}
                     <div className="mt-6">
                         <label className="block text-xs font-bold text-slate-700 mb-1">Catatan Kesimpulan / Rekomendasi Akhir</label>
                         <textarea
                             value={data.catatan_umum}
                             onChange={(e) => setData('catatan_umum', e.target.value)}
                             rows={3}
-                            placeholder="Catatan hasil pengetesan akhir, kondisi rotor, kesiapan pasang di lapangan..."
                             className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:ring-2 focus:ring-emerald-500"
                         />
                     </div>
                 </div>
 
-                {/* Form Action Buttons */}
                 <div className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-200 shadow-sm sticky bottom-4 z-20">
                     <Link
-                        href={route('motors.show', motor.id)}
+                        href={route('checklists.show', checklist.id)}
                         className="px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 text-xs font-bold transition"
                     >
                         Batal
@@ -379,7 +360,7 @@ export default function ChecklistsCreate({ motor, defaultTemplate, suggestedForm
                         className="px-8 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 transition flex items-center gap-2 disabled:opacity-50"
                     >
                         <Save className="h-4 w-4" />
-                        <span>Simpan & Buka Format Preview A4</span>
+                        <span>Simpan Perubahan & Buka Format Preview A4</span>
                     </button>
                 </div>
             </form>
