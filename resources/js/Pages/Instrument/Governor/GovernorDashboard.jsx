@@ -1,117 +1,147 @@
-import GovernorLayout from '@/Pages/Instrument/Governor/GovernorLayout';
+
 import React from 'react';
+import GovernorLayout from '@/Pages/Instrument/Governor/GovernorLayout';
 
-
-
-const GovernorDashboard = () => {
-    const recentWorkOrders = [
-        { id: 'WO-001', type: 'Kalibrasi', area: 'Panel P321-A', date: '2023-10-27', status: 'Selesai', priority: 'Medium' },
-        { id: 'WO-002', type: 'Trouble Shooting', area: 'Turbin #2', date: '2023-10-26', status: 'Pending', priority: 'High' },
-        { id: 'WO-003', type: 'Inspeksi', area: 'Governor P123', date: '2023-10-26', status: 'Selesai', priority: 'Low' },
-        { id: 'WO-004', type: 'Maintenance', area: 'Governor #1', date: '2023-10-25', status: 'Selesai', priority: 'Medium' },
+const GovernorDashboard = ({ stats }) => {
+    const cards = [
+        {
+            title: 'Total Governor',
+            value: stats.total,
+            description: 'Total seluruh data governor',
+            icon: '⚙️',
+            color: 'blue',
+        },
+        {
+            title: 'Governor 1A',
+            value: stats.governor_1a,
+            description: 'Jumlah governor pabrik 1A',
+            icon: '🔧',
+            color: 'indigo',
+        },
+        {
+            title: 'Governor 1B',
+            value: stats.governor_1b,
+            description: 'Jumlah governor pabrik 1B',
+            icon: '🛠️',
+            color: 'cyan',
+        },
     ];
 
-    const criticalIssues = [
-        { id: 'CI-001', name: 'Governor P321-A', governorType: 'Mark VI', lastMaintenance: '2023-10-15', downtime: '4 Jam', priority: 'High', status: 'Critical' },
-        { id: 'CI-002', name: 'Governor #2', governorType: 'Woodward', lastMaintenance: '2023-09-20', downtime: '12 Jam', priority: 'Medium', status: 'Warning' },
-    ];
-
-    const calibrationData = [
-        { name: 'Jan', value: 2 },
-        { name: 'Feb', value: 3 },
-        { name: 'Mar', value: 1 },
-        { name: 'Apr', value: 4 },
-        { name: 'Mei', value: 2 },
-        { name: 'Jun', value: 5 },
-        { name: 'Jul', value: 3 },
-        { name: 'Agu', value: 6 },
-        { name: 'Sep', value: 4 },
-        { name: 'Okt', value: 7 },
-    ];
-
-    const maintenanceData = [
-        { name: 'Jan', preventive: 10, corrective: 3 },
-        { name: 'Feb', preventive: 8, corrective: 5 },
-        { name: 'Mar', preventive: 12, corrective: 2 },
-        { name: 'Apr', preventive: 9, corrective: 4 },
-        { name: 'Mei', preventive: 11, corrective: 3 },
-        { name: 'Jun', preventive: 7, corrective: 6 },
-    ];
-
-    const alerts = [
-        { id: 'A-001', message: 'Governor #1 - Over Speed Trip Warning', date: '2023-10-27 10:30', severity: 'High' },
-        { id: 'A-002', message: 'Calibration Due: Governor P123', date: '2023-10-26 14:00', severity: 'Medium' },
-        { id: 'A-003', message: 'Low Oil Pressure: Governor #2', date: '2023-10-25 09:15', severity: 'High' },
-    ];
+    const colorStyles = {
+        blue: {
+            icon: 'bg-blue-100 text-blue-700',
+            accent: 'bg-blue-600',
+            value: 'text-blue-700',
+        },
+        indigo: {
+            icon: 'bg-indigo-100 text-indigo-700',
+            accent: 'bg-indigo-600',
+            value: 'text-indigo-700',
+        },
+        cyan: {
+            icon: 'bg-cyan-100 text-cyan-700',
+            accent: 'bg-cyan-600',
+            value: 'text-cyan-700',
+        },
+    };
 
     return (
         <GovernorLayout>
-            <div className="flex-1 space-y-6">
+            <div className="min-h-screen space-y-7 bg-slate-50/60 p-4 sm:p-6 lg:p-8">
+
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h2 className="text-3xl font-bold tracking-tight">Governor Dashboard</h2>
-                        <p className="text-muted-foreground">Overview of governor performance and maintenance operations</p>
+                        <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+                            Instrument Management System
+                        </p>
+
+                        <h1 className="text-2xl font-bold tracking-tight text-slate-800 sm:text-3xl">
+                            Governor Dashboard
+                        </h1>
+
+                        <p className="mt-2 text-sm text-slate-500 sm:text-base">
+                            Ringkasan inventaris dan data peralatan governor.
+                        </p>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <button className="bg-blue-600 hover:bg-blue-700">
-                            <div className="h-4 w-4 mr-2" />
-                            Export Report
-                        </button>
+
+                    <div className="flex w-fit items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5">
+                        <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                        <span className="text-sm font-medium text-emerald-700">
+                            Data Terhubung
+                        </span>
+                    </div>
+                </div>
+
+                {/* Statistics Cards */}
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                    {cards.map((card) => {
+                        const styles = colorStyles[card.color];
+
+                        return (
+                            <div
+                                key={card.title}
+                                className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                            >
+                                {/* Accent bar */}
+                                <div
+                                    className={`absolute left-0 top-0 h-1 w-full ${styles.accent}`}
+                                />
+
+                                <div className="flex items-start justify-between gap-3">
+                                    <div>
+                                        <p className="text-sm font-medium text-slate-500">
+                                            {card.title}
+                                        </p>
+
+                                        <p className={`mt-4 text-4xl font-bold tracking-tight ${styles.value}`}>
+                                            {Number(card.value ?? 0).toLocaleString('id-ID')}
+                                        </p>
+
+                                        <p className="mt-3 text-sm text-slate-500">
+                                            {card.description}
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl ${styles.icon}`}
+                                    >
+                                        {card.icon}
+                                    </div>
+                                </div>
+
+                                <div className="mt-6 border-t border-slate-100 pt-4">
+                                    <p className="text-xs font-medium text-slate-400">
+                                        INVENTORY OVERVIEW
+                                    </p>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* Information Section */}
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+                    <div className="flex items-start gap-4">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-xl">
+                            📊
+                        </div>
+
+                        <div>
+                            <h2 className="font-semibold text-slate-800">
+                                Ringkasan Inventaris Governor
+                            </h2>
+
+                            <p className="mt-2 text-sm leading-6 text-slate-500">
+                                Dashboard ini menampilkan jumlah data governor
+                                berdasarkan database. Tambahkan atau hapus data
+                                melalui halaman data peralatan untuk memperbarui
+                                jumlah inventaris yang ditampilkan.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                {/* Stats Grid */}
-                <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
-                    <div className="hover:shadow-md transition-shadow bg-amber-600 rounded-3xl pt-8 p-6">
-                        <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <div className="text-sm font-medium text-muted-foreground bg-amber-200 text-center w-full">Total Governors</div>
-                            <div className="h-4 w-4 text-blue-600" />
-                        </div>
-                        <div className="text-2xl font-bold bg-amber-100 text-center">12</div>
-                        <p className="text-xs text-muted-foreground mt-2 bg-amber-200 text-center w-full md:text-left">Operational Governors</p>
-
-                    </div>
-
-                    <div className="hover:shadow-md transition-shadow">
-                        <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <div className="text-sm font-medium text-muted-foreground">Active Work Orders</div>
-                            <div className="h-4 w-4 text-yellow-600" />
-                        </div>
-                        <div className="text-2xl font-bold">3</div>
-                        <p className="text-xs text-muted-foreground mt-2">Pending Maintenance</p>
-
-                    </div>
-
-                    <div className="hover:shadow-md transition-shadow">
-                        <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <div className="text-sm font-medium text-muted-foreground">Completed Today</div>
-                            <div className="h-4 w-4 text-green-600" />
-                        </div>
-                        <div className="text-2xl font-bold">8</div>
-                        <p className="text-xs text-muted-foreground mt-2">Work orders completed</p>
-
-                    </div>
-
-                    <div className="hover:shadow-md transition-shadow">
-                        <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <div className="text-sm font-medium text-muted-foreground">Critical Alerts</div>
-                            <div className="h-4 w-4 text-red-600" />
-                        </div>
-                        <div className="text-2xl font-bold">2</div>
-                        <p className="text-xs text-muted-foreground mt-2">High severity issues</p>
-
-                    </div>
-
-                    <div className="hover:shadow-md transition-shadow">
-                        <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <div className="text-sm font-medium text-muted-foreground">On Time Rate</div>
-                            <div className="text-2xl font-bold text-green-600">92%</div>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-2">Maintenance completed on schedule</p>
-
-                    </div>
-                </div>
             </div>
         </GovernorLayout>
     );

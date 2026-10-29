@@ -3,18 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Governor;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class GovernorDashboardController extends Controller
 {
     public function index()
     {
-        $governors = Governor::all();
+        $stats = [
+            'total' => Governor::count(),
+
+            'governor_1a' => Governor::where('pabrik', '1A')->count(),
+
+            'governor_1b' => Governor::where('pabrik', '1B')->count(),
+        ];
+
         return Inertia::render(
             'Instrument/Governor/GovernorDashboard',
             [
-                'governors' => $governors,
+                'stats' => $stats,
             ]
         );
     }
