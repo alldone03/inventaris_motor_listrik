@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Motor;
 use App\Models\MotorChecklist;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,7 +16,7 @@ class ListrikDashboardController extends Controller
         $motorKeluar = Motor::where('status', 'Keluar Workshop')->count();
         $totalChecklists = MotorChecklist::count();
         $selesaiChecklists = MotorChecklist::where('status_perbaikan', 'Selesai')->count();
-        $prosesChecklists = MotorChecklist::where('staxtus_perbaikan', '!=', 'Selesai')->count();
+        $prosesChecklists = MotorChecklist::where('status_perbaikan', '!=', 'Selesai')->count();
 
         $recentChecklists = MotorChecklist::with('motor')
             ->latest()

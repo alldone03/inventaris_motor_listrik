@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('governors', function (Blueprint $table) {
             $table->id();
-            $table->string('item_no')->unique();
+            $table->string('item_no')->nullable();
             $table->string('governor_type')->nullable();
             $table->string('rotation')->nullable();
             $table->string('speed_range_rpm')->nullable();
