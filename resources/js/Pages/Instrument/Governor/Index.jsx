@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, router, usePage } from "@inertiajs/react";
 import GovernorLayout from "./GovernorLayout";
 import CheckIsInput from "@/Components/CheckIsInput";
+import { allowedInputter } from "@/Components/allowedInputter";
 
 export default function GovernorIndex({ governors, filters = {} }) {
     const [search, setSearch] = useState(filters.search ?? "");
@@ -67,7 +68,7 @@ export default function GovernorIndex({ governors, filters = {} }) {
                             Kelola dan cari data peralatan Governor.
                         </p>
                     </div>
-                    <CheckIsInput allowed="AVP,SPV,Staff">
+                    <CheckIsInput allowed={allowedInputter}>
                         <Link
                             href={route("governor.create")}
                             className="btn btn-primary"
@@ -153,7 +154,7 @@ export default function GovernorIndex({ governors, filters = {} }) {
                                 <th>Stock Code</th>
                                 <th>Area</th>
                                 <th>Pabrik</th>
-                                <CheckIsInput allowed="AVP,SPV,Staff">
+                                <CheckIsInput allowed={allowedInputter}>
                                     <th>Actions</th>
                                 </CheckIsInput>
                             </tr>
@@ -177,7 +178,7 @@ export default function GovernorIndex({ governors, filters = {} }) {
                                         <td>{governor.stock_code}</td>
                                         <td>{governor.area}</td>
                                         <td>{governor.pabrik}</td>
-                                        <CheckIsInput allowed="AVP|WLI,SPV|Instrument,Staff|Instrument,AVP|Instrument">
+                                        <CheckIsInput allowed={allowedInputter}>
                                             <td>
                                                 <div className="flex gap-2">
                                                     <Link
