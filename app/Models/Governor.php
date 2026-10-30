@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\GovernorHistory;
 
 class Governor extends Model
 {
@@ -17,6 +18,7 @@ class Governor extends Model
         'stock_code',
         'area',
         'pabrik',
+        'pdf_path'
     ];
 
     public function histories()

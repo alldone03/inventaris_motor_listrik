@@ -65,6 +65,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('governor.delete');
         Route::get('governor/{id}/uploadpdf', [GovernorController::class, 'uploadpdf'])
             ->name('governor.uploadpdf');
+        Route::post('/governor/upload/{record}', [GovernorController::class, 'uploadedPdf'])
+        ->name('governor.uploadedpdf');   
         // Route::post('')
     });
     // Alat Berat

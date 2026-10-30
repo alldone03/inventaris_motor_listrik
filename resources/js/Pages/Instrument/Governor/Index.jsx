@@ -209,7 +209,7 @@ export default function GovernorIndex({ governors, filters = {} }) {
                                                         )}
                                                         className="btn btn-sm border-0 bg-blue-600 text-white hover:bg-blue-700"
                                                     >
-                                                        Upload
+                                                        PDF
                                                     </Link>
                                                 </div>
                                             </td>

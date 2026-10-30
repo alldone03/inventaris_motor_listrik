@@ -127,24 +127,46 @@ class GovernorController extends Controller
     public function uploadpdf(Request $request, $id)
     {
         // dd('hello');s
+        $governor = Governor::find($id);
 
-        return Inertia::render('Instrument/Governor/Uploadpdf');
+        return Inertia::render('Instrument/Governor/Uploadpdf', [
+            'record' => $id,
+            'governor' => $governor
+        ]   );
+    }
+    public function uploadedpdf(Request $request, $id){
+        // 1. Validasi data yang masuk
+    $request->validate([
+        'pdf_file' => 'required|mimes:pdf|max:2048', // Maksimal 2MB, harus PDF
+    ]);
+
+    $governor = Governor::find($id);
+
+    // 2. Cek apakah ada file yang di-upload
+    if ($request->hasFile('pdf_file')) {
+        $file = $request->file('pdf_file');
+        
+        // (Opsional) Hapus file lama dari storage jika sudah ada sebelumnya
+        if ($governor->pdf_path && \Storage::disk('public')->exists($governor->pdf_path)) {
+            \Storage::disk('public')->delete($governor->pdf_path);
+        }
+
+        // Simpan file baru ke folder storage/app/public/uploads/pdf
+        $path = $file->store('uploads/pdf', 'public');
+        
+
+        // 3. Update database menggunakan update() dengan array fillable
+        $governor->update([
+            'pdf_path' => $path
+        ]);
+        
+
+        
+        // 4. Kembalikan response sukses
+        return redirect()->back()->with('success', 'PDF berhasil di-upload!');
+    }
+
+    return redirect()->back()->with('error', 'File tidak ditemukan.');
     }
 }
-// } public function uploadPdf(Request $request, $id)
-// {
-//     $request->validate([
-//         'pdf' => 'required|file|mimes:pdf|max:10240',
-//     ]);
 
-//     $governor = Governor::findOrFail($id);
-
-//     $path = $request->file('pdf')
-//         ->store('governor-pdfs', 'public');
-
-//     $governor->update([
-//         'pdf_path' => $path,
-//     ]);
-
-//     return back()->with('success', 'PDF berhasil disimpan.');
-// }
