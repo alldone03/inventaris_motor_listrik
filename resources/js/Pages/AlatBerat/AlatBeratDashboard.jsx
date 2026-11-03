@@ -1,232 +1,370 @@
-// INI SEMENTARA NANTI DIEDIT LAGI SESUAI KEBUTUHAN
-import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
-import {
-    Search,
-    Truck,
-    Wrench,
-    Activity,
-    MapPin,
-    Eye,
-    PlusCircle
-} from 'lucide-react';
-import AlatBeratLayout from './AlatBeratLayout';
 
-export default function AlatBeratDashboard() {
-    const [searchQuery, setSearchQuery] = useState('');
+import React, { useMemo, useState } from "react";
+import InstrumentLayout from "./AlatBeratLayout";
 
-    // Data contoh untuk tampilan saja, belum dari database
-    const daftarAlat = [
-        {
-            id: 1,
-            kode: 'AB-001',
-            nama: 'Forklift',
-            lokasi: 'Workshop',
-            kondisi: 'Baik',
-            status: 'Aktif',
-        },
-        {
-            id: 2,
-            kode: 'AB-002',
-            nama: 'Wheel Loader',
-            lokasi: 'Area Produksi',
-            kondisi: 'Baik',
-            status: 'Aktif',
-        },
-        {
-            id: 3,
-            kode: 'AB-003',
-            nama: 'Excavator',
-            lokasi: 'Area Lapangan',
-            kondisi: 'Perlu Pemeriksaan',
-            status: 'Maintenance',
-        },
-        {
-            id: 4,
-            kode: 'AB-004',
-            nama: 'Mobile Crane',
-            lokasi: 'Workshop',
-            kondisi: 'Baik',
-            status: 'Aktif',
-        },
-    ];
+const dataAlatBerat = [
+    {
+        id: 1,
+        nama: "Excavator",
+        merk: "Caterpillar",
+        model: "320D",
+        nomor_unit: "AB-001",
+        kapasitas: "20 Ton",
+        lokasi: "Utility",
+        status: "Siap Operasi",
+        pemeliharaan: "Kondisi normal",
+    },
+    {
+        id: 2,
+        nama: "Excavator",
+        merk: "Komatsu",
+        model: "PC200",
+        nomor_unit: "AB-002",
+        kapasitas: "20 Ton",
+        lokasi: "Area Produksi",
+        status: "Dalam Perbaikan",
+        pemeliharaan: "Perbaikan sistem hidrolik",
+    },
+    {
+        id: 3,
+        nama: "Wheel Loader",
+        merk: "Volvo",
+        model: "L90H",
+        nomor_unit: "AB-003",
+        kapasitas: "15 Ton",
+        lokasi: "Gudang",
+        status: "Siap Operasi",
+        pemeliharaan: "Kondisi normal",
+    },
+    {
+        id: 4,
+        nama: "Bulldozer",
+        merk: "Komatsu",
+        model: "D85",
+        nomor_unit: "AB-004",
+        kapasitas: "25 Ton",
+        lokasi: "Area Tambang",
+        status: "Rusak",
+        pemeliharaan: "Kerusakan sistem transmisi",
+    },
+    {
+        id: 5,
+        nama: "Forklift",
+        merk: "Toyota",
+        model: "8FD30",
+        nomor_unit: "AB-005",
+        kapasitas: "3 Ton",
+        lokasi: "Gudang",
+        status: "Dalam Perbaikan",
+        pemeliharaan: "Pemeriksaan mesin",
+    },
+    {
+        id: 6,
+        nama: "Motor Grader",
+        merk: "Caterpillar",
+        model: "120K",
+        nomor_unit: "AB-006",
+        kapasitas: "12 Ton",
+        lokasi: "Area Produksi",
+        status: "Siap Operasi",
+        pemeliharaan: "Kondisi normal",
+    },
+];
 
-    const filteredAlat = daftarAlat.filter((alat) =>
-        `${alat.kode} ${alat.nama} ${alat.lokasi}`
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase())
-    );
+const statusStyle = {
+    "Siap Operasi": "bg-emerald-100 text-emerald-700",
+    "Dalam Perbaikan": "bg-amber-100 text-amber-700",
+    "Rusak": "bg-red-100 text-red-700",
+};
 
+function StatistikCard({ judul, jumlah, simbol, warna }) {
     return (
-        <AlatBeratLayout
-            header={
-                <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-amber-100 text-amber-700">
-                        <Truck className="w-6 h-6" />
-                    </div>
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition">
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl ${warna}`}>
+                {simbol}
+            </div>
+
+            <p className="text-sm text-gray-500 mt-3">{judul}</p>
+            <h2 className="text-2xl font-bold text-gray-800 mt-1">
+                {jumlah}
+            </h2>
+            <p className="text-xs text-gray-400 mt-1">Unit alat berat</p>
+        </div>
+    );
+}
+
+function AlatBeratCard({ alat, onDetail }) {
+    return (
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 p-5">
+
+            {/* Nama dan Status */}
+            <div className="flex items-start justify-between gap-2">
+                <div>
+                    <h3 className="font-bold text-gray-800">
+                        {alat.merk} {alat.model}
+                    </h3>
+                    <p className="text-xs text-gray-400 mt-1">
+                        {alat.nomor_unit}
+                    </p>
+                </div>
+
+                <span className={`text-[10px] font-semibold px-2 py-1 rounded-md whitespace-nowrap ${statusStyle[alat.status]}`}>
+                    {alat.status}
+                </span>
+            </div>
+
+            <div className="border-t border-gray-100 my-4" />
+
+            {/* Informasi Alat */}
+            <div className="space-y-3 text-sm">
+                <div>
+                    <p className="text-xs text-gray-400">Nama Alat</p>
+                    <p className="font-medium text-gray-700">{alat.nama}</p>
+                </div>
+
+                <div>
+                    <p className="text-xs text-gray-400">Merk / Model</p>
+                    <p className="font-medium text-gray-700">
+                        {alat.merk} {alat.model}
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
                     <div>
-                        <h2 className="text-2xl font-black text-slate-900">
-                            Dashboard Alat Berat
-                        </h2>
-                        <p className="text-sm text-slate-500">
-                            Inventaris dan pemantauan kondisi alat berat
-                        </p>
-                    </div>
-                </div>
-            }
-        >
-            <Head title="Dashboard Alat Berat" />
-
-            <div className="space-y-6">
-                {/* Ringkasan */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-500">
-                                Total Alat Berat
-                            </span>
-                            <Truck className="w-5 h-5 text-blue-600" />
-                        </div>
-                        <p className="text-3xl font-black text-slate-900 mt-3">
-                            {daftarAlat.length}
-                        </p>
-                        <p className="text-xs text-slate-400 mt-1">
-                            Data contoh
-                        </p>
+                        <p className="text-xs text-gray-400">Kapasitas</p>
+                        <p className="font-semibold text-gray-700">{alat.kapasitas}</p>
                     </div>
 
-                    <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-500">
-                                Kondisi Baik
-                            </span>
-                            <Activity className="w-5 h-5 text-emerald-600" />
-                        </div>
-                        <p className="text-3xl font-black text-emerald-600 mt-3">
-                            {daftarAlat.filter(a => a.kondisi === 'Baik').length}
-                        </p>
-                        <p className="text-xs text-slate-400 mt-1">
-                            Unit dalam kondisi baik
-                        </p>
-                    </div>
-
-                    <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-500">
-                                Maintenance
-                            </span>
-                            <Wrench className="w-5 h-5 text-amber-600" />
-                        </div>
-                        <p className="text-3xl font-black text-amber-600 mt-3">
-                            {daftarAlat.filter(a => a.status === 'Maintenance').length}
-                        </p>
-                        <p className="text-xs text-slate-400 mt-1">
-                            Unit perlu pemeliharaan
-                        </p>
-                    </div>
-                </div>
-
-                {/* Daftar alat berat */}
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div className="p-5 sm:p-6 border-b border-slate-100">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                            <div>
-                                <h3 className="text-lg font-extrabold text-slate-900">
-                                    Daftar Alat Berat
-                                </h3>
-                                <p className="text-sm text-slate-500 mt-1">
-                                    Inventaris seluruh unit alat berat
-                                </p>
-                            </div>
-
-                            <div className="relative">
-                                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Cari alat berat..."
-                                    className="w-full sm:w-64 pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm text-left">
-                            <thead className="bg-slate-50 text-slate-500 uppercase text-xs">
-                                <tr>
-                                    <th className="px-6 py-4">No.</th>
-                                    <th className="px-6 py-4">Kode Alat</th>
-                                    <th className="px-6 py-4">Nama Alat</th>
-                                    <th className="px-6 py-4">Lokasi</th>
-                                    <th className="px-6 py-4">Kondisi</th>
-                                    <th className="px-6 py-4">Status</th>
-                                    <th className="px-6 py-4">Aksi</th>
-                                </tr>
-                            </thead>
-
-                            <tbody className="divide-y divide-slate-100">
-                                {filteredAlat.map((alat, index) => (
-                                    <tr key={alat.id} className="hover:bg-slate-50">
-                                        <td className="px-6 py-4 text-slate-500">
-                                            {index + 1}
-                                        </td>
-                                        <td className="px-6 py-4 font-mono font-bold text-slate-700">
-                                            {alat.kode}
-                                        </td>
-                                        <td className="px-6 py-4 font-semibold text-slate-900">
-                                            {alat.nama}
-                                        </td>
-                                        <td className="px-6 py-4 text-slate-600">
-                                            <span className="flex items-center gap-1.5">
-                                                <MapPin className="w-4 h-4 text-slate-400" />
-                                                {alat.lokasi}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                                                alat.kondisi === 'Baik'
-                                                    ? 'bg-emerald-100 text-emerald-700'
-                                                    : 'bg-amber-100 text-amber-700'
-                                            }`}>
-                                                {alat.kondisi}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-slate-600">
-                                            {alat.status}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <button
-                                                type="button"
-                                                onClick={() => alert(`Data contoh: ${alat.nama}`)}
-                                                className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 font-semibold"
-                                            >
-                                                <Eye className="w-4 h-4" />
-                                                Lihat
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-
-                                {filteredAlat.length === 0 && (
-                                    <tr>
-                                        <td colSpan="7" className="px-6 py-10 text-center text-slate-400">
-                                            Alat berat tidak ditemukan.
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div className="px-6 py-4 bg-slate-50 border-t border-slate-100">
-                        <p className="text-xs text-slate-500">
-                            Menampilkan {filteredAlat.length} dari {daftarAlat.length} data contoh.
-                        </p>
+                    <div>
+                        <p className="text-xs text-gray-400">Lokasi</p>
+                        <p className="font-semibold text-gray-700">{alat.lokasi}</p>
                     </div>
                 </div>
             </div>
-        </AlatBeratLayout>
+
+            {/* Informasi Pemeliharaan */}
+            <div className="mt-4 bg-emerald-50 border border-emerald-100 rounded-lg p-3">
+                <p className="text-xs text-emerald-700 font-semibold mb-1">
+                    Informasi Pemeliharaan
+                </p>
+                <p className="text-xs text-gray-600">
+                    {alat.pemeliharaan}
+                </p>
+            </div>
+
+            {/* Tombol Detail */}
+            <button
+                onClick={() => onDetail(alat)}
+                className="w-full mt-4 text-sm text-emerald-700 font-semibold hover:text-emerald-900 transition"
+            >
+                Lihat Detail →
+            </button>
+        </div>
+    );
+}
+
+export default function AlatBeratDashboard() {
+    const [data] = useState(dataAlatBerat);
+    const [pencarian, setPencarian] = useState("");
+    const [filterStatus, setFilterStatus] = useState("Semua Status");
+    const [alatTerpilih, setAlatTerpilih] = useState(null);
+
+    // Menghitung jumlah alat berdasarkan status
+    const statistik = useMemo(() => ({
+        total: data.length,
+        siap: data.filter(a => a.status === "Siap Operasi").length,
+        perbaikan: data.filter(a => a.status === "Dalam Perbaikan").length,
+        rusak: data.filter(a => a.status === "Rusak").length,
+    }), [data]);
+
+    // Pencarian dan filter alat berat
+    const dataTersaring = useMemo(() => {
+        return data.filter((alat) => {
+            const kataKunci = pencarian.toLowerCase();
+
+            const cocokPencarian = [
+                alat.nama,
+                alat.merk,
+                alat.model,
+                alat.nomor_unit,
+                alat.lokasi,
+            ].some(nilai => nilai.toLowerCase().includes(kataKunci));
+
+            const cocokStatus =
+                filterStatus === "Semua Status" ||
+                alat.status === filterStatus;
+
+            return cocokPencarian && cocokStatus;
+        });
+    }, [data, pencarian, filterStatus]);
+
+    return (
+        <InstrumentLayout>
+            <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
+
+                {/* HEADER */}
+                <div className="bg-gradient-to-r from-emerald-800 to-emerald-600 rounded-xl p-6 text-white shadow-md">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <h1 className="text-2xl font-bold">
+                                Dashboard Alat Berat
+                            </h1>
+                            <p className="text-emerald-100 text-sm mt-1">
+                                Sistem Informasi Manajemen Alat Berat
+                            </p>
+                        </div>
+
+                        <div className="bg-white/15 rounded-lg px-4 py-2 text-sm font-medium">
+                            Monitoring Alat Berat
+                        </div>
+                    </div>
+                </div>
+
+                {/* PENCARIAN DAN FILTER */}
+                <div className="mt-6 flex flex-col md:flex-row gap-3">
+                    <div className="relative flex-1">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                            🔍
+                        </span>
+
+                        <input
+                            type="text"
+                            value={pencarian}
+                            onChange={(e) => setPencarian(e.target.value)}
+                            placeholder="Cari nama alat, merk, model, atau nomor unit..."
+                            className="w-full bg-white border border-gray-200 rounded-lg pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        />
+                    </div>
+
+                    <select
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                        className="bg-white border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                        <option>Semua Status</option>
+                        <option>Siap Operasi</option>
+                        <option>Dalam Perbaikan</option>
+                        <option>Rusak</option>
+                    </select>
+                </div>
+
+                {/* STATISTIK */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+                    <StatistikCard
+                        judul="Total Alat Berat"
+                        jumlah={statistik.total}
+                        simbol="🚜"
+                        warna="bg-emerald-50 text-emerald-700"
+                    />
+
+                    <StatistikCard
+                        judul="Siap Operasi"
+                        jumlah={statistik.siap}
+                        simbol="✓"
+                        warna="bg-green-50 text-green-600"
+                    />
+
+                    <StatistikCard
+                        judul="Dalam Perbaikan"
+                        jumlah={statistik.perbaikan}
+                        simbol="🔧"
+                        warna="bg-amber-50 text-amber-600"
+                    />
+
+                    <StatistikCard
+                        judul="Rusak"
+                        jumlah={statistik.rusak}
+                        simbol="⚠"
+                        warna="bg-red-50 text-red-600"
+                    />
+                </div>
+
+                {/* DAFTAR ALAT BERAT */}
+                <div className="mt-8">
+                    <div className="flex items-center justify-between mb-5">
+                        <div>
+                            <h2 className="text-lg font-bold text-gray-800">
+                                Daftar Alat Berat
+                            </h2>
+                            <p className="text-sm text-gray-500 mt-1">
+                                Informasi dan kondisi alat berat
+                            </p>
+                        </div>
+
+                        <span className="text-sm text-emerald-700 font-semibold">
+                            {dataTersaring.length} Unit
+                        </span>
+                    </div>
+
+                    {dataTersaring.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                            {dataTersaring.map((alat) => (
+                                <AlatBeratCard
+                                    key={alat.id}
+                                    alat={alat}
+                                    onDetail={setAlatTerpilih}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
+                            <div className="text-4xl mb-3">🔍</div>
+                            <h3 className="font-semibold text-gray-700">
+                                Data tidak ditemukan
+                            </h3>
+                            <p className="text-sm text-gray-400 mt-1">
+                                Coba gunakan kata kunci atau filter lainnya.
+                            </p>
+                        </div>
+                    )}
+                </div>
+
+                {/* MODAL DETAIL */}
+                {alatTerpilih && (
+                    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+                        <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+                            <div className="flex justify-between items-center mb-5">
+                                <h2 className="text-lg font-bold text-gray-800">
+                                    Detail Alat Berat
+                                </h2>
+
+                                <button
+                                    onClick={() => setAlatTerpilih(null)}
+                                    className="text-gray-400 hover:text-red-500 text-xl"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+
+                            <div className="space-y-4 text-sm">
+                                {[
+                                    ["Nama Alat", alatTerpilih.nama],
+                                    ["Merk", alatTerpilih.merk],
+                                    ["Model", alatTerpilih.model],
+                                    ["Nomor Unit", alatTerpilih.nomor_unit],
+                                    ["Kapasitas", alatTerpilih.kapasitas],
+                                    ["Lokasi", alatTerpilih.lokasi],
+                                    ["Status", alatTerpilih.status],
+                                    ["Pemeliharaan", alatTerpilih.pemeliharaan],
+                                ].map(([label, value]) => (
+                                    <div key={label} className="flex justify-between gap-4 border-b border-gray-100 pb-2">
+                                        <span className="text-gray-400">{label}</span>
+                                        <span className="font-medium text-gray-700 text-right">{value}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={() => setAlatTerpilih(null)}
+                                className="w-full mt-6 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg py-2.5 font-medium transition"
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+            </div>
+        </InstrumentLayout>
     );
 }

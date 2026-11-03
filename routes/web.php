@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlatBeratController;
 use App\Http\Controllers\AlatBeratDashboardController;
 use App\Http\Controllers\ApproverController;
 use App\Http\Controllers\DashboardMainController;
@@ -66,7 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('governor/{id}/uploadpdf', [GovernorController::class, 'uploadpdf'])
             ->name('governor.uploadpdf');
         Route::post('/governor/upload/{record}', [GovernorController::class, 'uploadedPdf'])
-        ->name('governor.uploadedpdf');   
+            ->name('governor.uploadedpdf');
         // Route::post('')
     });
     // Alat Berat
@@ -79,6 +80,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->group(function () {
             Route::get('/dashboard', [AlatBeratDashboardController::class, 'index'])
                 ->name('alatberat_dashboard');
+            Route::get('/daftar', [AlatBeratController::class, 'index'])
+                ->name('alatberat.index');
+            // Tambah Alat Berat
+            Route::get('/create', [AlatBeratController::class, 'create'])
+                ->name('alatberat.create');
+
+            Route::post('/store', [AlatBeratController::class, 'store'])
+                ->name('alatberat.store');
+
+            // Edit Alat Berat
+            Route::get('/{id}/edit', [AlatBeratController::class, 'edit'])
+                ->name('alatberat.edit');
+
+            Route::put('/{id}', [AlatBeratController::class, 'update'])
+                ->name('alatberat.update');
+
+            // Hapus Alat Berat
+            Route::delete('/{id}', [AlatBeratController::class, 'destroy'])
+                ->name('alatberat.delete');
         });
 
     // Profile

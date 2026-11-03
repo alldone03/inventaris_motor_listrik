@@ -3,6 +3,7 @@ import { Link, usePage } from '@inertiajs/react';
 import PupukKujangLogo from '@/Components/PupukKujangLogo';
 import {
     LayoutDashboard,
+    Truck,
     Zap,
     List,
     PlusCircle,
@@ -49,6 +50,13 @@ export default function AlatBeratLayout({ header, children }) {
             icon: LayoutDashboard,
             active: route().current('instrument_dashboard'),
         },
+        {
+            name: 'Daftar Alat Berat',
+            href: route('alatberat.index'),
+            icon: Truck,
+            active: route().current('alatberat.index'),
+        },
+
 
     ].filter(Boolean);
 
