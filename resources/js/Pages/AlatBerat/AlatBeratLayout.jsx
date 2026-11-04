@@ -46,9 +46,9 @@ export default function AlatBeratLayout({ header, children }) {
     const navItems = [
         {
             name: 'Dashboard',
-            href: route('instrument_dashboard'),
+            href: route('dashboard'),
             icon: LayoutDashboard,
-            active: route().current('instrument_dashboard'),
+            active: route().current('dashboard'),
         },
         {
             name: 'Daftar Alat Berat',

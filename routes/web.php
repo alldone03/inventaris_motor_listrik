@@ -90,10 +90,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->name('alatberat.store');
 
             // Edit Alat Berat
-            Route::get('/{id}/edit', [AlatBeratController::class, 'edit'])
+            Route::get('/{alatBerat}/edit', [AlatBeratController::class, 'edit'])
                 ->name('alatberat.edit');
 
-            Route::put('/{id}', [AlatBeratController::class, 'update'])
+            Route::put('/{alatBerat}', [AlatBeratController::class, 'update'])
                 ->name('alatberat.update');
 
             // Hapus Alat Berat

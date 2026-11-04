@@ -1,82 +1,16 @@
 
 import React, { useMemo, useState } from "react";
+import { usePage } from "@inertiajs/react";
 import InstrumentLayout from "./AlatBeratLayout";
 
-const dataAlatBerat = [
-    {
-        id: 1,
-        nama: "Excavator",
-        merk: "Caterpillar",
-        model: "320D",
-        nomor_unit: "AB-001",
-        kapasitas: "20 Ton",
-        lokasi: "Utility",
-        status: "Siap Operasi",
-        pemeliharaan: "Kondisi normal",
-    },
-    {
-        id: 2,
-        nama: "Excavator",
-        merk: "Komatsu",
-        model: "PC200",
-        nomor_unit: "AB-002",
-        kapasitas: "20 Ton",
-        lokasi: "Area Produksi",
-        status: "Dalam Perbaikan",
-        pemeliharaan: "Perbaikan sistem hidrolik",
-    },
-    {
-        id: 3,
-        nama: "Wheel Loader",
-        merk: "Volvo",
-        model: "L90H",
-        nomor_unit: "AB-003",
-        kapasitas: "15 Ton",
-        lokasi: "Gudang",
-        status: "Siap Operasi",
-        pemeliharaan: "Kondisi normal",
-    },
-    {
-        id: 4,
-        nama: "Bulldozer",
-        merk: "Komatsu",
-        model: "D85",
-        nomor_unit: "AB-004",
-        kapasitas: "25 Ton",
-        lokasi: "Area Tambang",
-        status: "Rusak",
-        pemeliharaan: "Kerusakan sistem transmisi",
-    },
-    {
-        id: 5,
-        nama: "Forklift",
-        merk: "Toyota",
-        model: "8FD30",
-        nomor_unit: "AB-005",
-        kapasitas: "3 Ton",
-        lokasi: "Gudang",
-        status: "Dalam Perbaikan",
-        pemeliharaan: "Pemeriksaan mesin",
-    },
-    {
-        id: 6,
-        nama: "Motor Grader",
-        merk: "Caterpillar",
-        model: "120K",
-        nomor_unit: "AB-006",
-        kapasitas: "12 Ton",
-        lokasi: "Area Produksi",
-        status: "Siap Operasi",
-        pemeliharaan: "Kondisi normal",
-    },
-];
-
+// Styling status
 const statusStyle = {
     "Siap Operasi": "bg-emerald-100 text-emerald-700",
     "Dalam Perbaikan": "bg-amber-100 text-amber-700",
     "Rusak": "bg-red-100 text-red-700",
 };
 
+// Komponen Statistik
 function StatistikCard({ judul, jumlah, simbol, warna }) {
     return (
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition">
@@ -85,14 +19,19 @@ function StatistikCard({ judul, jumlah, simbol, warna }) {
             </div>
 
             <p className="text-sm text-gray-500 mt-3">{judul}</p>
+
             <h2 className="text-2xl font-bold text-gray-800 mt-1">
-                {jumlah}
+                {jumlah ?? 0}
             </h2>
-            <p className="text-xs text-gray-400 mt-1">Unit alat berat</p>
+
+            <p className="text-xs text-gray-400 mt-1">
+                Unit alat berat
+            </p>
         </div>
     );
 }
 
+// Komponen Kartu Alat Berat
 function AlatBeratCard({ alat, onDetail }) {
     return (
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 p-5">
@@ -103,12 +42,14 @@ function AlatBeratCard({ alat, onDetail }) {
                     <h3 className="font-bold text-gray-800">
                         {alat.merk} {alat.model}
                     </h3>
+
                     <p className="text-xs text-gray-400 mt-1">
                         {alat.nomor_unit}
                     </p>
                 </div>
 
-                <span className={`text-[10px] font-semibold px-2 py-1 rounded-md whitespace-nowrap ${statusStyle[alat.status]}`}>
+                <span className={`text-[10px] font-semibold px-2 py-1 rounded-md whitespace-nowrap ${statusStyle[alat.status] || "bg-gray-100 text-gray-600"
+                    }`}>
                     {alat.status}
                 </span>
             </div>
@@ -119,7 +60,9 @@ function AlatBeratCard({ alat, onDetail }) {
             <div className="space-y-3 text-sm">
                 <div>
                     <p className="text-xs text-gray-400">Nama Alat</p>
-                    <p className="font-medium text-gray-700">{alat.nama}</p>
+                    <p className="font-medium text-gray-700">
+                        {alat.nama_alat}
+                    </p>
                 </div>
 
                 <div>
@@ -132,12 +75,16 @@ function AlatBeratCard({ alat, onDetail }) {
                 <div className="grid grid-cols-2 gap-3">
                     <div>
                         <p className="text-xs text-gray-400">Kapasitas</p>
-                        <p className="font-semibold text-gray-700">{alat.kapasitas}</p>
+                        <p className="font-semibold text-gray-700">
+                            {alat.kapasitas || "-"}
+                        </p>
                     </div>
 
                     <div>
                         <p className="text-xs text-gray-400">Lokasi</p>
-                        <p className="font-semibold text-gray-700">{alat.lokasi}</p>
+                        <p className="font-semibold text-gray-700">
+                            {alat.lokasi || "-"}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -147,8 +94,9 @@ function AlatBeratCard({ alat, onDetail }) {
                 <p className="text-xs text-emerald-700 font-semibold mb-1">
                     Informasi Pemeliharaan
                 </p>
+
                 <p className="text-xs text-gray-600">
-                    {alat.pemeliharaan}
+                    {alat.keterangan || "-"}
                 </p>
             </div>
 
@@ -163,19 +111,26 @@ function AlatBeratCard({ alat, onDetail }) {
     );
 }
 
+// Dashboard Utama
 export default function AlatBeratDashboard() {
-    const [data] = useState(dataAlatBerat);
+
+    // Mengambil data dari Laravel melalui Inertia
+    const { alatBerats = [], stats = {} } = usePage().props;
+
+    // Data asli dari database
+    const data = alatBerats;
+
     const [pencarian, setPencarian] = useState("");
     const [filterStatus, setFilterStatus] = useState("Semua Status");
     const [alatTerpilih, setAlatTerpilih] = useState(null);
 
-    // Menghitung jumlah alat berdasarkan status
-    const statistik = useMemo(() => ({
-        total: data.length,
-        siap: data.filter(a => a.status === "Siap Operasi").length,
-        perbaikan: data.filter(a => a.status === "Dalam Perbaikan").length,
-        rusak: data.filter(a => a.status === "Rusak").length,
-    }), [data]);
+    // Statistik berasal dari database melalui Controller
+    const statistik = {
+        total: stats.total ?? 0,
+        siap: stats.siap_operasi ?? 0,
+        perbaikan: stats.dalam_perbaikan ?? 0,
+        rusak: stats.rusak ?? 0,
+    };
 
     // Pencarian dan filter alat berat
     const dataTersaring = useMemo(() => {
@@ -183,12 +138,14 @@ export default function AlatBeratDashboard() {
             const kataKunci = pencarian.toLowerCase();
 
             const cocokPencarian = [
-                alat.nama,
+                alat.nama_alat,
                 alat.merk,
                 alat.model,
                 alat.nomor_unit,
                 alat.lokasi,
-            ].some(nilai => nilai.toLowerCase().includes(kataKunci));
+            ].some(nilai =>
+                String(nilai ?? "").toLowerCase().includes(kataKunci)
+            );
 
             const cocokStatus =
                 filterStatus === "Semua Status" ||
@@ -209,6 +166,7 @@ export default function AlatBeratDashboard() {
                             <h1 className="text-2xl font-bold">
                                 Dashboard Alat Berat
                             </h1>
+
                             <p className="text-emerald-100 text-sm mt-1">
                                 Sistem Informasi Manajemen Alat Berat
                             </p>
@@ -286,6 +244,7 @@ export default function AlatBeratDashboard() {
                             <h2 className="text-lg font-bold text-gray-800">
                                 Daftar Alat Berat
                             </h2>
+
                             <p className="text-sm text-gray-500 mt-1">
                                 Informasi dan kondisi alat berat
                             </p>
@@ -309,11 +268,17 @@ export default function AlatBeratDashboard() {
                     ) : (
                         <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
                             <div className="text-4xl mb-3">🔍</div>
+
                             <h3 className="font-semibold text-gray-700">
-                                Data tidak ditemukan
+                                {data.length === 0
+                                    ? "Belum ada data alat berat"
+                                    : "Data tidak ditemukan"}
                             </h3>
+
                             <p className="text-sm text-gray-400 mt-1">
-                                Coba gunakan kata kunci atau filter lainnya.
+                                {data.length === 0
+                                    ? "Silakan tambahkan data alat berat terlebih dahulu."
+                                    : "Coba gunakan kata kunci atau filter lainnya."}
                             </p>
                         </div>
                     )}
@@ -338,18 +303,26 @@ export default function AlatBeratDashboard() {
 
                             <div className="space-y-4 text-sm">
                                 {[
-                                    ["Nama Alat", alatTerpilih.nama],
+                                    ["Nama Alat", alatTerpilih.nama_alat],
                                     ["Merk", alatTerpilih.merk],
                                     ["Model", alatTerpilih.model],
                                     ["Nomor Unit", alatTerpilih.nomor_unit],
-                                    ["Kapasitas", alatTerpilih.kapasitas],
-                                    ["Lokasi", alatTerpilih.lokasi],
+                                    ["Kapasitas", alatTerpilih.kapasitas || "-"],
+                                    ["Lokasi", alatTerpilih.lokasi || "-"],
                                     ["Status", alatTerpilih.status],
-                                    ["Pemeliharaan", alatTerpilih.pemeliharaan],
+                                    ["Keterangan", alatTerpilih.keterangan || "-"],
                                 ].map(([label, value]) => (
-                                    <div key={label} className="flex justify-between gap-4 border-b border-gray-100 pb-2">
-                                        <span className="text-gray-400">{label}</span>
-                                        <span className="font-medium text-gray-700 text-right">{value}</span>
+                                    <div
+                                        key={label}
+                                        className="flex justify-between gap-4 border-b border-gray-100 pb-2"
+                                    >
+                                        <span className="text-gray-400">
+                                            {label}
+                                        </span>
+
+                                        <span className="font-medium text-gray-700 text-right">
+                                            {value}
+                                        </span>
                                     </div>
                                 ))}
                             </div>

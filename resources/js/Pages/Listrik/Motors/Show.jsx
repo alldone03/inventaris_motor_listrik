@@ -1,6 +1,7 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Pages/Listrik/ListrikLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
+import CheckIsInput from '@/Components/CheckIsInput';
 import {
     Zap,
     ArrowLeft,

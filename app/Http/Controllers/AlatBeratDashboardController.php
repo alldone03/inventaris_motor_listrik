@@ -29,6 +29,8 @@ class AlatBeratDashboardController extends Controller
             'AlatBerat/AlatBeratDashboard',
             [
                 'stats' => $stats,
+                // Mengambil seluruh data alat berat dari database
+                'alatBerats' => AlatBerat::all(),
             ]
         );
     }

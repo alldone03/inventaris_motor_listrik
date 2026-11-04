@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import AuthenticatedLayout from '@/Pages/Listrik/ListrikLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
 import PupukKujangLogo from '@/Components/PupukKujangLogo';
+import CheckIsInput from '@/Components/CheckIsInput';
 import {
     Printer,
     Edit,

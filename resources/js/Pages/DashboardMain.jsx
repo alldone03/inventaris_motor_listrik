@@ -27,7 +27,7 @@ export default function Dashboard() {
     console.log(user);
 
     const aplikasi = [
-        { nama: "Listrik", url: route("listrik_dashboard"), gambar: "/Listrik.png", deskripsi: "Database inventaris motor listrik dan peralatan kelistrikan workshop." },
+        { nama: "Workshop Listrik", url: route("listrik_dashboard"), gambar: "/Listrik.png", deskripsi: "Database inventaris motor listrik dan peralatan kelistrikan workshop." },
         { nama: "Instrumen", url: route("instrument_dashboard"), gambar: "/Instrumen.png", deskripsi: "Database instrumen, informasi peralatan, dan kegiatan kalibrasi." },
         { nama: "Alat Berat", url: route("alatberat_dashboard"), gambar: "/Alat_Berat.png", deskripsi: "Database inventaris alat berat dan informasi kondisi unit." }
     ]
