@@ -23,6 +23,7 @@
     },
     "dependencies": {
         "@vitejs/plugin-react": "^6.1.1",
+        "aos": "^2.3.4",
         "daisyui": "^5.7.50",
         "heic2any": "^0.0.4",
         "lucide-react": "^1.48.0",

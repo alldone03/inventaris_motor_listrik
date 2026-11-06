@@ -276,8 +276,9 @@ export default function ListrikLayout({ header, children }) {
                                     <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white shadow-xl border border-slate-100 py-2 z-50">
                                         <div className="px-4 py-2 border-b border-slate-100">
                                             <p className="text-xs font-bold text-slate-800">{user.name}</p>
-                                            <p className="text-xs font-bold text-slate-800">Role : {user.role}</p>
-                                            <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
+                                            <span className="text-[10px] text-slate-500">jabatan : {user.jabatan}</span>
+                                            <span className="text-[10px] text-slate-500">bagian : {user.bagian}</span>
+                                            <span className="text-[10px] text-slate-500">{user.email}</span>
                                         </div>
                                         <Link
                                             href={route('profile.edit')}

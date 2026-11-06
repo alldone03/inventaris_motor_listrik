@@ -46,9 +46,9 @@ export default function AlatBeratLayout({ header, children }) {
     const navItems = [
         {
             name: 'Dashboard',
-            href: route('dashboard'),
+            href: route('alatberat_dashboard'),
             icon: LayoutDashboard,
-            active: route().current('dashboard'),
+            active: route().current('alatberat_dashboard'),
         },
         {
             name: 'Daftar Alat Berat',
@@ -212,7 +212,8 @@ export default function AlatBeratLayout({ header, children }) {
                                 </div>
                                 <div className="hidden md:flex flex-col text-left">
                                     <span className="text-xs font-bold text-slate-800 leading-tight">{user.name}</span>
-                                    <span className="text-[10px] text-slate-500">Role : {user.role}</span>
+                                    <span className="text-[10px] text-slate-500">jabatan : {user.jabatan}</span>
+                                    <span className="text-[10px] text-slate-500">bagian : {user.bagian}</span>
                                     <span className="text-[10px] text-slate-500">{user.email}</span>
                                 </div>
                             </button>
@@ -226,8 +227,10 @@ export default function AlatBeratLayout({ header, children }) {
                                     <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white shadow-xl border border-slate-100 py-2 z-50">
                                         <div className="px-4 py-2 border-b border-slate-100">
                                             <p className="text-xs font-bold text-slate-800">{user.name}</p>
-                                            <p className="text-xs font-bold text-slate-800">Role : {user.role}</p>
-                                            <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
+                                            <span className="text-[10px] text-slate-500">jabatan : {user.jabatan}</span>
+                                            <br />
+                                            <span className="text-[10px] text-slate-500">bagian : {user.bagian}</span>
+                                            <span className="text-[10px] text-slate-500">{user.email}</span>
                                         </div>
                                         <Link
                                             href={route('profile.edit')}

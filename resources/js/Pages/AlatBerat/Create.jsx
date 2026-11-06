@@ -78,6 +78,7 @@ export default function AlatBeratCreate() {
                         <p className="mt-1 text-sm text-slate-500">
                             Masukkan informasi alat berat ke dalam inventaris perusahaan.
                         </p>
+
                     </div>
 
                     {/* Form */}
@@ -85,14 +86,28 @@ export default function AlatBeratCreate() {
                         onSubmit={handleSubmit}
                         className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
                     >
-                        <div className="mb-6 border-b border-slate-200 pb-4">
-                            <h2 className="text-lg font-semibold text-slate-800">
-                                Informasi Alat Berat
-                            </h2>
+                        <div className="mb-6 border-b border-slate-200 pb-4 flex justify-between w-full">
+                            <div className="">
 
-                            <p className="mt-1 text-sm text-slate-500">
-                                Lengkapi informasi unit alat berat berikut.
-                            </p>
+                                <h2 className="text-lg font-semibold text-slate-800">
+                                    Informasi Alat Berat
+                                </h2>
+
+                                <p className="mt-1 text-sm text-slate-500">
+                                    Lengkapi informasi unit alat berat berikut.
+                                </p>
+                            </div>
+                            <div className="">
+
+                                <button
+                                    type="button"
+                                    onClick={() => reset()}
+                                    disabled={processing}
+                                    className=" btn btn-error rounded-lg border "
+                                >
+                                    Reset Form
+                                </button>
+                            </div>
                         </div>
 
                         {/* Input Fields */}
@@ -193,14 +208,7 @@ export default function AlatBeratCreate() {
 
                         {/* Buttons */}
                         <div className="mt-8 flex flex-col-reverse justify-end gap-3 border-t border-slate-200 pt-5 sm:flex-row">
-                            <button
-                                type="button"
-                                onClick={() => reset()}
-                                disabled={processing}
-                                className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
-                            >
-                                Reset Form
-                            </button>
+
 
                             <button
                                 type="submit"

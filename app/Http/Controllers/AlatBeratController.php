@@ -8,14 +8,34 @@ use Inertia\Inertia;
 
 class AlatBeratController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $alatBerat = AlatBerat::all();
+        // Mengambil parameter dari URL (query string)
+        $search = $request->input('search');
+        $status = $request->input('status');
+
+        // Membuat query Eloquent dengan filter dinamis
+        $alatBerat = AlatBerat::query()
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('nama_alat', 'like', "%{$search}%")
+                      ->orWhere('merk', 'like', "%{$search}%")
+                      ->orWhere('model', 'like', "%{$search}%")
+                      ->orWhere('nomor_unit', 'like', "%{$search}%");
+                });
+            })
+            ->when($status && $status !== 'Semua Status', function ($query, $status) {
+                // Filter berdasarkan kolom status
+                $query->where('status', $status);
+            })
+            ->get();
 
         return Inertia::render(
             'AlatBerat/Index',
             [
                 'alatBerat' => $alatBerat,
+                // Mengirimkan kembali filter ke frontend agar input form tetap terisi
+                'filters' => $request->only(['search', 'status']),
             ]
         );
     }

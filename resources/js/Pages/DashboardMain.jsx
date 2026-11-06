@@ -1,10 +1,17 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import MainLayout from '@/Pages/MainLayout';
 import { Head, Link } from '@inertiajs/react';
 import { Activity, ArrowRight } from 'lucide-react';
+import AOS from 'aos';
 
 export default function Dashboard() {
+    useEffect(() => {
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+    }, []);
 
     // Data aplikasi
     // Routing tetap menggunakan route yang sudah ada
@@ -84,13 +91,20 @@ export default function Dashboard() {
                     {/* Application Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
-                        {aplikasi.map((item, index) => (
+                        {aplikasi.map((item, index) => {
+                            const aosAnimation =
+                                index === 0
+                                    ? "fade-right"
+                                    : index === aplikasi.length - 1
+                                    ? "fade-left"
+                                    : "fade-up";
 
-                            <Link
-                                key={item.nama}
-                                href={item.url}
-                                className="group block bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-                            >
+                            return (
+                                <div key={item.nama} data-aos={aosAnimation}>
+                                    <Link
+                                        href={item.url}
+                                        className="group block bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col justify-between"
+                                    >
 
                                 {/* Image Section */}
                                 <div className="relative h-56 overflow-hidden bg-slate-100">
@@ -144,9 +158,10 @@ export default function Dashboard() {
 
                                 </div>
 
-                            </Link>
-
-                        ))}
+                                    </Link>
+                                </div>
+                            );
+                        })}
 
                     </div>
 

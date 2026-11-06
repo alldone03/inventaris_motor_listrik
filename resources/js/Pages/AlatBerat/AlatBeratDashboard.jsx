@@ -1,6 +1,6 @@
 
 import React, { useMemo, useState } from "react";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import InstrumentLayout from "./AlatBeratLayout";
 
 // Styling status
@@ -155,6 +155,16 @@ export default function AlatBeratDashboard() {
         });
     }, [data, pencarian, filterStatus]);
 
+    // Fungsi navigasi ke daftar alat berat saat ditekan Enter
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            router.get(route("alatberat.index"), {
+                search: pencarian.trim(),
+                status: filterStatus === "Semua Status" ? "" : filterStatus,
+            });
+        }
+    };
+
     return (
         <InstrumentLayout>
             <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
@@ -189,6 +199,7 @@ export default function AlatBeratDashboard() {
                             type="text"
                             value={pencarian}
                             onChange={(e) => setPencarian(e.target.value)}
+                            onKeyDown={handleKeyDown}
                             placeholder="Cari nama alat, merk, model, atau nomor unit..."
                             className="w-full bg-white border border-gray-200 rounded-lg pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                         />
