@@ -44,7 +44,7 @@ export default function MainLayout({ header, children }) {
 
     const navItems = [
         {
-            name: 'Dashboard',
+            name: 'Halaman Utama',
             href: route('dashboard'),
             icon: LayoutDashboard,
             active: route().current('dashboard'),

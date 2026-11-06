@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Bagian;
 use App\Models\Jabatan;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class MasterSeeder extends Seeder
@@ -48,7 +47,7 @@ class MasterSeeder extends Seeder
         foreach ($pegawais as $p) {
             // Jika jabatan di data menggunakan "Staff" tapi di master ada "STAFF", gunakan uppercase agar cocok
             $jabatanKey = strtoupper($p['jabatan']);
-            
+
             // Simpan data pegawai (sesuaikan nama kolom tabel database Anda)
             User::updateOrCreate(
                 ['email' => $p['email']], // Cek berdasarkan email agar tidak duplikat
@@ -57,7 +56,7 @@ class MasterSeeder extends Seeder
                     // Sesuaikan foreign key jika menggunakan relasi ID, contoh:
                     // 'jabatan_id' => $createdJabatans[$jabatanKey]->id ?? null,
                     // 'bagian_id' => $createdBagians[$p['divisi']]->id ?? null,
-                    
+
                     // Atau jika kolomnya langsung string:
                     'jabatan' => $p['jabatan'],
                     'divisi' => $p['divisi'],

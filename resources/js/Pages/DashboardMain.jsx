@@ -1,97 +1,167 @@
-import React, { useState } from 'react';
-import AuthenticatedLayout from '@/Pages/Listrik/ListrikLayout';
-import { Head, Link, router, usePoll, usePage } from '@inertiajs/react';
-import OcrScannerModal from '@/Components/OcrScannerModal';
-import {
-    Zap,
-    FileCheck,
-    CheckCircle2,
-    Clock,
-    PlusCircle,
-    Search,
-    Camera,
-    ArrowRight,
-    Wrench,
-    Activity,
-    Layers,
-    Sparkles,
-    Eye,
-    ChevronRight
-} from 'lucide-react';
+
+import React from 'react';
 import MainLayout from '@/Pages/MainLayout';
+import { Head, Link } from '@inertiajs/react';
+import { Activity, ArrowRight } from 'lucide-react';
 
 export default function Dashboard() {
-    const { auth } = usePage().props;
-    const user = auth.user;
 
-    console.log(user);
-
+    // Data aplikasi
+    // Routing tetap menggunakan route yang sudah ada
     const aplikasi = [
-        { nama: "Workshop Listrik", url: route("listrik_dashboard"), gambar: "/Listrik.png", deskripsi: "Database inventaris motor listrik dan peralatan kelistrikan workshop." },
-        { nama: "Instrumen", url: route("instrument_dashboard"), gambar: "/Instrumen.png", deskripsi: "Database instrumen, informasi peralatan, dan kegiatan kalibrasi." },
-        { nama: "Alat Berat", url: route("alatberat_dashboard"), gambar: "/Alat_Berat.png", deskripsi: "Database inventaris alat berat dan informasi kondisi unit." }
-    ]
+        {
+            nama: "Workshop Listrik",
+            url: route("listrik_dashboard"),
+            gambar: "/MOTORLISTRIK.jpg",
+            deskripsi: "Database inventaris motor listrik dan peralatan kelistrikan workshop.",
+        },
+        {
+            nama: "Instrumen",
+            url: route("instrument_dashboard"),
+            gambar: "/INSTRUMEN.jpg",
+            deskripsi: "Database instrumen, informasi peralatan, dan kegiatan kalibrasi.",
+        },
+        {
+            nama: "Alat Berat",
+            url: route("alatberat_dashboard"),
+            gambar: "/ALATBERAT.jpg",
+            deskripsi: "Database inventaris alat berat dan informasi kondisi unit.",
+        }
+    ];
+
     return (
         <MainLayout
             header={
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div className="p-3 rounded-2xl bg-emerald-100 text-emerald-800">
+                        <Activity className="h-7 w-7" />
+                    </div>
+
                     <div>
-                        <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-                            <span className="p-2 rounded-xl bg-emerald-100 text-emerald-800">
-                                <Activity className="h-6 w-6" />
-                            </span>
+                        <h2 className="text-2xl font-black text-slate-900 tracking-tight">
                             WORKSHOP LISTRIK INSTRUMEN (WLI)
                         </h2>
 
+                        <p className="text-sm text-slate-500 mt-1">
+                            Sistem manajemen data peralatan, instrumen, dan alat berat Bengkel Listrik Pupuk Kujang.
+                        </p>
                     </div>
-
                 </div>
             }
         >
             <Head title="Dashboard - Bengkel Listrik Pupuk Kujang" />
-            <div className="flex gap-20">
-                {aplikasi.map((item, index) => (
-                    <Link
-                        key={index}
-                        className="group block bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-300"
-                        href={item.url}
-                    >
-                        {/* Bagian Atas: Label & Gambar Thumbnail */}
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                                {item.nama}
-                            </span>
-                            <div className="p-2 rounded-xl bg-slate-100 group-hover:bg-primary/10 group-hover:text-primary transition-colors text-slate-600">
-                                <img
-                                    className="h-8 w-8 object-contain rounded-lg"
-                                    src={item.gambar}
-                                    alt={item.nama}
-                                />
-                            </div>
-                        </div>
 
-                        {/* Bagian Tengah: Deskripsi Singkat */}
-                        <div className="mt-3">
-                            <p className="text-slate-600 text-sm line-clamp-2 leading-relaxed">
-                                {item.deskripsi}
-                            </p>
-                        </div>
+            <div className="relative min-h-full overflow-hidden">
 
-                        {/* Bagian Bawah: Badge / Label Tambahan (Opsional, mirip card statistik) */}
-                        <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
-                            <div className="flex gap-2">
+                {/* Background Decoration */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
 
-                            </div>
-                            <span className="text-xs font-semibold text-primary group-hover:underline flex items-center gap-1">
-                                Lihat Detail &rarr;
-                            </span>
-                        </div>
-                    </Link>
-                ))}
+                    <div className="absolute -top-20 -right-20 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl" />
+
+                    <div className="absolute bottom-0 -left-20 w-96 h-96 bg-emerald-100/30 rounded-full blur-3xl" />
+
+                </div>
+
+                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
+                    {/* Section Heading */}
+                    <div className="mb-8">
+
+                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">
+                            Main Applications
+                        </p>
+
+                        <h3 className="text-2xl font-bold text-slate-800 mt-2">
+                            Pilih Menu Utama
+                        </h3>
+
+                        <p className="text-sm text-slate-500 mt-1">
+                            Akses sistem pengelolaan inventaris dan peralatan.
+                        </p>
+
+                    </div>
+
+                    {/* Application Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                        {aplikasi.map((item, index) => (
+
+                            <Link
+                                key={item.nama}
+                                href={item.url}
+                                className="group block bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                            >
+
+                                {/* Image Section */}
+                                <div className="relative h-56 overflow-hidden bg-slate-100">
+
+                                    <img
+                                        src={item.gambar}
+                                        alt={item.nama}
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    />
+
+                                    {/* Image Overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
+
+                                    {/* Number Badge */}
+                                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1.5">
+
+                                        <span className="text-xs font-bold text-slate-800">
+                                            0{index + 1}
+                                        </span>
+
+                                    </div>
+
+                                    {/* Green Accent */}
+                                    <div className="absolute bottom-0 left-0 w-full h-1 bg-emerald-500" />
+
+                                </div>
+
+                                {/* Card Content */}
+                                <div className="p-6">
+
+                                    <h4 className="text-xl font-extrabold uppercase tracking-tight text-slate-900 group-hover:text-emerald-700 transition-colors">
+                                        {item.nama}
+                                    </h4>
+
+                                    <p className="mt-3 text-sm leading-relaxed text-slate-600 min-h-[48px]">
+                                        {item.deskripsi}
+                                    </p>
+
+                                    {/* Detail Button */}
+                                    <div className="mt-6">
+
+                                        <span className="inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold group-hover:bg-emerald-600 transition-colors">
+
+                                            Lihat Detail
+
+                                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </Link>
+
+                        ))}
+
+                    </div>
+
+                    {/* Footer */}
+                    <div className="mt-12 border-t border-slate-200/70 pt-5">
+
+                        <p className="text-xs text-center text-slate-400">
+                            © 2026 PT Pupuk Kujang — Workshop Listrik Instrumen
+                        </p>
+
+                    </div>
+
+                </div>
+
             </div>
-
-
-
 
         </MainLayout>
     );
