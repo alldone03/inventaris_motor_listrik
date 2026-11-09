@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import PupukKujangLogo from '@/Components/PupukKujangLogo';
 import {
+    House,
     LayoutDashboard,
     Zap,
     List,
@@ -45,6 +46,7 @@ export default function ListrikLayout({ header, children }) {
     }, []);
 
     const navItems = [
+
         {
             name: 'Dashboard',
             href: route('listrik_dashboard'),
@@ -116,6 +118,23 @@ export default function ListrikLayout({ header, children }) {
 
                     {/* Navigation Menu */}
                     <div className="flex-1 py-6 px-3 space-y-1.5 overflow-y-auto">
+                        <Link
+                            href={route('dashboard')}
+                            onClick={() => setIsMobileOpen(false)}
+                            className={`flex items-center gap-3 px-3.5 py-3 mb-5 rounded-xl font-medium text-sm transition-all group
+                                ${route().current('dashboard')
+                                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg'
+                                    : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                                }
+                                ${isCollapsed && !isMobileOpen ? 'justify-center px-0' : ''}
+                            `}
+                            title={isCollapsed ? 'Halaman Utama' : undefined}
+                        >
+                            <House className="h-5 w-5 shrink-0" />
+                            {(!isCollapsed || isMobileOpen) && (
+                                <span>Halaman Utama</span>
+                            )}
+                        </Link>
                         <div className={`px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 ${isCollapsed && !isMobileOpen ? 'text-center' : ''}`}>
                             {isCollapsed && !isMobileOpen ? '•••' : 'Menu Utama'}
                         </div>
