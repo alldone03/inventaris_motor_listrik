@@ -166,21 +166,27 @@ export default function InstrumentDashboard() {
                 </Link>
 
                 {/* Alat Primer */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:border-amber-300 transition">
+                <Link
+                    href={route('alatprimer_dashboard')}
+                    className="block bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:border-amber-300 transition group"
+                >
                     <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-4">
                         <Layers className="w-6 h-6" />
                     </div>
+
                     <h4 className="text-lg font-bold text-slate-800">
                         Alat Primer
                     </h4>
+
                     <p className="text-sm text-slate-500 mt-2">
                         Inventaris dan informasi Alat Primer.
                     </p>
+
                     <div className="mt-5 flex items-center justify-between text-sm font-semibold text-amber-700">
                         <span>Data peralatan</span>
-                        <ArrowRight className="w-4 h-4" />
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
-                </div>
+                </Link>
 
             </div>
 

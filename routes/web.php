@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AlatBeratController;
 use App\Http\Controllers\AlatBeratDashboardController;
+use App\Http\Controllers\AlatPrimerController;
 use App\Http\Controllers\ApproverController;
 use App\Http\Controllers\DashboardMainController;
 use App\Http\Controllers\GovernorController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\MotorChecklistController;
 use App\Http\Controllers\MotorController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -69,6 +71,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/governor/upload/{record}', [GovernorController::class, 'uploadedPdf'])
             ->name('governor.uploadedpdf');
         // Route::post('')
+        // Dashboard Alat Primer
+        Route::get('/alat-primer/dashboard', function () {
+            return Inertia::render('Instrument/AlatPrimer/AlatPrimerDashboard');
+        })->name('alatprimer_dashboard');
+        Route::get('/alat-primer/create', function () {
+            return Inertia::render('Instrument/AlatPrimer/Create');
+        })->name('alatprimer.create');
+        Route::get('/alat-primer/daftar', [AlatPrimerController::class, 'index'])
+            ->name('alatprimer.index');
+        Route::post('/alat-primer/store', [AlatPrimerController::class, 'store'])
+            ->name('alatprimer.store');
+        
     });
     // Alat Berat
     Route::prefix('alat_berat')
