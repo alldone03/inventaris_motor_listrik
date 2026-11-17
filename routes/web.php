@@ -82,7 +82,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('alatprimer.index');
         Route::post('/alat-primer/store', [AlatPrimerController::class, 'store'])
             ->name('alatprimer.store');
-        
+
+        Route::get('/alat-primer/{id}/edit', [AlatPrimerController::class, 'edit'])
+                    ->name('alatprimer.edit');
+
+        Route::put('/alat-primer/{id}', [AlatPrimerController::class, 'update'])
+            ->name('alatprimer.update');
+
+        Route::delete('/alat-primer/{id}', [AlatPrimerController::class, 'destroy'])
+            ->name('alatprimer.destroy');
+
     });
     // Alat Berat
     Route::prefix('alat_berat')

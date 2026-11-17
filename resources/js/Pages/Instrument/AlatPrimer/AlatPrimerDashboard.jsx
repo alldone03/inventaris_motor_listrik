@@ -163,7 +163,7 @@ export default function AlatPrimerDashboard({
                     </div>
                 </div>
 
-                {/* KATEGORI ALAT */}
+                {/* KATEGORI ALAT
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
                     <div className="flex items-center gap-2 mb-5">
                         <Layers size={22} className="text-slate-800" />
@@ -201,7 +201,7 @@ export default function AlatPrimerDashboard({
                             );
                         })}
                     </div>
-                </div>
+                </div> */}
 
                 {/* RECENT TOOLS TABLE */}
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">

@@ -9,6 +9,7 @@ use Inertia\Inertia;
 
 class AlatPrimerController extends Controller
 {
+    // DAFTAR ALAT PRIMER
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -33,6 +34,7 @@ class AlatPrimerController extends Controller
         ]);
     }
 
+    // TAMBAH ALAT PRIMER
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -58,5 +60,58 @@ class AlatPrimerController extends Controller
         return redirect()
             ->route('alatprimer.index')
             ->with('success', 'Data alat primer berhasil disimpan.');
+    }
+
+    // HALAMAN EDIT
+    public function edit($id)
+    {
+        $alatPrimer = AlatPrimer::findOrFail($id);
+
+        return Inertia::render('Instrument/AlatPrimer/Edit', [
+            'alatPrimer' => $alatPrimer,
+        ]);
+    }
+
+    // UPDATE DATA LAMA
+    public function update(Request $request, $id)
+    {
+        $alatPrimer = AlatPrimer::findOrFail($id);
+
+        $validated = $request->validate([
+            'nama' => ['nullable', 'string', 'max:255'],
+            'merk' => ['nullable', 'string', 'max:255'],
+            'serial_number' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('alat_primers', 'serial_number')
+                    ->ignore($alatPrimer->id),
+            ],
+            'range' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        foreach ($validated as $key => $value) {
+            if ($value === '') {
+                $validated[$key] = null;
+            }
+        }
+
+        $alatPrimer->update($validated);
+
+        return redirect()
+            ->route('alatprimer.index')
+            ->with('success', 'Data alat primer berhasil diperbarui.');
+    }
+
+    // HAPUS DATA ALAT PRIMER
+    public function destroy($id)
+    {
+        $alatPrimer = AlatPrimer::findOrFail($id);
+
+        $alatPrimer->delete();
+
+        return redirect()
+            ->route('alatprimer.index')
+            ->with('success', 'Data alat primer berhasil dihapus.');
     }
 }

@@ -1,10 +1,20 @@
 
 import React from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import { Plus, Search, RotateCcw, Package, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+    Plus,
+    Search,
+    RotateCcw,
+    Package,
+    ChevronLeft,
+    ChevronRight,
+    Pencil,
+    Trash2
+} from 'lucide-react';
 import AlatPrimerLayout from './AlatPrimerLayout';
 
 export default function Index({ alatPrimers, filters }) {
+
     const handleSearch = (e) => {
         e.preventDefault();
 
@@ -17,6 +27,15 @@ export default function Index({ alatPrimers, filters }) {
 
     const handleReset = () => {
         router.get(route('alatprimer.index'));
+    };
+
+    // Fungsi hapus data
+    const handleDelete = (id) => {
+        if (confirm('Apakah kamu yakin ingin menghapus data alat primer ini?')) {
+            router.delete(route('alatprimer.destroy', id), {
+                preserveScroll: true,
+            });
+        }
     };
 
     return (
@@ -104,6 +123,7 @@ export default function Index({ alatPrimers, filters }) {
                                     <th className="px-5 py-4">Merk</th>
                                     <th className="px-5 py-4">Serial Number</th>
                                     <th className="px-5 py-4">Range</th>
+                                    <th className="px-5 py-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
 
@@ -111,26 +131,56 @@ export default function Index({ alatPrimers, filters }) {
                                 {alatPrimers.data.length > 0 ? (
                                     alatPrimers.data.map((alat, index) => (
                                         <tr key={alat.id} className="hover:bg-slate-50">
+
                                             <td className="px-5 py-4 text-slate-500">
                                                 {alatPrimers.from + index}
                                             </td>
+
                                             <td className="px-5 py-4 font-semibold text-slate-800">
                                                 {alat.nama}
                                             </td>
+
                                             <td className="px-5 py-4 text-slate-600">
                                                 {alat.merk}
                                             </td>
+
                                             <td className="px-5 py-4 text-slate-600">
                                                 {alat.serial_number}
                                             </td>
+
                                             <td className="px-5 py-4 text-slate-600">
                                                 {alat.range}
                                             </td>
+
+                                            {/* TOMBOL AKSI */}
+                                            <td className="px-5 py-4">
+                                                <div className="flex items-center justify-center gap-2">
+
+                                                    <Link
+                                                        href={route('alatprimer.edit', alat.id)}
+                                                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-blue-500 text-blue-600 text-xs font-semibold hover:bg-blue-50 transition"
+                                                    >
+                                                        <Pencil size={14} />
+                                                        Edit
+                                                    </Link>
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleDelete(alat.id)}
+                                                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-red-500 text-red-600 text-xs font-semibold hover:bg-red-50 transition"
+                                                    >
+                                                        <Trash2 size={14} />
+                                                        Hapus
+                                                    </button>
+
+                                                </div>
+                                            </td>
+
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="5" className="px-5 py-12 text-center">
+                                        <td colSpan="6" className="px-5 py-12 text-center">
                                             <Package size={32} className="mx-auto text-slate-300 mb-3" />
                                             <p className="font-semibold text-slate-600">
                                                 Belum ada data alat primer
@@ -157,10 +207,11 @@ export default function Index({ alatPrimers, filters }) {
                                         key={index}
                                         disabled={!link.url}
                                         onClick={() => link.url && router.visit(link.url)}
-                                        className={`px-3 py-2 rounded-lg text-xs ${link.active
+                                        className={`px-3 py-2 rounded-lg text-xs ${
+                                            link.active
                                                 ? 'bg-blue-600 text-white'
                                                 : 'bg-white border border-slate-200 text-slate-600'
-                                            } disabled:opacity-40`}
+                                        } disabled:opacity-40`}
                                     >
                                         {index === 0 ? <ChevronLeft size={14} /> :
                                             index === alatPrimers.links.length - 1 ? <ChevronRight size={14} /> :
