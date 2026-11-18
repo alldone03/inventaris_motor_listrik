@@ -1,28 +1,17 @@
+
 import React, { useState } from 'react';
-import AuthenticatedLayout from '@/Pages/Listrik/ListrikLayout';
-import { Head, Link, router, usePoll, usePage } from '@inertiajs/react';
-import OcrScannerModal from '@/Components/OcrScannerModal';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
-    Zap,
-    FileCheck,
-    CheckCircle2,
-    Clock,
-    PlusCircle,
     Search,
-    Camera,
     ArrowRight,
     Wrench,
     Activity,
     Layers,
-    Sparkles,
-    Eye,
-    ChevronRight
 } from 'lucide-react';
+
 import InstrumentLayout from './InstrumentLayout';
 
-
 export default function InstrumentDashboard() {
-
     const { auth } = usePage().props;
     const user = auth.user;
     const [searchQuery, setSearchQuery] = useState('');
@@ -38,21 +27,18 @@ export default function InstrumentDashboard() {
                             </span>
                             Dashboard Instrument
                         </h2>
-
                     </div>
-
-
                 </div>
-
             }
         >
-
             <Head title="Dashboard Instrumen" />
 
-            <div className="space-y-6">
+            <div className="space-y-7">
 
-                {/* Search Banner Instrumen */}
-                <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 p-6 sm:p-8 text-white shadow-xl">
+                {/* SEARCH BANNER */}
+                <div
+                    className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 p-6 sm:p-8 text-white shadow-xl"
+                >
                     <div className="relative z-10">
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-3">
                             <Search className="h-3.5 w-3.5" />
@@ -93,106 +79,152 @@ export default function InstrumentDashboard() {
                         </form>
                     </div>
                 </div>
-            </div>
 
-            {/* Header section */}
-            <div>
-                <h3 className="text-lg font-bold text-slate-800">
-                    Kategori Instrumen
-                </h3>
-                <p className="text-sm text-slate-500 mt-1">
-                    Pilih kategori peralatan yang ingin dilihat.
-                </p>
-            </div>
-
-            {/* Tiga kartu kategori */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                {/* Valve */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:border-blue-300 transition">
-                    <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center mb-4">
-                        <Wrench className="w-6 h-6" />
-                    </div>
-                    <h4 className="text-lg font-bold text-slate-800">
-                        Valve
-                    </h4>
-                    <p className="text-sm text-slate-500 mt-2">
-                        Inventaris dan informasi peralatan valve.
+                {/* HEADER KATEGORI */}
+                <div>
+                    <h3 className="text-lg font-bold text-slate-800">
+                        Kategori Instrumen
+                    </h3>
+                    <p className="text-sm text-slate-500 mt-1">
+                        Pilih kategori peralatan yang ingin dilihat.
                     </p>
-                    <div className="mt-5 flex items-center justify-between text-sm font-semibold text-blue-700">
-                        <span>Data peralatan</span>
-                        <ArrowRight className="w-4 h-4" />
-                    </div>
                 </div>
 
-                {/* Transmitter */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:border-emerald-300 transition">
-                    <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center mb-4">
-                        <Activity className="w-6 h-6" />
+                {/* GRID 2 X 2 */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+                    {/* VALVE */}
+                    <div
+                        className="group relative min-h-[190px] overflow-hidden rounded-2xl border border-blue-100 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-300 bg-cover bg-center"
+                        style={{
+                            backgroundImage: "url('/background_valve.png')",
+                        }}
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/75 to-transparent" />
+
+                        <div className="relative z-10 flex flex-col justify-between min-h-[190px] p-6">
+                            <div className="flex items-start gap-4">
+                                <div className="w-14 h-14 shrink-0 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center">
+                                    <Wrench className="w-7 h-7" />
+                                </div>
+
+                                <div className="pt-1">
+                                    <h4 className="text-xl font-bold text-slate-900">
+                                        Valve
+                                    </h4>
+                                    <p className="text-sm text-slate-600 mt-2 max-w-xs">
+                                        Inventaris dan informasi peralatan valve.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-sm font-bold text-blue-700 mt-5">
+                                <span>Data peralatan</span>
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                        </div>
                     </div>
-                    <h4 className="text-lg font-bold text-slate-800">
-                        Transmitter
-                    </h4>
-                    <p className="text-sm text-slate-500 mt-2">
-                        Inventaris transmitter dan informasi pengukuran.
-                    </p>
-                    <div className="mt-5 flex items-center justify-between text-sm font-semibold text-emerald-700">
-                        <span>Data peralatan</span>
-                        <ArrowRight className="w-4 h-4" />
+
+                    {/* TRANSMITTER */}
+                    <div
+                        className="group relative min-h-[190px] overflow-hidden rounded-2xl border border-emerald-100 shadow-sm hover:shadow-lg hover:border-emerald-300 transition-all duration-300 bg-cover bg-center"
+                        style={{
+                            backgroundImage: "url('/background_transmitter.png')",
+                        }}
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/75 to-transparent" />
+
+                        <div className="relative z-10 flex flex-col justify-between min-h-[190px] p-6">
+                            <div className="flex items-start gap-4">
+                                <div className="w-14 h-14 shrink-0 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                                    <Activity className="w-7 h-7" />
+                                </div>
+
+                                <div className="pt-1">
+                                    <h4 className="text-xl font-bold text-slate-900">
+                                        Transmitter
+                                    </h4>
+                                    <p className="text-sm text-slate-600 mt-2 max-w-xs">
+                                        Inventaris transmitter dan informasi pengukuran.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-sm font-bold text-emerald-700 mt-5">
+                                <span>Data peralatan</span>
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                        </div>
                     </div>
+
+                    {/* GOVERNOR */}
+                    <Link
+                        href={route('governor.dashboard')}
+                        className="group block relative min-h-[190px] overflow-hidden rounded-2xl border border-amber-100 shadow-sm hover:shadow-lg hover:border-amber-300 transition-all duration-300 bg-cover bg-center"
+                        style={{
+                            backgroundImage: "url('/background_governor.png')",
+                        }}
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/75 to-transparent" />
+
+                        <div className="relative z-10 flex flex-col justify-between min-h-[190px] p-6">
+                            <div className="flex items-start gap-4">
+                                <div className="w-14 h-14 shrink-0 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+                                    <Layers className="w-7 h-7" />
+                                </div>
+
+                                <div className="pt-1">
+                                    <h4 className="text-xl font-bold text-slate-900">
+                                        Governor
+                                    </h4>
+                                    <p className="text-sm text-slate-600 mt-2 max-w-xs">
+                                        Inventaris dan informasi sistem governor.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-sm font-bold text-amber-700 mt-5">
+                                <span>Data peralatan</span>
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                        </div>
+                    </Link>
+
+                    {/* ALAT PRIMER */}
+                    <Link
+                        href={route('alatprimer_dashboard')}
+                        className="group block relative min-h-[190px] overflow-hidden rounded-2xl border border-orange-100 shadow-sm hover:shadow-lg hover:border-orange-300 transition-all duration-300 bg-cover bg-center"
+                        style={{
+                            backgroundImage: "url('/background_alat_primer.png')",
+                        }}
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/75 to-transparent" />
+
+                        <div className="relative z-10 flex flex-col justify-between min-h-[190px] p-6">
+                            <div className="flex items-start gap-4">
+                                <div className="w-14 h-14 shrink-0 rounded-xl bg-orange-100 text-orange-700 flex items-center justify-center">
+                                    <Layers className="w-7 h-7" />
+                                </div>
+
+                                <div className="pt-1">
+                                    <h4 className="text-xl font-bold text-slate-900">
+                                        Alat Primer
+                                    </h4>
+                                    <p className="text-sm text-slate-600 mt-2 max-w-xs">
+                                        Inventaris dan informasi Alat Primer.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-sm font-bold text-orange-700 mt-5">
+                                <span>Data peralatan</span>
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                        </div>
+                    </Link>
+
                 </div>
-
-                {/* Governor */}
-                <Link
-                    href={route('governor.dashboard')}
-                    className="block bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:border-amber-300 transition"
-                >
-                    <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-4">
-                        <Layers className="w-6 h-6" />
-                    </div>
-
-                    <h4 className="text-lg font-bold text-slate-800">
-                        Governor
-                    </h4>
-
-                    <p className="text-sm text-slate-500 mt-2">
-                        Inventaris dan informasi sistem governor.
-                    </p>
-
-                    <div className="mt-5 flex items-center justify-between text-sm font-semibold text-amber-700">
-                        <span>Data peralatan</span>
-                        <ArrowRight className="w-4 h-4" />
-                    </div>
-                </Link>
-
-                {/* Alat Primer */}
-                <Link
-                    href={route('alatprimer_dashboard')}
-                    className="block bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:border-amber-300 transition group"
-                >
-                    <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-4">
-                        <Layers className="w-6 h-6" />
-                    </div>
-
-                    <h4 className="text-lg font-bold text-slate-800">
-                        Alat Primer
-                    </h4>
-
-                    <p className="text-sm text-slate-500 mt-2">
-                        Inventaris dan informasi Alat Primer.
-                    </p>
-
-                    <div className="mt-5 flex items-center justify-between text-sm font-semibold text-amber-700">
-                        <span>Data peralatan</span>
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                </Link>
-
             </div>
-
-
-
-
-        </InstrumentLayout >
+        </InstrumentLayout>
     );
 }
