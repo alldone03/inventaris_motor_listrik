@@ -1,4 +1,3 @@
-
 import { Head, Link, useForm } from "@inertiajs/react";
 import AlatBeratLayout from "./AlatBeratLayout";
 
@@ -8,9 +7,11 @@ export default function AlatBeratCreate() {
         merk: "",
         model: "",
         nomor_unit: "",
-        kapasitas: "",
-        lokasi: "",
         status: "Siap Operasi",
+        nomor_register_depnaker: "",
+        tanggal_surat_keluar: "",
+        tanggal_habis_berlaku: "",
+        status_silo: "",
         keterangan: "",
     });
 
@@ -27,32 +28,53 @@ export default function AlatBeratCreate() {
             name: "nama_alat",
             label: "Nama Alat",
             placeholder: "Contoh: Excavator",
+            type: "text",
         },
         {
             name: "merk",
             label: "Merk",
             placeholder: "Contoh: Caterpillar",
+            type: "text",
         },
         {
             name: "model",
             label: "Model",
             placeholder: "Contoh: CAT 320D",
+            type: "text",
         },
         {
             name: "nomor_unit",
             label: "Nomor Unit",
             placeholder: "Contoh: EX-001",
+            type: "text",
         },
         {
-            name: "kapasitas",
-            label: "Kapasitas",
-            placeholder: "Contoh: 20 Ton",
+            name: "nomor_register_depnaker",
+            label: "Nomor Register DEPNAKER",
+            placeholder: "Masukkan nomor register DEPNAKER",
+            type: "text",
         },
         {
-            name: "lokasi",
-            label: "Lokasi",
-            placeholder: "Contoh: Area Produksi",
+            name: "tanggal_surat_keluar",
+            label: "Tanggal Surat Keluar",
+            type: "date",
         },
+        {
+            name: "tanggal_habis_berlaku",
+            label: "Tanggal Habis Berlaku",
+            type: "date",
+        },
+        {
+            name: "status_silo",
+            label: "Status SILO",
+            type: "select",
+            options: [
+                "Masih Berlaku",
+                "Mendekati Habis",
+                "Segera Habis",
+                "Belum Diatur",
+            ],
+        }, ,
     ];
 
     return (
@@ -78,7 +100,6 @@ export default function AlatBeratCreate() {
                         <p className="mt-1 text-sm text-slate-500">
                             Masukkan informasi alat berat ke dalam inventaris perusahaan.
                         </p>
-
                     </div>
 
                     {/* Form */}
@@ -87,8 +108,7 @@ export default function AlatBeratCreate() {
                         className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
                     >
                         <div className="mb-6 border-b border-slate-200 pb-4 flex justify-between w-full">
-                            <div className="">
-
+                            <div>
                                 <h2 className="text-lg font-semibold text-slate-800">
                                     Informasi Alat Berat
                                 </h2>
@@ -97,13 +117,13 @@ export default function AlatBeratCreate() {
                                     Lengkapi informasi unit alat berat berikut.
                                 </p>
                             </div>
-                            <div className="">
 
+                            <div>
                                 <button
                                     type="button"
                                     onClick={() => reset()}
                                     disabled={processing}
-                                    className=" btn btn-error rounded-lg border "
+                                    className="btn btn-error rounded-lg border"
                                 >
                                     Reset Form
                                 </button>
@@ -121,19 +141,36 @@ export default function AlatBeratCreate() {
                                         {field.label}
                                     </label>
 
-                                    <input
-                                        id={field.name}
-                                        type="text"
-                                        value={data[field.name]}
-                                        onChange={(e) =>
-                                            setData(field.name, e.target.value)
-                                        }
-                                        placeholder={field.placeholder}
-                                        className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors[field.name]
-                                            ? "border-red-500"
-                                            : "border-slate-300"
-                                            }`}
-                                    />
+                                    {field.type === "select" ? (
+                                        <select
+                                            id={field.name}
+                                            value={data[field.name]}
+                                            onChange={(e) => setData(field.name, e.target.value)}
+                                            className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition ${errors[field.name]
+                                                    ? "border-red-500"
+                                                    : "border-slate-300"
+                                                }`}
+                                        >
+                                            <option value="">Pilih Status SILO</option>
+                                            {field.options.map((option) => (
+                                                <option key={option} value={option}>
+                                                    {option}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <input
+                                            id={field.name}
+                                            type={field.type || "text"}
+                                            value={data[field.name]}
+                                            onChange={(e) => setData(field.name, e.target.value)}
+                                            placeholder={field.placeholder || ""}
+                                            className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition ${errors[field.name]
+                                                    ? "border-red-500"
+                                                    : "border-slate-300"
+                                                }`}
+                                        />
+                                    )}
 
                                     {errors[field.name] && (
                                         <p className="mt-1 text-sm text-red-600">
@@ -143,13 +180,13 @@ export default function AlatBeratCreate() {
                                 </div>
                             ))}
 
-                            {/* Status */}
+                            {/* Status Operasional */}
                             <div>
                                 <label
                                     htmlFor="status"
                                     className="mb-2 block text-sm font-medium text-slate-700"
                                 >
-                                    Status
+                                    Status Operasional
                                 </label>
 
                                 <select
@@ -158,7 +195,10 @@ export default function AlatBeratCreate() {
                                     onChange={(e) =>
                                         setData("status", e.target.value)
                                     }
-                                    className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                                    className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors.status
+                                        ? "border-red-500"
+                                        : "border-slate-300"
+                                        }`}
                                 >
                                     <option value="Siap Operasi">
                                         Siap Operasi
@@ -196,7 +236,10 @@ export default function AlatBeratCreate() {
                                 }
                                 rows="4"
                                 placeholder="Tambahkan keterangan kondisi atau informasi alat berat..."
-                                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                                className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors.keterangan
+                                    ? "border-red-500"
+                                    : "border-slate-300"
+                                    }`}
                             />
 
                             {errors.keterangan && (
@@ -208,8 +251,6 @@ export default function AlatBeratCreate() {
 
                         {/* Buttons */}
                         <div className="mt-8 flex flex-col-reverse justify-end gap-3 border-t border-slate-200 pt-5 sm:flex-row">
-
-
                             <button
                                 type="submit"
                                 disabled={processing}

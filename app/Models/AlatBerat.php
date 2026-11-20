@@ -13,9 +13,12 @@ class AlatBerat extends Model
         'merk',
         'model',
         'nomor_unit',
-        'kapasitas',
-        'lokasi',
         'status',
+        'nomor_register_depnaker',
+        'tanggal_surat_keluar',
+        'tanggal_habis_berlaku',
+        'status_silo',
         'keterangan',
+        'pdf_path'
     ];
 }

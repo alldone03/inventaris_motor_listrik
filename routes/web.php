@@ -12,7 +12,9 @@ use App\Http\Controllers\ListrikDashboardController;
 use App\Http\Controllers\MotorChecklistController;
 use App\Http\Controllers\MotorController;
 use App\Http\Controllers\ProfileController;
+use App\Models\AlatBerat;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -84,7 +86,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('alatprimer.store');
 
         Route::get('/alat-primer/{id}/edit', [AlatPrimerController::class, 'edit'])
-                    ->name('alatprimer.edit');
+            ->name('alatprimer.edit');
 
         Route::put('/alat-primer/{id}', [AlatPrimerController::class, 'update'])
             ->name('alatprimer.update');
@@ -122,6 +124,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
             // Hapus Alat Berat
             Route::delete('/{id}', [AlatBeratController::class, 'destroy'])
                 ->name('alatberat.delete');
+            // Upload Dokumen PDF SILO
+            Route::post('/{alatBerat}/upload-pdf', [AlatBeratController::class, 'uploadPdf'])
+                ->name('alatberat.uploadPdf');
+            // Lihat Dokumen PDF SILO
+            Route::get('/{alatBerat}/view-pdf', function (AlatBerat $alatBerat) {
+                if (! $alatBerat->pdf_path || ! Storage::disk('public')->exists($alatBerat->pdf_path)) {
+                    abort(404);
+                }
+
+                return response()->file(
+                    storage_path('app/public/'.$alatBerat->pdf_path)
+                );
+            })->name('alatberat.viewPdf');
         });
 
     // Profile
