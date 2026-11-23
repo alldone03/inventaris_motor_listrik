@@ -170,8 +170,12 @@ export default function AlatBeratCreate() {
                         </div>
 
                         {/* Input Fields */}
+
+                        {/* Input Fields */}
                         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                            {fields.map((field) => (
+
+                            {/* 5 Field Pertama */}
+                            {fields.slice(0, 5).map((field) => (
                                 <div key={field.name}>
                                     <label
                                         htmlFor={field.name}
@@ -180,36 +184,17 @@ export default function AlatBeratCreate() {
                                         {field.label}
                                     </label>
 
-                                    {field.type === "select" ? (
-                                        <select
-                                            id={field.name}
-                                            value={data[field.name]}
-                                            onChange={(e) => setData(field.name, e.target.value)}
-                                            className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition ${errors[field.name]
+                                    <input
+                                        id={field.name}
+                                        type={field.type || "text"}
+                                        value={data[field.name]}
+                                        onChange={(e) => setData(field.name, e.target.value)}
+                                        placeholder={field.placeholder || ""}
+                                        className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors[field.name]
                                                 ? "border-red-500"
                                                 : "border-slate-300"
-                                                }`}
-                                        >
-                                            <option value="">Pilih Status SILO</option>
-                                            {field.options.map((option) => (
-                                                <option key={option} value={option}>
-                                                    {option}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    ) : (
-                                        <input
-                                            id={field.name}
-                                            type={field.type || "text"}
-                                            value={data[field.name]}
-                                            onChange={(e) => setData(field.name, e.target.value)}
-                                            placeholder={field.placeholder || ""}
-                                            className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition ${errors[field.name]
-                                                ? "border-red-500"
-                                                : "border-slate-300"
-                                                }`}
-                                        />
-                                    )}
+                                            }`}
+                                    />
 
                                     {errors[field.name] && (
                                         <p className="mt-1 text-sm text-red-600">
@@ -217,24 +202,83 @@ export default function AlatBeratCreate() {
                                         </p>
                                     )}
                                 </div>
-
                             ))}
 
+                            {/* Status Operasional */}
+                            <div>
+                                <label
+                                    htmlFor="status"
+                                    className="mb-2 block text-sm font-medium text-slate-700"
+                                >
+                                    Status Operasional
+                                </label>
+
+                                <select
+                                    id="status"
+                                    value={data.status}
+                                    onChange={(e) => setData("status", e.target.value)}
+                                    className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors.status
+                                            ? "border-red-500"
+                                            : "border-slate-300"
+                                        }`}
+                                >
+                                    <option value="Siap Operasi">Siap Operasi</option>
+                                    <option value="Dalam Perbaikan">Dalam Perbaikan</option>
+                                    <option value="Rusak">Rusak</option>
+                                </select>
+
+                                {errors.status && (
+                                    <p className="mt-1 text-sm text-red-600">
+                                        {errors.status}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Dua Field Tanggal */}
+                            {fields.slice(5).map((field) => (
+                                <div key={field.name}>
+                                    <label
+                                        htmlFor={field.name}
+                                        className="mb-2 block text-sm font-medium text-slate-700"
+                                    >
+                                        {field.label}
+                                    </label>
+
+                                    <input
+                                        id={field.name}
+                                        type={field.type}
+                                        value={data[field.name]}
+                                        onChange={(e) => setData(field.name, e.target.value)}
+                                        className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors[field.name]
+                                                ? "border-red-500"
+                                                : "border-slate-300"
+                                            }`}
+                                    />
+
+                                    {errors[field.name] && (
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {errors[field.name]}
+                                        </p>
+                                    )}
+                                </div>
+                            ))}
 
                             {/* SILO AUTO COUNTDOWN */}
-                            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                            <div className="md:col-span-2 rounded-lg border border-slate-200 bg-slate-50 p-4">
                                 <div className="mb-3 flex items-center justify-between">
                                     <label className="text-sm font-medium text-slate-700">
                                         Status SILO
                                     </label>
 
                                     {siloCountdown && (
-                                        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${siloCountdown.color === "green"
-                                                ? "bg-green-100 text-green-700"
-                                                : siloCountdown.color === "yellow"
-                                                    ? "bg-yellow-100 text-yellow-700"
-                                                    : "bg-red-100 text-red-700"
-                                            }`}>
+                                        <span
+                                            className={`rounded-full px-3 py-1 text-xs font-semibold ${siloCountdown.color === "green"
+                                                    ? "bg-green-100 text-green-700"
+                                                    : siloCountdown.color === "yellow"
+                                                        ? "bg-yellow-100 text-yellow-700"
+                                                        : "bg-red-100 text-red-700"
+                                                }`}
+                                        >
                                             {siloCountdown.status}
                                         </span>
                                     )}
@@ -246,6 +290,7 @@ export default function AlatBeratCreate() {
                                             <span className="text-3xl font-bold text-slate-800">
                                                 {Math.abs(siloCountdown.sisaHari)}
                                             </span>
+
                                             <span className="text-sm text-slate-500">
                                                 {siloCountdown.sisaHari > 0
                                                     ? "hari tersisa"
@@ -262,7 +307,7 @@ export default function AlatBeratCreate() {
                                                             : "bg-red-500"
                                                     }`}
                                                 style={{
-                                                    width: `${siloCountdown.progress}%`
+                                                    width: `${siloCountdown.progress}%`,
                                                 }}
                                             />
                                         </div>
@@ -279,46 +324,8 @@ export default function AlatBeratCreate() {
                                     </div>
                                 )}
                             </div>
-
-
-                            {/* Status Operasional */}
-                            <div>
-                                <label
-                                    htmlFor="status"
-                                    className="mb-2 block text-sm font-medium text-slate-700"
-                                >
-                                    Status Operasional
-                                </label>
-
-                                <select
-                                    id="status"
-                                    value={data.status}
-                                    onChange={(e) =>
-                                        setData("status", e.target.value)
-                                    }
-                                    className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors.status
-                                        ? "border-red-500"
-                                        : "border-slate-300"
-                                        }`}
-                                >
-                                    <option value="Siap Operasi">
-                                        Siap Operasi
-                                    </option>
-                                    <option value="Dalam Perbaikan">
-                                        Dalam Perbaikan
-                                    </option>
-                                    <option value="Rusak">
-                                        Rusak
-                                    </option>
-                                </select>
-
-                                {errors.status && (
-                                    <p className="mt-1 text-sm text-red-600">
-                                        {errors.status}
-                                    </p>
-                                )}
-                            </div>
                         </div>
+
 
                         {/* Keterangan */}
                         <div className="mt-5">

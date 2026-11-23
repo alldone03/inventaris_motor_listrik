@@ -129,20 +129,24 @@ export default function Index({ alatBerat, filters = {} }) {
     };
 
     // Warna status SILO
+
     const siloStyle = (value) => {
         switch (value) {
-            case "Masih Berlaku":
+            case "Aman":
                 return "bg-green-100 text-green-700";
-            case "Mendekati Habis":
+            case "Perlu Perhatian":
                 return "bg-yellow-100 text-yellow-700";
             case "Segera Habis":
-                return "bg-red-100 text-red-700";
+                return "bg-orange-100 text-orange-700";
+            case "Kedaluwarsa":
+                return "bg-red-200 text-red-800";
             case "Belum Diatur":
                 return "bg-gray-100 text-gray-600";
             default:
                 return "bg-gray-100 text-gray-600";
         }
     };
+
 
     // Format tanggal
     const formatDate = (date) => {

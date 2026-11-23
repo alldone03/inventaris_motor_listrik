@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AlatBerat;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -10,6 +11,7 @@ use Inertia\Inertia;
 class AlatBeratController extends Controller
 {
     // Menampilkan daftar alat berat
+
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -28,7 +30,33 @@ class AlatBeratController extends Controller
             ->when($status && $status !== 'Semua Status', function ($query, $status) {
                 $query->where('status', $status);
             })
-            ->get();
+            ->get()
+            ->map(function ($alat) {
+                if (! $alat->tanggal_habis_berlaku) {
+                    $alat->status_silo = 'Belum Diatur';
+
+                    return $alat;
+                }
+
+                $today = Carbon::today();
+                $tanggalHabis = Carbon::parse($alat->tanggal_habis_berlaku)->startOfDay();
+
+                if ($tanggalHabis->lessThanOrEqualTo($today)) {
+                    $alat->status_silo = 'Kedaluwarsa';
+                } else {
+                    $hariTersisa = $today->diffInDays($tanggalHabis);
+
+                    if ($hariTersisa <= 30) {
+                        $alat->status_silo = 'Segera Habis';
+                    } elseif ($hariTersisa <= 90) {
+                        $alat->status_silo = 'Perlu Perhatian';
+                    } else {
+                        $alat->status_silo = 'Aman';
+                    }
+                }
+
+                return $alat;
+            });
 
         return Inertia::render('AlatBerat/Index', [
             'alatBerat' => $alatBerat,

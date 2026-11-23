@@ -10,11 +10,72 @@ export default function AlatBeratEdit({ alatBerat }) {
         nomor_unit: alatBerat.nomor_unit ?? "",
         status: alatBerat.status ?? "Siap Operasi",
         nomor_register_depnaker: alatBerat.nomor_register_depnaker ?? "",
-        tanggal_surat_keluar: alatBerat.tanggal_surat_keluar ?? "",
-        tanggal_habis_berlaku: alatBerat.tanggal_habis_berlaku ?? "",
-        status_silo: alatBerat.status_silo ?? "",
+        tanggal_surat_keluar: alatBerat.tanggal_surat_keluar
+            ? String(alatBerat.tanggal_surat_keluar).slice(0, 10)
+            : "",
+        tanggal_habis_berlaku: alatBerat.tanggal_habis_berlaku
+            ? String(alatBerat.tanggal_habis_berlaku).slice(0, 10)
+            : "",
         keterangan: alatBerat.keterangan ?? "",
     });
+
+    // Perhitungan Countdown SILO
+    const calculateSiloCountdown = () => {
+        const { tanggal_surat_keluar, tanggal_habis_berlaku } = data;
+
+        if (!tanggal_surat_keluar || !tanggal_habis_berlaku) {
+            return null;
+        }
+
+        const toUTC = (date) => {
+            const [year, month, day] = date.split("-").map(Number);
+            return Date.UTC(year, month - 1, day);
+        };
+
+        const today = new Date();
+
+        const todayUTC = Date.UTC(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate()
+        );
+
+        const mulai = toUTC(tanggal_surat_keluar);
+        const habis = toUTC(tanggal_habis_berlaku);
+
+        const totalHari = Math.round((habis - mulai) / 86400000);
+        const sisaHari = Math.round((habis - todayUTC) / 86400000);
+
+        let status, color;
+
+        if (sisaHari <= 0) {
+            status = "Kedaluwarsa";
+            color = "red";
+        } else if (sisaHari <= 30) {
+            status = "Segera Habis";
+            color = "red";
+        } else if (sisaHari <= 90) {
+            status = "Perlu Perhatian";
+            color = "yellow";
+        } else {
+            status = "Aman";
+            color = "green";
+        }
+
+        const progress = totalHari > 0
+            ? Math.max(
+                0,
+                Math.min(
+                    100,
+                    Math.round((sisaHari / totalHari) * 100)
+                )
+            )
+            : 0;
+
+        return { sisaHari, progress, status, color };
+    };
+
+    const siloCountdown = calculateSiloCountdown();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -49,7 +110,7 @@ export default function AlatBeratEdit({ alatBerat }) {
         {
             name: "nomor_register_depnaker",
             label: "Nomor Register DEPNAKER",
-            placeholder: "Masukkan nomor register",
+            placeholder: "Masukkan nomor register DEPNAKER",
             type: "text",
         },
         {
@@ -61,17 +122,6 @@ export default function AlatBeratEdit({ alatBerat }) {
             name: "tanggal_habis_berlaku",
             label: "Tanggal Habis Berlaku",
             type: "date",
-        },
-        {
-            name: "status_silo",
-            label: "Status SILO",
-            type: "select",
-            options: [
-                "Masih Berlaku",
-                "Mendekati Habis",
-                "Segera Habis",
-                "Belum Diatur",
-            ],
         },
     ];
 
@@ -105,19 +155,25 @@ export default function AlatBeratEdit({ alatBerat }) {
                         onSubmit={handleSubmit}
                         className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
                     >
-                        <div className="mb-6 border-b border-slate-200 pb-4">
-                            <h2 className="text-lg font-semibold text-slate-800">
-                                Informasi Alat Berat
-                            </h2>
+                        <div className="mb-6 flex w-full justify-between border-b border-slate-200 pb-4">
+                            <div>
+                                <h2 className="text-lg font-semibold text-slate-800">
+                                    Informasi Alat Berat
+                                </h2>
 
-                            <p className="mt-1 text-sm text-slate-500">
-                                Ubah informasi unit alat berat berikut.
-                            </p>
+                                <p className="mt-1 text-sm text-slate-500">
+                                    Ubah informasi unit alat berat berikut.
+                                </p>
+                            </div>
                         </div>
 
                         {/* Input Fields */}
+
+                        {/* Input Fields */}
                         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                            {fields.map((field) => (
+
+                            {/* Nama Alat, Merk, Model, Nomor Unit, Nomor Register */}
+                            {fields.slice(0, 5).map((field) => (
                                 <div key={field.name}>
                                     <label
                                         htmlFor={field.name}
@@ -126,43 +182,17 @@ export default function AlatBeratEdit({ alatBerat }) {
                                         {field.label}
                                     </label>
 
-                                    {field.type === "select" ? (
-                                        <select
-                                            id={field.name}
-                                            value={data[field.name]}
-                                            onChange={(e) =>
-                                                setData(field.name, e.target.value)
-                                            }
-                                            className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors[field.name]
-                                                    ? "border-red-500"
-                                                    : "border-slate-300"
-                                                }`}
-                                        >
-                                            <option value="">
-                                                Pilih Status SILO
-                                            </option>
-
-                                            {field.options.map((option) => (
-                                                <option key={option} value={option}>
-                                                    {option}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    ) : (
-                                        <input
-                                            id={field.name}
-                                            type={field.type}
-                                            value={data[field.name]}
-                                            onChange={(e) =>
-                                                setData(field.name, e.target.value)
-                                            }
-                                            placeholder={field.placeholder || ""}
-                                            className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors[field.name]
-                                                    ? "border-red-500"
-                                                    : "border-slate-300"
-                                                }`}
-                                        />
-                                    )}
+                                    <input
+                                        id={field.name}
+                                        type={field.type || "text"}
+                                        value={data[field.name]}
+                                        onChange={(e) => setData(field.name, e.target.value)}
+                                        placeholder={field.placeholder || ""}
+                                        className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors[field.name]
+                                                ? "border-red-500"
+                                                : "border-slate-300"
+                                            }`}
+                                    />
 
                                     {errors[field.name] && (
                                         <p className="mt-1 text-sm text-red-600">
@@ -184,32 +214,112 @@ export default function AlatBeratEdit({ alatBerat }) {
                                 <select
                                     id="status"
                                     value={data.status}
-                                    onChange={(e) =>
-                                        setData("status", e.target.value)
-                                    }
-                                    className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors.status
-                                            ? "border-red-500"
-                                            : "border-slate-300"
+                                    onChange={(e) => setData("status", e.target.value)}
+                                    className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors.status ? "border-red-500" : "border-slate-300"
                                         }`}
                                 >
-                                    <option value="Siap Operasi">
-                                        Siap Operasi
-                                    </option>
-                                    <option value="Dalam Perbaikan">
-                                        Dalam Perbaikan
-                                    </option>
-                                    <option value="Rusak">
-                                        Rusak
-                                    </option>
+                                    <option value="Siap Operasi">Siap Operasi</option>
+                                    <option value="Dalam Perbaikan">Dalam Perbaikan</option>
+                                    <option value="Rusak">Rusak</option>
                                 </select>
 
                                 {errors.status && (
-                                    <p className="mt-1 text-sm text-red-600">
-                                        {errors.status}
-                                    </p>
+                                    <p className="mt-1 text-sm text-red-600">{errors.status}</p>
+                                )}
+                            </div>
+
+                            {/* Tanggal Surat Keluar dan Tanggal Habis Berlaku */}
+                            {fields.slice(5).map((field) => (
+                                <div key={field.name}>
+                                    <label
+                                        htmlFor={field.name}
+                                        className="mb-2 block text-sm font-medium text-slate-700"
+                                    >
+                                        {field.label}
+                                    </label>
+
+                                    <input
+                                        id={field.name}
+                                        type={field.type}
+                                        value={data[field.name]}
+                                        onChange={(e) => setData(field.name, e.target.value)}
+                                        className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors[field.name]
+                                                ? "border-red-500"
+                                                : "border-slate-300"
+                                            }`}
+                                    />
+
+                                    {errors[field.name] && (
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {errors[field.name]}
+                                        </p>
+                                    )}
+                                </div>
+                            ))}
+
+                            {/* SILO AUTO COUNTDOWN */}
+                            <div className="md:col-span-2 rounded-lg border border-slate-200 bg-slate-50 p-4">
+                                <div className="mb-3 flex items-center justify-between">
+                                    <label className="text-sm font-medium text-slate-700">
+                                        Status SILO
+                                    </label>
+
+                                    {siloCountdown && (
+                                        <span
+                                            className={`rounded-full px-3 py-1 text-xs font-semibold ${siloCountdown.color === "green"
+                                                    ? "bg-green-100 text-green-700"
+                                                    : siloCountdown.color === "yellow"
+                                                        ? "bg-yellow-100 text-yellow-700"
+                                                        : "bg-red-100 text-red-700"
+                                                }`}
+                                        >
+                                            {siloCountdown.status}
+                                        </span>
+                                    )}
+                                </div>
+
+                                {siloCountdown ? (
+                                    <>
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-3xl font-bold text-slate-800">
+                                                {Math.abs(siloCountdown.sisaHari)}
+                                            </span>
+
+                                            <span className="text-sm text-slate-500">
+                                                {siloCountdown.sisaHari > 0
+                                                    ? "hari tersisa"
+                                                    : "hari sejak kedaluwarsa"}
+                                            </span>
+                                        </div>
+
+                                        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                                            <div
+                                                className={`h-full rounded-full transition-all ${siloCountdown.color === "green"
+                                                        ? "bg-green-500"
+                                                        : siloCountdown.color === "yellow"
+                                                            ? "bg-yellow-500"
+                                                            : "bg-red-500"
+                                                    }`}
+                                                style={{
+                                                    width: `${siloCountdown.progress}%`,
+                                                }}
+                                            />
+                                        </div>
+
+                                        <p className="mt-2 text-xs text-slate-500">
+                                            Countdown dihitung otomatis berdasarkan tanggal habis berlaku.
+                                        </p>
+                                    </>
+                                ) : (
+                                    <div className="flex min-h-[75px] items-center justify-center rounded-lg border border-dashed border-slate-300 bg-white">
+                                        <p className="text-center text-sm text-slate-400">
+                                            Isi tanggal untuk melihat countdown SILO
+                                        </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
+
 
                         {/* Keterangan */}
                         <div className="mt-5">
@@ -228,7 +338,10 @@ export default function AlatBeratEdit({ alatBerat }) {
                                 }
                                 rows="4"
                                 placeholder="Tambahkan keterangan kondisi alat berat..."
-                                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                                className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${errors.keterangan
+                                        ? "border-red-500"
+                                        : "border-slate-300"
+                                    }`}
                             />
 
                             {errors.keterangan && (
