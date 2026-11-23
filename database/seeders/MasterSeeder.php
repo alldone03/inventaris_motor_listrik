@@ -42,6 +42,8 @@ class MasterSeeder extends Seeder
             ['nama' => 'Angga Septiadi', 'jabatan' => 'Staff', 'divisi' => 'Bengkel Listrik', 'email' => 'anggaseptiadi@pupuk-kujang.com'],
             ['nama' => 'Iman', 'jabatan' => 'Staff', 'divisi' => 'Bengkel Instrumen', 'email' => 'iman@pupuk-kujang.com'],
             ['nama' => 'Firman Maulana', 'jabatan' => 'Staff', 'divisi' => 'Bengkel Instrumen', 'email' => 'firmanmaulana@pupuk-kujang.com'],
+            ['nama' => 'Dwi Marwanto', 'jabatan' => 'AVP', 'divisi' => 'Alat Berat', 'email' => 'dwimarwanto@pupuk-kujang.com'],
+            ['nama' => 'Admin', 'jabatan' => 'Admin', 'divisi' => 'Alat Berat', 'email' => 'adminalatberat@pupuk-kujang.com'],
         ];
 
         foreach ($pegawais as $p) {

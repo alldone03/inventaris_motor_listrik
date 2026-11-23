@@ -65,11 +65,11 @@ export default function Login({ status, canResetPassword }) {
                         <div className="text-center mb-7">
 
                             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                                Login to WLI System
+                                Login to DPLI System
                             </h2>
 
                             <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-                                Workshop Listrik & Instrument
+                                Departemen Pemeliharaan Listrik dan Instrument
                                 <br />
                                 Management System
                             </p>
@@ -227,7 +227,7 @@ export default function Login({ status, canResetPassword }) {
                             </p>
 
                             <p className="text-xs text-slate-400 mt-1">
-                                Workshop Listrik & Instrument
+                                Departemen Pemeliharaan Listrik dan Instrument
                             </p>
 
                         </div>

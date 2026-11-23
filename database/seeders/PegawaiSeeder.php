@@ -2,10 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Bagian;
-use App\Models\Jabatan;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -16,7 +13,6 @@ class PegawaiSeeder extends Seeder
      */
     public function run(): void
     {
-        
 
         // 3. Data User dari tabel Anda
         $usersData = [
@@ -98,6 +94,20 @@ class PegawaiSeeder extends Seeder
                 'bagian' => 'user',
                 'email' => 'user@pupuk-kujang.com',
             ],
+
+            [
+                'name' => 'Dwi Marwanto',
+                'jabatan' => 'AVP',
+                'bagian' => 'AlatBerat',
+                'email' => 'dwimarwanto@pupuk-kujang.com',
+            ],
+            [
+                'name' => 'Admin',
+                'jabatan' => 'Admin',
+                'bagian' => 'AlatBerat',
+                'email' => 'adminalatberat@pupuk-kujang.com',
+            ],
+
         ];
 
         // 4. Masukkan data ke tabel users

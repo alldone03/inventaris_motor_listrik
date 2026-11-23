@@ -11,9 +11,57 @@ export default function AlatBeratCreate() {
         nomor_register_depnaker: "",
         tanggal_surat_keluar: "",
         tanggal_habis_berlaku: "",
-        status_silo: "",
         keterangan: "",
     });
+    const calculateSiloCountdown = () => {
+        const { tanggal_surat_keluar, tanggal_habis_berlaku } = data;
+
+        if (!tanggal_surat_keluar || !tanggal_habis_berlaku) {
+            return null;
+        }
+
+        const toUTC = (date) => {
+            const [year, month, day] = date.split("-").map(Number);
+            return Date.UTC(year, month - 1, day);
+        };
+
+        const today = new Date();
+        const todayUTC = Date.UTC(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate()
+        );
+
+        const mulai = toUTC(tanggal_surat_keluar);
+        const habis = toUTC(tanggal_habis_berlaku);
+
+        const totalHari = Math.round((habis - mulai) / 86400000);
+        const sisaHari = Math.round((habis - todayUTC) / 86400000);
+
+        let status, color;
+
+        if (sisaHari <= 0) {
+            status = "Kedaluwarsa";
+            color = "red";
+        } else if (sisaHari <= 30) {
+            status = "Segera Habis";
+            color = "red";
+        } else if (sisaHari <= 90) {
+            status = "Perlu Perhatian";
+            color = "yellow";
+        } else {
+            status = "Aman";
+            color = "green";
+        }
+
+        const progress = totalHari > 0
+            ? Math.max(0, Math.min(100, Math.round((sisaHari / totalHari) * 100)))
+            : 0;
+
+        return { sisaHari, progress, status, color };
+    };
+
+    const siloCountdown = calculateSiloCountdown();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -64,17 +112,8 @@ export default function AlatBeratCreate() {
             label: "Tanggal Habis Berlaku",
             type: "date",
         },
-        {
-            name: "status_silo",
-            label: "Status SILO",
-            type: "select",
-            options: [
-                "Masih Berlaku",
-                "Mendekati Habis",
-                "Segera Habis",
-                "Belum Diatur",
-            ],
-        }, ,
+
+
     ];
 
     return (
@@ -147,8 +186,8 @@ export default function AlatBeratCreate() {
                                             value={data[field.name]}
                                             onChange={(e) => setData(field.name, e.target.value)}
                                             className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition ${errors[field.name]
-                                                    ? "border-red-500"
-                                                    : "border-slate-300"
+                                                ? "border-red-500"
+                                                : "border-slate-300"
                                                 }`}
                                         >
                                             <option value="">Pilih Status SILO</option>
@@ -166,8 +205,8 @@ export default function AlatBeratCreate() {
                                             onChange={(e) => setData(field.name, e.target.value)}
                                             placeholder={field.placeholder || ""}
                                             className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition ${errors[field.name]
-                                                    ? "border-red-500"
-                                                    : "border-slate-300"
+                                                ? "border-red-500"
+                                                : "border-slate-300"
                                                 }`}
                                         />
                                     )}
@@ -178,7 +217,69 @@ export default function AlatBeratCreate() {
                                         </p>
                                     )}
                                 </div>
+
                             ))}
+
+
+                            {/* SILO AUTO COUNTDOWN */}
+                            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                                <div className="mb-3 flex items-center justify-between">
+                                    <label className="text-sm font-medium text-slate-700">
+                                        Status SILO
+                                    </label>
+
+                                    {siloCountdown && (
+                                        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${siloCountdown.color === "green"
+                                                ? "bg-green-100 text-green-700"
+                                                : siloCountdown.color === "yellow"
+                                                    ? "bg-yellow-100 text-yellow-700"
+                                                    : "bg-red-100 text-red-700"
+                                            }`}>
+                                            {siloCountdown.status}
+                                        </span>
+                                    )}
+                                </div>
+
+                                {siloCountdown ? (
+                                    <>
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-3xl font-bold text-slate-800">
+                                                {Math.abs(siloCountdown.sisaHari)}
+                                            </span>
+                                            <span className="text-sm text-slate-500">
+                                                {siloCountdown.sisaHari > 0
+                                                    ? "hari tersisa"
+                                                    : "hari sejak kedaluwarsa"}
+                                            </span>
+                                        </div>
+
+                                        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                                            <div
+                                                className={`h-full rounded-full transition-all ${siloCountdown.color === "green"
+                                                        ? "bg-green-500"
+                                                        : siloCountdown.color === "yellow"
+                                                            ? "bg-yellow-500"
+                                                            : "bg-red-500"
+                                                    }`}
+                                                style={{
+                                                    width: `${siloCountdown.progress}%`
+                                                }}
+                                            />
+                                        </div>
+
+                                        <p className="mt-2 text-xs text-slate-500">
+                                            Countdown dihitung otomatis berdasarkan tanggal habis berlaku.
+                                        </p>
+                                    </>
+                                ) : (
+                                    <div className="flex min-h-[75px] items-center justify-center rounded-lg border border-dashed border-slate-300 bg-white">
+                                        <p className="text-center text-sm text-slate-400">
+                                            Isi tanggal untuk melihat countdown SILO
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+
 
                             {/* Status Operasional */}
                             <div>

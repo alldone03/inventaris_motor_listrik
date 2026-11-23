@@ -46,11 +46,11 @@ export default function Dashboard() {
 
                     <div>
                         <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-                            WORKSHOP LISTRIK INSTRUMEN (WLI)
+                            DEPARTEMEN PEMELIHARAAN LISTRIK DAN INSTRUMEN
                         </h2>
 
                         <p className="text-sm text-slate-500 mt-1">
-                            Sistem manajemen data peralatan, instrumen, dan alat berat Bengkel Listrik Pupuk Kujang.
+                            Sistem Manajemen Data Peralatan Liatrik, Instrumen, dan Alat Berat Departemen Pemeliharaan Listrik dan Instrument.
                         </p>
                     </div>
                 </div>

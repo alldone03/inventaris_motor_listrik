@@ -98,7 +98,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Alat Berat
     Route::prefix('alat_berat')
         ->middleware([
-            'CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|BengkelListrik,AVP|WLI,user|user',
+            'CheckAccess:VP|DeptHarListrikInstrumentAlatBerat,AVP|BengkelListrik,AVP|WLI,user|user,AVP|AlatBerat,Admin|AlatBerat',
             'auth',
             'verified',
         ])
